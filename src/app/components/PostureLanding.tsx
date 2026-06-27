@@ -146,13 +146,13 @@ export function PostureLanding() {
         </defs>
       </svg>
 
-      {/* Base image — objectPosition tuned so the nose aligns with the helmet image */}
+      {/* Base image */}
       <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <ImageWithFallback
           src={baseImage}
           alt="Girl base"
           className="w-full h-full object-cover"
-          style={{ objectPosition: '50% 8%' }}
+          style={{ objectPosition: '50% 0%' }}
         />
       </div>
 
@@ -165,7 +165,11 @@ export function PostureLanding() {
           src={helmetImage}
           alt="Girl with helmet"
           className="w-full h-full object-cover"
-          style={{ objectPosition: '50% 0%' }}
+          style={{
+            objectPosition: '50% 0%',
+            transform: 'translate3d(-0.9vw, -0.42vw, 0)',
+            willChange: 'transform',
+          }}
         />
       </div>
 
