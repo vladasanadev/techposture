@@ -80,7 +80,7 @@ export function PostureLanding() {
   const now = Date.now();
   const TRAIL_LIFETIME = 900;
   const CM_TO_PX = 96 / 2.54;
-  const TRAIL_RADIUS = 1.5 * CM_TO_PX; // ~57px — tight reveal
+  const TRAIL_RADIUS = 0.65 * CM_TO_PX;
 
   const cx = containerRef.current?.offsetWidth ?? (typeof window !== 'undefined' ? window.innerWidth : 1440);
   const cy = containerRef.current?.offsetHeight ?? (typeof window !== 'undefined' ? window.innerHeight : 900);
@@ -109,10 +109,11 @@ export function PostureLanding() {
   };
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full h-screen overflow-hidden bg-black"
-    >
+    <main className="w-full bg-black text-white">
+      <div
+        ref={containerRef}
+        className="relative w-full h-screen overflow-hidden bg-black"
+      >
       {/* SVG filters & masks */}
       <svg
         className="absolute inset-0"
@@ -120,7 +121,7 @@ export function PostureLanding() {
       >
         <defs>
           <filter id="trailBlur" x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
-            <feGaussianBlur stdDeviation="14" />
+            <feGaussianBlur stdDeviation="7" />
           </filter>
           <mask id="trailMask">
             <rect width="100%" height="100%" fill="black" />
@@ -193,11 +194,11 @@ export function PostureLanding() {
         style={{ top: 28, left: 32, zIndex: 40 }}
       >
         <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.38)', fontSize: '0.58rem' }}>
-          Every movement shapes<br />the architecture of your body
+          Craft tech content that<br />turns complex into<br />engaging
         </p>
       </div>
 
-      {/* TOP RIGHT — book session link */}
+      {/* TOP RIGHT — work with me link */}
       <div
         className="absolute pointer-events-auto"
         style={{ top: 24, right: 32, zIndex: 40 }}
@@ -215,7 +216,7 @@ export function PostureLanding() {
             paddingBottom: 2,
           }}
         >
-          Book a session ↗
+          Work with me ↗
         </a>
       </div>
 
@@ -229,7 +230,7 @@ export function PostureLanding() {
           <span style={{ ...dotStyle, background: '#7fff9a' }} />
         </div>
         <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.38)', textAlign: 'right' }}>
-          Spinal alignment index +91.4%
+          Content signal online +91.4%
         </p>
       </div>
 
@@ -241,7 +242,7 @@ export function PostureLanding() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ ...dotStyle }} />
           <p style={{ ...labelStyle, maxWidth: 110 }}>
-            Biometric posture<br />calibration active
+            Tech storytelling<br />system active
           </p>
         </div>
       </div>
@@ -259,10 +260,10 @@ export function PostureLanding() {
             color: 'rgba(255,255,255,0.95)',
             lineHeight: 1.2,
             marginBottom: 10,
-            letterSpacing: '-0.01em',
+            letterSpacing: '0',
           }}
         >
-          Align with<br />your potential
+          Hello, I&apos;m Vlada
         </h2>
         <p
           style={{
@@ -274,9 +275,9 @@ export function PostureLanding() {
             marginBottom: 20,
           }}
         >
-          A precision platform dedicated to mapping,<br />
-          correcting, and reinforcing the hidden signals<br />
-          that hold your body upright.
+          Tech creator and strategist who uses a<br />
+          software developer background to help<br />
+          brands grow their presence online.
         </p>
         <button
           className="pointer-events-auto"
@@ -293,7 +294,7 @@ export function PostureLanding() {
             fontWeight: 600,
           }}
         >
-          Begin the journey
+          Build the system
         </button>
       </div>
 
@@ -303,31 +304,31 @@ export function PostureLanding() {
         style={{ bottom: 44, right: 32, zIndex: 40, textAlign: 'right', maxWidth: 200 }}
       >
         <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.65)', marginBottom: 10 }}>
-          Recent metrics
+          Content stack
         </p>
 
         <div style={{ marginBottom: 8 }}>
           <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.75)', marginBottom: 2 }}>
-            Cervical study 08.21
+            Videos that convert
           </p>
           <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.35)', fontSize: '0.54rem' }}>
-            Detected micro-compressions between<br />C3–C5 under sustained screen load
+            Sharp technical ideas packaged<br />for reach, trust, and action
           </p>
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.75)', marginBottom: 2 }}>
-            Lumbar model 14.03
+            Branding system
           </p>
           <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.35)', fontSize: '0.54rem' }}>
-            Predictive correction trained on<br />biomechanics data from 3,200+ sessions
+            Cohesive story, visuals, and<br />positioning across every channel
           </p>
         </div>
 
         <Waveform />
       </div>
 
-      {/* ── POSTURE HERO TEXT ── */}
+      {/* ── PORTFOLIO HERO TEXT ── */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         style={{ zIndex: 30 }}
@@ -339,13 +340,13 @@ export function PostureLanding() {
           style={{
             fontFamily: '"Space Grotesk", "Inter", sans-serif',
             fontWeight: 800,
-            fontSize: 'clamp(4rem, 12vw, 12rem)',
+            fontSize: 'clamp(2.7rem, 10vw, 10rem)',
             color: 'rgba(255,255,255,0.85)',
-            letterSpacing: '0.15em',
+            letterSpacing: '0.1em',
             filter: 'blur(22px)',
           }}
         >
-          POSTURE
+          PORTFOLIO
         </h1>
 
         {/* Sharp layer */}
@@ -354,14 +355,14 @@ export function PostureLanding() {
           style={{
             fontFamily: '"Space Grotesk", "Inter", sans-serif',
             fontWeight: 800,
-            fontSize: 'clamp(4rem, 12vw, 12rem)',
+            fontSize: 'clamp(2.7rem, 10vw, 10rem)',
             color: 'rgba(255,255,255,0.95)',
-            letterSpacing: '0.15em',
+            letterSpacing: '0.1em',
             textShadow: '0 0 60px rgba(255,255,255,0.25), 0 0 120px rgba(255,255,255,0.12)',
             filter: `blur(${textBlur}px)`,
           }}
         >
-          POSTURE
+          PORTFOLIO
         </h1>
       </div>
 
@@ -384,7 +385,7 @@ export function PostureLanding() {
             color: 'rgba(255,255,255,0.18)',
           }}
         >
-          ·─────·  ◈  POSTURE.TECH  ◈  ·─────·
+          ·─────·  ◈  VLADA.TECH  ◈  ·─────·
         </span>
       </div>
 
@@ -410,6 +411,97 @@ export function PostureLanding() {
           ┌──────────────── ◦ ────────────────┐
         </span>
       </div>
-    </div>
+      </div>
+
+      <section
+        className="relative min-h-screen overflow-hidden bg-black"
+        style={{
+          borderTop: '1px solid rgba(255,255,255,0.08)',
+          fontFamily: '"Space Grotesk", "Inter", sans-serif',
+        }}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle at 50% 35%, rgba(120,130,255,0.16), transparent 38%), linear-gradient(180deg, rgba(255,255,255,0.04), transparent 38%)',
+          }}
+        />
+
+        <div
+          className="relative z-10 flex min-h-screen flex-col justify-between px-8 py-10"
+          style={{ color: 'rgba(255,255,255,0.94)' }}
+        >
+          <div className="flex items-start justify-between gap-6">
+            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.42)' }}>
+              Built for founders, SaaS teams,<br />AI tools, and technical brands
+            </p>
+            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.58)', textAlign: 'right' }}>
+              Audience architecture<br />for content that compounds
+            </p>
+          </div>
+
+          <div className="grid items-end gap-10 md:grid-cols-[1.1fr_0.9fr]">
+            <div>
+              <h2
+                className="select-none"
+                style={{
+                  fontFamily: '"Space Grotesk", "Inter", sans-serif',
+                  fontWeight: 800,
+                  fontSize: 'clamp(3.2rem, 12vw, 12rem)',
+                  lineHeight: 0.9,
+                  letterSpacing: '0.12em',
+                  color: 'rgba(255,255,255,0.94)',
+                  textShadow: '0 0 70px rgba(255,255,255,0.18)',
+                }}
+              >
+                AUDIENCE
+              </h2>
+              <p
+                style={{
+                  maxWidth: 520,
+                  marginTop: 28,
+                  fontSize: '0.82rem',
+                  lineHeight: 1.85,
+                  letterSpacing: '0.03em',
+                  color: 'rgba(255,255,255,0.56)',
+                }}
+              >
+                With a software developer background, I know exactly what your target audience needs:
+                clarity, proof, strong positioning, and videos that make complex technology feel useful fast.
+              </p>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gap: 18,
+                borderLeft: '1px solid rgba(255,255,255,0.14)',
+                paddingLeft: 24,
+              }}
+            >
+              {['Technical depth without the jargon', 'Content systems built for conversion', 'Brand presence that feels sharp and human'].map(item => (
+                <div key={item}>
+                  <span style={{ ...dotStyle, background: 'rgba(255,255,255,0.72)' }} />
+                  <span style={{ ...labelStyle, color: 'rgba(255,255,255,0.72)' }}>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <span
+              style={{
+                fontFamily: 'monospace',
+                fontSize: '0.5rem',
+                letterSpacing: '0.3em',
+                color: 'rgba(255,255,255,0.18)',
+              }}
+            >
+              ·─────·  ◈  CONTENT.SYSTEM  ◈  ·─────·
+            </span>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
