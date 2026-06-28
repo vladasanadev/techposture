@@ -80,7 +80,7 @@ export function PostureLanding() {
   const now = Date.now();
   const TRAIL_LIFETIME = 900;
   const CM_TO_PX = 96 / 2.54;
-  const TRAIL_RADIUS = 0.65 * CM_TO_PX;
+  const TRAIL_RADIUS = 2.6 * CM_TO_PX;
 
   const cx = containerRef.current?.offsetWidth ?? (typeof window !== 'undefined' ? window.innerWidth : 1440);
   const cy = containerRef.current?.offsetHeight ?? (typeof window !== 'undefined' ? window.innerHeight : 900);
@@ -178,7 +178,7 @@ export function PostureLanding() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(circle 380px at ${mousePosition.x}px ${mousePosition.y}px,
+          background: `radial-gradient(circle 90px at ${mousePosition.x}px ${mousePosition.y}px,
             transparent 0%,
             rgba(0,0,0,0.18) 50%,
             rgba(0,0,0,0.52) 100%)`,
