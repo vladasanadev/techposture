@@ -1329,17 +1329,25 @@ export function PostureLanding() {
         </a>
       </div>
 
-      {/* RIGHT MIDDLE — status indicator */}
+      {/* RIGHT MIDDLE — audience positioning */}
       <div
         className="absolute pointer-events-none"
-        style={{ top: '42%', right: 32, zIndex: 40, textAlign: 'right' }}
+        style={{ top: '38%', right: 32, zIndex: 40, textAlign: 'right', maxWidth: 360 }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 6, marginBottom: 4 }}>
-          <span style={{ ...labelStyle, color: 'rgba(255,255,255,0.65)' }}>Status</span>
-          <span style={{ ...dotStyle, background: '#7fff9a' }} />
-        </div>
-        <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.38)', textAlign: 'right' }}>
-          Content signal online +91.4%
+        <p
+          style={{
+            ...labelStyle,
+            color: 'rgba(255,255,255,0.48)',
+            textAlign: 'right',
+            fontSize: '0.56rem',
+            lineHeight: 1.72,
+            letterSpacing: '0.09em',
+            textTransform: 'none',
+          }}
+        >
+          I create short-form content for a 25K+ audience of developers, AI users, founders,
+          and tech professionals, showing how modern tools fit into real workflows through
+          practical, high-retention videos that feel native, not like ads.
         </p>
       </div>
 
