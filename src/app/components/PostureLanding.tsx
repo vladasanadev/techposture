@@ -28,6 +28,88 @@ interface ShowcaseWork {
   views: string;
   src: string;
   link: string;
+  containFrame?: boolean;
+}
+
+interface GlobeMorphProps {
+  hex?: string;
+  ocean?: string;
+  bg?: string;
+  landOpacity?: number;
+  globeOpacity?: number;
+  density?: number;
+  style?: React.CSSProperties;
+}
+
+const GLOBE_URL = 'https://tkartik.com/globe-to-flat-map/van-der-grinten-map.html';
+const GLOBE_DEFAULTS = {
+  hex: '#ffffff',
+  ocean: '#000000',
+  bg: '#000000',
+  landOpacity: 1,
+  globeOpacity: 0.5,
+  density: 500,
+};
+
+function toGlobeHex(color?: string) {
+  if (!color) return '';
+  if (color.startsWith('#')) return color.slice(1);
+  const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!match) return '';
+  const red = parseInt(match[1], 10).toString(16).padStart(2, '0');
+  const green = parseInt(match[2], 10).toString(16).padStart(2, '0');
+  const blue = parseInt(match[3], 10).toString(16).padStart(2, '0');
+  return `${red}${green}${blue}`;
+}
+
+function buildGlobeUrl(props: GlobeMorphProps) {
+  const hex = props.hex != null ? toGlobeHex(props.hex) : GLOBE_DEFAULTS.hex.slice(1);
+  const ocean = props.ocean != null ? toGlobeHex(props.ocean) : GLOBE_DEFAULTS.ocean.slice(1);
+  const bg = props.bg != null ? toGlobeHex(props.bg) : GLOBE_DEFAULTS.bg.slice(1);
+  const params = new URLSearchParams({
+    hex,
+    ocean,
+    bg,
+    landOpacity: String(props.landOpacity ?? GLOBE_DEFAULTS.landOpacity),
+    globeOpacity: String(props.globeOpacity ?? GLOBE_DEFAULTS.globeOpacity),
+    density: String(Math.round(Number(props.density) || GLOBE_DEFAULTS.density)),
+  });
+  return `${GLOBE_URL}?${params.toString()}`;
+}
+
+function GlobeMorph(props: GlobeMorphProps) {
+  const settings = { ...GLOBE_DEFAULTS, ...props };
+  const src = buildGlobeUrl(settings);
+
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        minWidth: 320,
+        minHeight: 180,
+        position: 'relative',
+        backgroundColor: '#0a0a0a',
+        ...props.style,
+      }}
+    >
+      <iframe
+        src={src}
+        title="Globe Morph"
+        loading="lazy"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          border: 'none',
+          pointerEvents: 'auto',
+          touchAction: 'auto',
+        }}
+      />
+    </div>
+  );
 }
 
 const socialLinks = [
@@ -105,6 +187,7 @@ const financeWorks: ShowcaseWork[] = [
     views: '15k views',
     src: 'https://www.instagram.com/reel/DOGrEdnjYfT/embed',
     link: 'https://www.instagram.com/reel/DOGrEdnjYfT/?igsh=MXJ0ZG1mMnh3empxbw==',
+    containFrame: true,
   },
   {
     title: 'Research Signal',
@@ -136,6 +219,7 @@ const eventsWorks: ShowcaseWork[] = [
     views: '10k views',
     src: 'https://www.instagram.com/reel/DK_6ljXNl0I/embed',
     link: 'https://www.instagram.com/reel/DK_6ljXNl0I/?igsh=MXh3bDZyajhqb2toNQ==',
+    containFrame: true,
   },
   {
     title: 'Community Event',
@@ -247,6 +331,26 @@ function ClientLogoTile({ logo }: { logo: ClientLogo }) {
 }
 
 function PhoneShowcase({ work }: { work: ShowcaseWork }) {
+  const iframeStyle: React.CSSProperties = work.containFrame
+    ? {
+        position: 'absolute',
+        left: 0,
+        top: '50%',
+        width: '100%',
+        height: '87%',
+        transform: 'translateY(-50%)',
+        border: 0,
+        background: '#000',
+        display: 'block',
+      }
+    : {
+        width: '100%',
+        height: '100%',
+        border: 0,
+        background: '#000',
+        display: 'block',
+      };
+
   return (
     <div style={{ display: 'grid', justifyItems: 'center', gap: 18 }}>
       <a
@@ -320,13 +424,7 @@ function PhoneShowcase({ work }: { work: ShowcaseWork }) {
             title={`${work.title} ${work.brand}`}
             loading="lazy"
             allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-            style={{
-              width: '100%',
-              height: '100%',
-              border: 0,
-              background: '#000',
-              display: 'block',
-            }}
+            style={iframeStyle}
           />
         </div>
       </a>
@@ -347,6 +445,139 @@ function PhoneShowcase({ work }: { work: ShowcaseWork }) {
           {work.views}
         </p>
       </div>
+    </div>
+  );
+}
+
+function FrameStoryShowcase({ stories, label }: { stories: ShowcaseWork[]; label: string }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [viewerIndex, setViewerIndex] = useState<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const activeStory = stories[activeIndex];
+
+  const goToStory = useCallback((index: number) => {
+    setActiveIndex(index);
+  }, []);
+
+  const goNext = useCallback(() => {
+    setActiveIndex(index => (index + 1) % stories.length);
+    setViewerIndex(index => index == null ? index : (index + 1) % stories.length);
+  }, [stories.length]);
+
+  const goPrevious = useCallback(() => {
+    setActiveIndex(index => (index - 1 + stories.length) % stories.length);
+    setViewerIndex(index => index == null ? index : (index - 1 + stories.length) % stories.length);
+  }, [stories.length]);
+
+  useEffect(() => {
+    if (isPaused) return undefined;
+    const timeout = window.setTimeout(goNext, 6500);
+    return () => window.clearTimeout(timeout);
+  }, [activeIndex, goNext, isPaused]);
+
+  return (
+    <div
+      className="frame-story-shell"
+      tabIndex={0}
+      onKeyDown={event => {
+        if (event.key === 'ArrowRight') goNext();
+        if (event.key === 'ArrowLeft') goPrevious();
+        if (event.key === 'Escape') setViewerIndex(null);
+        if (event.key === ' ') setIsPaused(paused => !paused);
+      }}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <div className="frame-story-stage" aria-label={`${label} story cards`}>
+        {stories.map((story, index) => (
+          <button
+            key={`${story.brand}-${story.title}-card`}
+            type="button"
+            className={`frame-story-card ${index === activeIndex ? 'is-active' : ''}`}
+            onMouseEnter={() => goToStory(index)}
+            onFocus={() => goToStory(index)}
+            onClick={() => {
+              goToStory(index);
+              setViewerIndex(index);
+            }}
+          >
+            <iframe
+              src={story.src}
+              title={`${story.title} ${story.brand}`}
+              loading="lazy"
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+              className="frame-story-iframe"
+            />
+
+            <div className="frame-story-description">
+              <p>{story.title}</p>
+              <span>{story.views}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <div className="frame-story-caption">
+        <p className="frame-story-kicker">{label}</p>
+        <h3>{activeStory.brand}</h3>
+        <p>{activeStory.title} · {activeStory.views}</p>
+      </div>
+
+      {viewerIndex !== null && (
+        <div
+          className="frame-story-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${stories[viewerIndex].brand} fullscreen story`}
+          tabIndex={-1}
+          onKeyDown={event => {
+            if (event.key === 'Escape') setViewerIndex(null);
+            if (event.key === 'ArrowRight') goNext();
+            if (event.key === 'ArrowLeft') goPrevious();
+          }}
+        >
+          <button
+            type="button"
+            className="frame-story-modal-close"
+            aria-label="Close story"
+            onClick={() => setViewerIndex(null)}
+          >
+            ×
+          </button>
+          <button
+            type="button"
+            aria-label="Previous story"
+            className="frame-story-modal-nav frame-story-modal-prev"
+            onClick={goPrevious}
+          >
+            ‹
+          </button>
+          <div className="frame-story-modal-card">
+            <iframe
+              key={stories[viewerIndex].src}
+              src={stories[viewerIndex].src}
+              title={`${stories[viewerIndex].title} ${stories[viewerIndex].brand}`}
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+              className="frame-story-modal-iframe"
+            />
+            <div className="frame-story-description">
+              <p>{stories[viewerIndex].title}</p>
+              <span>{stories[viewerIndex].views}</span>
+              <a href={stories[viewerIndex].link} target="_blank" rel="noreferrer">
+                open reel ↗
+              </a>
+            </div>
+          </div>
+          <button
+            type="button"
+            aria-label="Next story"
+            className="frame-story-modal-nav frame-story-modal-next"
+            onClick={goNext}
+          >
+            ›
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -490,6 +721,327 @@ export function PostureLanding() {
             min-height: 100vh;
           }
 
+          .audience-globe-layout {
+            display: grid;
+            grid-template-columns: minmax(220px, 0.7fr) minmax(360px, 1.6fr);
+            align-items: center;
+            gap: clamp(28px, 5vw, 84px);
+          }
+
+          .audience-globe-frame {
+            height: min(58vh, 560px);
+            min-height: 360px;
+          }
+
+          .audience-country-grid {
+            display: grid;
+            gap: 14px;
+          }
+
+          .audience-map-caption {
+            max-width: min(410px, 48%);
+            line-height: 1.7;
+          }
+
+          .frame-story-shell {
+            width: min(100%, 1280px);
+            margin: 0 auto;
+            display: grid;
+            gap: clamp(10px, 1.8vw, 22px);
+            outline: none;
+          }
+
+          .frame-story-stage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(10px, 1.4vw, 20px);
+            min-height: clamp(500px, 60vh, 720px);
+            overflow: visible;
+            perspective: 1400px;
+          }
+
+          .frame-story-kicker,
+          .frame-story-description span,
+          .frame-story-description a {
+            font-family: "Space Grotesk", "Inter", sans-serif;
+            font-size: 0.56rem;
+            line-height: 1.5;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+          }
+
+          .frame-story-caption {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 14px;
+            min-height: 34px;
+            text-align: center;
+          }
+
+          .frame-story-caption h3 {
+            margin: 0;
+            font-size: clamp(1.1rem, 2.2vw, 2rem);
+            line-height: 0.95;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: rgba(255,255,255,0.94);
+            text-shadow: 0 0 48px rgba(255,255,255,0.16);
+          }
+
+          .frame-story-caption p {
+            margin: 0;
+            color: rgba(255,255,255,0.44);
+          }
+
+          .frame-story-kicker {
+            color: rgba(255,255,255,0.38) !important;
+          }
+
+          .frame-story-card {
+            position: relative;
+            width: clamp(190px, 20vw, 310px);
+            aspect-ratio: 9 / 16;
+            flex: 0 0 auto;
+            overflow: hidden;
+            justify-self: center;
+            border-radius: 28px;
+            background: #030305;
+            border: 1px solid rgba(255,255,255,0.14);
+            box-shadow:
+              0 0 44px rgba(255,255,255,0.06),
+              0 20px 70px rgba(0,0,0,0.68),
+              inset 0 1px 0 rgba(255,255,255,0.16);
+            transform: scale(0.92);
+            opacity: 0.58;
+            cursor: pointer;
+            appearance: none;
+            padding: 0;
+            transition:
+              transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 220ms ease,
+              border-color 220ms ease,
+              box-shadow 320ms ease;
+          }
+
+          .frame-story-card.is-active {
+            transform: scale(1.08);
+            opacity: 1;
+            border-color: rgba(255,255,255,0.36);
+            box-shadow:
+              0 0 86px rgba(255,255,255,0.12),
+              0 34px 100px rgba(0,0,0,0.78),
+              inset 0 1px 0 rgba(255,255,255,0.2);
+            z-index: 2;
+          }
+
+          .frame-story-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+              linear-gradient(180deg, rgba(0,0,0,0.68), transparent 24%, transparent 62%, rgba(0,0,0,0.84)),
+              radial-gradient(circle at 50% 0%, rgba(255,255,255,0.14), transparent 36%);
+            z-index: 2;
+          }
+
+          .frame-story-iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: #000;
+            pointer-events: none;
+          }
+
+          .frame-story-description p {
+            margin: 0;
+            font-weight: 700;
+            line-height: 1;
+          }
+
+          .frame-story-hotspot {
+            display: none;
+          }
+
+          .frame-story-hotspot-left {
+            left: 0;
+          }
+
+          .frame-story-hotspot-right {
+            right: 0;
+          }
+
+          .frame-story-description {
+            position: absolute;
+            z-index: 6;
+            left: 16px;
+            right: 16px;
+            bottom: 16px;
+            display: grid;
+            gap: 8px;
+            color: rgba(255,255,255,0.92);
+          }
+
+          .frame-story-description span {
+            color: rgba(255,255,255,0.48);
+          }
+
+          .frame-story-description a {
+            width: fit-content;
+            color: rgba(255,255,255,0.76);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.26);
+            pointer-events: auto;
+          }
+
+          .frame-story-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(12px, 3vw, 34px);
+            padding: 26px;
+            background:
+              radial-gradient(circle at 50% 50%, rgba(124,60,255,0.18), transparent 36%),
+              rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+          }
+
+          .frame-story-modal-card {
+            position: relative;
+            width: min(92vw, 480px);
+            height: min(88vh, 860px);
+            overflow: hidden;
+            border-radius: 34px;
+            background: #030305;
+            border: 1px solid rgba(255,255,255,0.22);
+            box-shadow: 0 0 120px rgba(255,255,255,0.12), 0 28px 100px rgba(0,0,0,0.85);
+          }
+
+          .frame-story-modal-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+              linear-gradient(180deg, rgba(0,0,0,0.72), transparent 24%, transparent 62%, rgba(0,0,0,0.86));
+            z-index: 2;
+          }
+
+          .frame-story-modal-iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: #000;
+          }
+
+          .frame-story-modal-close,
+          .frame-story-modal-nav {
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.86);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+          }
+
+          .frame-story-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 102;
+            width: 42px;
+            height: 42px;
+            font-size: 1.6rem;
+            line-height: 1;
+          }
+
+          .frame-story-modal-nav {
+            width: 46px;
+            height: 46px;
+            font-size: 2rem;
+            line-height: 1;
+            z-index: 101;
+          }
+
+          @media (max-width: 900px) {
+            .audience-globe-layout {
+              grid-template-columns: 1fr;
+              gap: 28px;
+            }
+
+            .audience-globe-frame {
+              height: 360px;
+              min-height: 280px;
+            }
+
+            .audience-topline {
+              display: grid !important;
+              gap: 16px;
+            }
+
+            .audience-topline p {
+              text-align: left !important;
+            }
+
+            .frame-story-shell {
+              gap: 24px;
+            }
+
+            .frame-story-stage {
+              display: grid;
+              grid-template-columns: repeat(4, minmax(150px, 1fr));
+              overflow-x: auto;
+              overflow-y: visible;
+              padding: 18px 10px;
+              scroll-snap-type: x mandatory;
+              min-height: 390px;
+            }
+
+            .frame-story-card {
+              width: 100%;
+              height: auto;
+              scroll-snap-align: center;
+            }
+
+            .frame-story-card.is-active {
+              transform: scale(1.06);
+            }
+
+            .frame-story-caption {
+              flex-direction: column;
+              align-items: center;
+              gap: 6px;
+            }
+
+            .frame-story-modal {
+              gap: 10px;
+              padding: 16px;
+            }
+
+            .frame-story-modal-nav {
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+            }
+
+            .frame-story-modal-prev {
+              left: 14px;
+            }
+
+            .frame-story-modal-next {
+              right: 14px;
+            }
+          }
+
           @media (max-width: 767px) {
             .audience-mobile-stack {
               display: grid;
@@ -539,6 +1091,11 @@ export function PostureLanding() {
               font-size: clamp(2.35rem, 14vw, 4.6rem) !important;
               letter-spacing: 0.06em !important;
             }
+
+            .audience-globe-frame {
+              height: 320px;
+              min-height: 260px;
+            }
           }
 
           .shiny-title {
@@ -582,16 +1139,15 @@ export function PostureLanding() {
 
           .contact-script {
             font-family: "Brush Script MT", "Snell Roundhand", "Apple Chancery", cursive;
-            color: rgba(255,255,255,0.9);
-            font-size: clamp(3.4rem, 10vw, 10rem);
-            font-weight: 300;
-            letter-spacing: -0.08em;
-            line-height: 0.78;
+            color: rgba(255,255,255,0.86);
+            font-size: clamp(2.2rem, 6.4vw, 6.8rem);
+            font-weight: 200;
+            letter-spacing: -0.06em;
+            line-height: 0.88;
             text-shadow:
-              0 0 10px rgba(255,255,255,0.66),
-              0 0 30px rgba(255,255,255,0.34),
-              0 0 60px rgba(255,255,255,0.18);
-            transform: translateY(0.18em) rotate(-3deg);
+              0 0 8px rgba(255,255,255,0.52),
+              0 0 24px rgba(255,255,255,0.24);
+            transform: rotate(-3deg);
           }
 
           .email-button {
@@ -974,124 +1530,106 @@ export function PostureLanding() {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'radial-gradient(circle at 48% 24%, rgba(240,47,232,0.14), transparent 30%), radial-gradient(circle at 78% 62%, rgba(120,90,255,0.12), transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.04), transparent 38%)',
+            background: 'radial-gradient(circle at 66% 42%, rgba(255,255,255,0.12), transparent 32%), radial-gradient(circle at 18% 76%, rgba(124,60,255,0.14), transparent 34%), linear-gradient(180deg, rgba(255,255,255,0.035), transparent 42%)',
           }}
         />
 
-        <div className="audience-mobile-stack relative z-40 min-h-screen" style={{ color: 'rgba(255,255,255,0.94)' }}>
-          <div
-            className="audience-mobile-block absolute pointer-events-none"
-            style={{ top: 28, left: 32, zIndex: 40, maxWidth: 310 }}
-          >
-            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.64)', marginBottom: 12 }}>
-              Primary geo
+        <div
+          className="audience-mobile-stack relative z-40 flex min-h-screen flex-col gap-8 px-8 py-10"
+          style={{ color: 'rgba(255,255,255,0.94)' }}
+        >
+          <div className="audience-topline flex items-start justify-between gap-6">
+            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.42)' }}>
+              Globe morph<br />country density
             </p>
-            <div style={{ display: 'grid', gap: 6 }}>
-              {primaryGeo.map(item => (
-                <p
-                  key={item}
-                  style={{
-                    ...labelStyle,
-                    color: 'rgba(255,255,255,0.4)',
-                    fontSize: '0.56rem',
-                    letterSpacing: '0.13em',
-                  }}
-                >
-                  <span style={{ ...dotStyle, width: 4, height: 4, marginRight: 8 }} />
-                  {item}
+            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.58)', textAlign: 'right' }}>
+              Actual audience data<br />top geographies
+            </p>
+          </div>
+
+          <GhostSectionTitle text="AUDIENCE" style={{ maxWidth: 900 }} />
+
+          <div className="audience-globe-layout" style={{ flex: 1 }}>
+            <div style={{ display: 'grid', gap: 26 }}>
+              <div>
+                <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.68)', marginBottom: 18 }}>
+                  Top countries
                 </p>
-              ))}
+                <div className="audience-country-grid">
+                  {topCountries.map((metric, index) => (
+                    <div
+                      key={metric.label}
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '32px 1fr auto',
+                        alignItems: 'center',
+                        gap: 12,
+                        padding: '12px 0',
+                        borderBottom: '1px solid rgba(255,255,255,0.1)',
+                      }}
+                    >
+                      <span style={{ ...labelStyle, color: 'rgba(255,255,255,0.26)', fontSize: '0.52rem' }}>
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <span style={{ color: 'rgba(255,255,255,0.88)', fontSize: 'clamp(0.98rem, 1.7vw, 1.42rem)', lineHeight: 1 }}>
+                        {metric.label}
+                      </span>
+                      <span style={{ ...labelStyle, color: 'rgba(255,255,255,0.72)', fontSize: '0.58rem' }}>
+                        {metric.display}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gap: 8 }}>
+                <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.68)' }}>
+                  Primary geo
+                </p>
+                {primaryGeo.map(item => (
+                  <p
+                    key={item}
+                    style={{
+                      ...labelStyle,
+                      color: 'rgba(255,255,255,0.38)',
+                      fontSize: '0.54rem',
+                      letterSpacing: '0.13em',
+                    }}
+                  >
+                    <span style={{ ...dotStyle, width: 4, height: 4, marginRight: 8 }} />
+                    {item}
+                  </p>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div
-            className="audience-mobile-block absolute pointer-events-none"
-            style={{ top: 28, right: 32, zIndex: 40, textAlign: 'right', maxWidth: 250 }}
-          >
-            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.64)', marginBottom: 12 }}>
-              Interests
-            </p>
-            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.42)', textAlign: 'right' }}>
-              {interests.join(' / ')}
-            </p>
-          </div>
-
-          <div
-            className="audience-mobile-block absolute pointer-events-none"
-            style={{ bottom: 132, left: 32, zIndex: 40, width: 'min(270px, 30vw)' }}
-          >
-            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.64)', marginBottom: 16 }}>
-              Top countries
-            </p>
-            <div style={{ display: 'grid', gap: 14 }}>
-              {topCountries.map(metric => (
-                <AudienceBar key={metric.label} metric={metric} />
-              ))}
-            </div>
-          </div>
-
-          <div
-            className="audience-mobile-block absolute pointer-events-none"
-            style={{ top: '38%', right: 32, transform: 'translateY(-50%)', zIndex: 40, width: 'min(310px, 34vw)' }}
-          >
-            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.64)', marginBottom: 16, textAlign: 'right' }}>
-              Top age ranges
-            </p>
-            <div style={{ display: 'grid', gap: 14 }}>
-              {ageRanges.map(metric => (
-                <AudienceBar key={metric.label} metric={metric} />
-              ))}
-            </div>
-          </div>
-
-          <div
-            className="audience-mobile-title absolute pointer-events-none"
-            style={{
-              top: '50%',
-              left: 28,
-              transform: 'translateY(-50%)',
-              zIndex: 30,
-              width: 'min(68vw, 1180px)',
-            }}
-          >
-            <GhostSectionTitle
-              text="AUDIENCE"
+            <div
+              className="audience-globe-frame"
               style={{
-                maxWidth: 1180,
+                position: 'relative',
+                overflow: 'hidden',
+                background: '#0a0a0a',
+                boxShadow: '0 0 90px rgba(255,255,255,0.08)',
               }}
-            />
-          </div>
-
-          <div
-            className="audience-mobile-block absolute pointer-events-none"
-            style={{ bottom: 44, left: 32, zIndex: 40, maxWidth: 330 }}
-          >
-            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.64)', marginBottom: 10 }}>
-              Audience read
-            </p>
-            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.38)', fontSize: '0.56rem' }}>
-              Young, global, tech-native viewers who care about AI tools, startups, SaaS, coding, and developer culture.
-            </p>
-          </div>
-
-          <div
-            className="audience-mobile-block absolute pointer-events-none"
-            style={{ bottom: 44, right: 32, zIndex: 40, width: 'min(260px, 38vw)' }}
-          >
-            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.64)', marginBottom: 16, textAlign: 'right' }}>
-              Gender
-            </p>
-            <div style={{ display: 'grid', gap: 14 }}>
-              {genderSplit.map(metric => (
-                <AudienceBar key={metric.label} metric={metric} />
-              ))}
+            >
+              <GlobeMorph
+                hex="#ffffff"
+                ocean="#000000"
+                bg="#000000"
+                landOpacity={1}
+                globeOpacity={0.5}
+                density={500}
+              />
+              <div
+                className="audience-map-caption pointer-events-none absolute left-5 top-5"
+                style={{ ...labelStyle, color: 'rgba(255,255,255,0.3)', fontSize: '0.5rem' }}
+              >
+                United States 38.8% / Thailand 9.7% / Canada 4.3% / India 4.0% / Germany 3.4% / Ukraine
+              </div>
             </div>
           </div>
 
-          <div
-            className="audience-mobile-block absolute pointer-events-none"
-            style={{ bottom: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 40, whiteSpace: 'nowrap' }}
-          >
+          <div style={{ display: 'flex', justifyContent: 'center', whiteSpace: 'nowrap' }}>
             <span
               style={{
                 fontFamily: 'monospace',
@@ -1188,7 +1726,7 @@ export function PostureLanding() {
               Reel performance<br />software + AI campaigns
             </p>
             <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.58)', textAlign: 'right' }}>
-              tap any video to open
+              tap any story to open
             </p>
           </div>
 
@@ -1196,14 +1734,7 @@ export function PostureLanding() {
             <GhostSectionTitle text="TECH + AI" style={{ maxWidth: 1080 }} />
           </div>
 
-          <div
-            className="showcase-phone-grid grid gap-8 sm:grid-cols-2 xl:grid-cols-4"
-            style={{ alignItems: 'start' }}
-          >
-            {showcaseWorks.map(work => (
-              <PhoneShowcase key={`${work.title}-${work.brand}`} work={work} />
-            ))}
-          </div>
+          <FrameStoryShowcase stories={showcaseWorks} label="software + AI campaigns" />
 
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <span
@@ -1243,7 +1774,7 @@ export function PostureLanding() {
               Reel performance<br />finance + fintech systems
             </p>
             <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.58)', textAlign: 'right' }}>
-              tap any video to open
+              tap any story to open
             </p>
           </div>
 
@@ -1251,14 +1782,7 @@ export function PostureLanding() {
             <GhostSectionTitle text="FINANCE" align="right" style={{ maxWidth: 960 }} />
           </div>
 
-          <div
-            className="showcase-phone-grid grid gap-8 sm:grid-cols-2 xl:grid-cols-4"
-            style={{ alignItems: 'start' }}
-          >
-            {financeWorks.map(work => (
-              <PhoneShowcase key={`${work.title}-${work.brand}`} work={work} />
-            ))}
-          </div>
+          <FrameStoryShowcase stories={financeWorks} label="finance + fintech systems" />
 
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <span
@@ -1298,7 +1822,7 @@ export function PostureLanding() {
               Reel performance<br />events + live activations
             </p>
             <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.58)', textAlign: 'right' }}>
-              tap any video to open
+              tap any story to open
             </p>
           </div>
 
@@ -1306,14 +1830,7 @@ export function PostureLanding() {
             <GhostSectionTitle text="EVENTS" style={{ maxWidth: 960 }} />
           </div>
 
-          <div
-            className="showcase-phone-grid grid gap-8 sm:grid-cols-2 xl:grid-cols-4"
-            style={{ alignItems: 'start' }}
-          >
-            {eventsWorks.map(work => (
-              <PhoneShowcase key={`${work.title}-${work.brand}`} work={work} />
-            ))}
-          </div>
+          <FrameStoryShowcase stories={eventsWorks} label="events + live activations" />
 
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <span
@@ -1332,7 +1849,7 @@ export function PostureLanding() {
 
       <section
         id="contact"
-        className="relative min-h-screen overflow-hidden"
+        className="contact-puzzle-section relative min-h-screen overflow-hidden"
         style={{
           borderTop: '1px solid rgba(255,255,255,0.08)',
           fontFamily: '"Space Grotesk", "Inter", sans-serif',
@@ -1352,24 +1869,22 @@ export function PostureLanding() {
         <div
           className="absolute left-1/2 z-40 w-full -translate-x-1/2 px-6 text-center"
           style={{
-            top: 'clamp(36px, 7vh, 78px)',
+            top: 'clamp(70px, 16vh, 160px)',
             color: 'rgba(255,255,255,0.94)',
           }}
         >
-          <GhostSectionTitle text="LET'S WORK" align="center" style={{ margin: '0 auto', maxWidth: 1260 }} />
+          <GhostSectionTitle text="LET'S WORK" align="center" style={{ margin: '0 auto', maxWidth: 1120 }} />
         </div>
 
         <div
           className="absolute left-1/2 z-40 flex -translate-x-1/2 flex-col items-center px-6 text-center"
           style={{
-            bottom: 'clamp(34px, 7vh, 78px)',
+            top: '68%',
             color: 'rgba(255,255,255,0.94)',
           }}
         >
-          <p className="contact-script select-none">together</p>
-
           <a
-            className="email-button mt-6 inline-flex h-10 items-center justify-center px-10 text-[0.58rem] uppercase tracking-[0.42em] sm:h-11 sm:px-12"
+            className="email-button inline-flex h-10 items-center justify-center px-10 text-[0.58rem] uppercase tracking-[0.42em] sm:h-11 sm:px-12"
             href="https://mail.google.com/mail/?view=cm&fs=1&to=hello.vladasana@gmail.com"
             target="_blank"
             rel="noreferrer"
