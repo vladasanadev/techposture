@@ -1329,28 +1329,6 @@ export function PostureLanding() {
         </a>
       </div>
 
-      {/* RIGHT MIDDLE — audience positioning */}
-      <div
-        className="absolute pointer-events-none"
-        style={{ top: '38%', right: 32, zIndex: 40, textAlign: 'right', maxWidth: 360 }}
-      >
-        <p
-          style={{
-            ...labelStyle,
-            color: 'rgba(255,255,255,0.48)',
-            textAlign: 'right',
-            fontSize: '0.56rem',
-            lineHeight: 1.72,
-            letterSpacing: '0.09em',
-            textTransform: 'none',
-          }}
-        >
-          I create short-form content for a 25K+ audience of developers, AI users, founders,
-          and tech professionals, showing how modern tools fit into real workflows through
-          practical, high-retention videos that feel native, not like ads.
-        </p>
-      </div>
-
       {/* LEFT MIDDLE — vertical ASCII rule + label */}
       <div
         className="absolute pointer-events-none"
@@ -1367,7 +1345,7 @@ export function PostureLanding() {
       {/* BOTTOM LEFT — headline + body + CTA */}
       <div
         className="absolute pointer-events-none"
-        style={{ bottom: 44, left: 32, zIndex: 40, maxWidth: 280 }}
+        style={{ bottom: 44, left: 32, zIndex: 40, maxWidth: 420 }}
       >
         <h2
           style={{
@@ -1385,16 +1363,16 @@ export function PostureLanding() {
         <p
           style={{
             fontFamily: '"Space Grotesk", "Inter", sans-serif',
-            fontSize: '0.7rem',
+            fontSize: '0.66rem',
             color: 'rgba(255,255,255,0.5)',
-            lineHeight: 1.65,
+            lineHeight: 1.62,
             letterSpacing: '0.02em',
             marginBottom: 20,
           }}
         >
-          Tech creator and strategist who uses a<br />
-          software developer background to help<br />
-          brands grow their presence online.
+          I create short-form content for a 25K+ audience of developers, AI users, founders,
+          and tech professionals, showing how modern tools fit into real workflows through
+          practical, high-retention videos that feel native, not like ads.
         </p>
         <a
           href="#contact"
