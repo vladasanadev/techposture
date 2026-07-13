@@ -10,16 +10,13 @@ interface TrailPoint {
   timestamp: number;
 }
 
-interface AudienceMetric {
-  label: string;
-  value: number;
-  display: string;
-  color?: string;
-}
-
 interface ClientLogo {
   name: string;
   src: string;
+  fit?: 'contain' | 'cover';
+  scale?: number;
+  position?: string;
+  tileBackground?: string;
 }
 
 interface ShowcaseWork {
@@ -120,19 +117,24 @@ const socialLinks = [
 ];
 
 const clientLogos: ClientLogo[] = [
-  { name: '4Geeks Academy', src: new URL('../../img/4geekacademy_logo.png', import.meta.url).href },
-  { name: 'Hostinger', src: new URL('../../img/Hostinger_logo.png', import.meta.url).href },
-  { name: 'Astraux', src: new URL('../../img/astraux)logo.webp', import.meta.url).href },
-  { name: 'DeepPocket', src: new URL('../../img/deeppocket_logo.png', import.meta.url).href },
-  { name: 'GameDev', src: new URL('../../img/gamedev_logo.jpg', import.meta.url).href },
-  { name: 'HeyGen', src: new URL('../../img/heygenai.jpg', import.meta.url).href },
-  { name: 'Ledger', src: new URL('../../img/ledger_logo.png', import.meta.url).href },
-  { name: 'Lovable', src: new URL('../../img/lovable_logo.png', import.meta.url).href },
-  { name: 'SheCodes', src: new URL('../../img/shecodes_logo.png', import.meta.url).href },
-  { name: 'Tangem', src: new URL('../../img/tangem.png', import.meta.url).href },
-  { name: 'Verdent', src: new URL('../../img/verdent_logo.jpeg', import.meta.url).href },
-  { name: 'Virtuals', src: new URL('../../img/virtuals.png', import.meta.url).href },
-  { name: 'Client mark', src: new URL('../../img/images.png', import.meta.url).href },
+  { name: '4Geeks Academy', src: new URL('../../img/4geekacademy_logo.png', import.meta.url).href, fit: 'contain', scale: 1.2 },
+  { name: 'Hostinger', src: new URL('../../img/Hostinger_logo.png', import.meta.url).href, fit: 'cover' },
+  { name: 'Astraux', src: new URL('../../img/astraux)logo.webp', import.meta.url).href, fit: 'contain', scale: 1.22 },
+  { name: 'DeepPocket', src: new URL('../../img/deeppocket_logo.png', import.meta.url).href, fit: 'cover' },
+  { name: 'GameDev', src: new URL('../../img/gamedev_logo.jpg', import.meta.url).href, fit: 'cover', position: '50% 50%' },
+  { name: 'HeyGen', src: new URL('../../img/heygenai.jpg', import.meta.url).href, fit: 'contain', scale: 0.94 },
+  { name: 'Ledger', src: new URL('../../img/ledger_logo.png', import.meta.url).href, fit: 'cover', scale: 1.1 },
+  { name: 'Lovable', src: new URL('../../img/lovable_logo.png', import.meta.url).href, fit: 'contain', scale: 1.2 },
+  { name: 'SheCodes', src: new URL('../../img/shecodes_logo.png', import.meta.url).href, fit: 'contain', scale: 1.2 },
+  { name: 'Tangem', src: new URL('../../img/tangem.png', import.meta.url).href, fit: 'cover', position: '50% 50%' },
+  { name: 'Verdent', src: new URL('../../img/verdent_logo.jpeg', import.meta.url).href, fit: 'cover', position: '50% 50%' },
+  { name: 'Virtuals', src: new URL('../../img/virtuals.png', import.meta.url).href, fit: 'contain', scale: 1.18 },
+  { name: 'Bluedot', src: new URL('../../img/images.png', import.meta.url).href, fit: 'contain', scale: 1.24 },
+];
+
+const clientLogoRows = [
+  clientLogos,
+  [...clientLogos.slice(6), ...clientLogos.slice(0, 6)],
 ];
 
 const showcaseWorks: ShowcaseWork[] = [
@@ -182,7 +184,7 @@ const financeWorks: ShowcaseWork[] = [
     link: 'https://www.instagram.com/reel/DTcppaDkbG6/?igsh=MTRpYnFlYXdkMGFlNg==',
   },
   {
-    title: 'UX Breakdown',
+    title: 'Event Invitation',
     brand: 'AstraUX',
     views: '15k views',
     src: 'https://www.instagram.com/reel/DOGrEdnjYfT/embed',
@@ -271,59 +273,55 @@ function GhostSectionTitle({
   );
 }
 
-function AudienceBar({ metric }: { metric: AudienceMetric }) {
-  return (
-    <div style={{ display: 'grid', gap: 8 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, alignItems: 'baseline' }}>
-        <span style={{ color: 'rgba(255,255,255,0.78)', fontSize: '0.86rem' }}>{metric.label}</span>
-        <span style={{ color: 'rgba(255,255,255,0.86)', fontSize: '0.8rem', fontWeight: 700 }}>{metric.display}</span>
-      </div>
-      <div
-        style={{
-          height: 8,
-          borderRadius: 999,
-          background: 'rgba(255,255,255,0.13)',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            width: `${Math.min(metric.value, 100)}%`,
-            height: '100%',
-            borderRadius: 999,
-            background: metric.color ?? 'linear-gradient(90deg, #f02fe8, #b44cff)',
-            boxShadow: '0 0 18px rgba(240,47,232,0.32)',
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
 function ClientLogoTile({ logo }: { logo: ClientLogo }) {
+  const imageFit = logo.fit ?? 'contain';
+  const imageInset = imageFit === 'cover' ? 0 : '16%';
+
   return (
     <div
+      className="client-logo-card"
       style={{
         flex: '0 0 auto',
-        height: 'clamp(70px, 9vw, 112px)',
-        width: 'clamp(145px, 15vw, 230px)',
+        width: 'clamp(92px, 10vw, 138px)',
+        aspectRatio: '1 / 1',
+        position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '0 clamp(10px, 1.5vw, 20px)',
+        overflow: 'hidden',
+        borderRadius: 28,
+        border: '1px solid rgba(255,255,255,0.13)',
+        background:
+          logo.tileBackground ??
+          'linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.035)), rgba(8,7,18,0.72)',
+        boxShadow: '0 22px 70px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.12)',
+        backdropFilter: 'blur(18px)',
       }}
     >
+      <span
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(circle at 28% 22%, rgba(245,255,114,0.16), transparent 34%), radial-gradient(circle at 74% 78%, rgba(240,47,232,0.18), transparent 36%)',
+          opacity: 0.68,
+        }}
+      />
       <img
         src={logo.src}
         alt={`${logo.name} logo`}
         loading="lazy"
         style={{
-          height: '100%',
-          width: '100%',
+          position: 'absolute',
+          inset: imageInset,
+          height: imageFit === 'cover' ? '100%' : `calc(100% - ${typeof imageInset === 'number' ? imageInset * 2 : '32%'})`,
+          width: imageFit === 'cover' ? '100%' : `calc(100% - ${typeof imageInset === 'number' ? imageInset * 2 : '32%'})`,
           maxWidth: '100%',
-          objectFit: 'contain',
+          objectFit: imageFit,
+          objectPosition: logo.position ?? '50% 50%',
           display: 'block',
-          filter: 'drop-shadow(0 0 18px rgba(240,47,232,0.16))',
+          transform: `scale(${logo.scale ?? 1})`,
+          filter: 'drop-shadow(0 0 18px rgba(240,47,232,0.2))',
         }}
       />
     </div>
@@ -493,7 +491,7 @@ function FrameStoryShowcase({ stories, label }: { stories: ShowcaseWork[]; label
           <button
             key={`${story.brand}-${story.title}-card`}
             type="button"
-            className={`frame-story-card ${index === activeIndex ? 'is-active' : ''}`}
+            className={`frame-story-card ${index === activeIndex ? 'is-active' : ''} ${story.containFrame ? 'is-contained' : ''}`}
             onMouseEnter={() => goToStory(index)}
             onFocus={() => goToStory(index)}
             onClick={() => {
@@ -552,7 +550,7 @@ function FrameStoryShowcase({ stories, label }: { stories: ShowcaseWork[]; label
           >
             ‹
           </button>
-          <div className="frame-story-modal-card">
+          <div className={`frame-story-modal-card ${stories[viewerIndex].containFrame ? 'is-contained' : ''}`}>
             <iframe
               key={stories[viewerIndex].src}
               src={stories[viewerIndex].src}
@@ -676,42 +674,12 @@ export function PostureLanding() {
   };
 
   const primaryGeo = [
-    'US: 38%',
-    'Thailand: 9.7%',
-    'India: 4%',
-    'Canada: 4.3%',
-    'Europe: 3.4% (Germany, UK, Netherlands, Nordics)',
-    'LATAM: 2.8%',
+    'India: 29.1%',
+    'United States: 10.8%',
+    'Canada: 4.1%',
+    'Brazil: 3.9%',
+    'Germany: 3.7%',
   ];
-
-  const interests = ['AI tools', 'Startups & SaaS', 'Developers', 'Tech', 'Coding'];
-
-  const topCountries: AudienceMetric[] = [
-    { label: 'United States', value: 38.8, display: '38.8%' },
-    { label: 'Thailand', value: 9.7, display: '9.7%' },
-    { label: 'Canada', value: 4.3, display: '4.3%' },
-    { label: 'India', value: 4, display: '4.0%' },
-    { label: 'Germany', value: 3.4, display: '3.4%' },
-  ];
-
-  const ageRanges: AudienceMetric[] = [
-    { label: '18-24', value: 59.6, display: '59.6%' },
-    { label: '25-34', value: 28, display: '28.0%' },
-    { label: '35-44', value: 6.7, display: '6.7%' },
-    { label: '45-54', value: 2.7, display: '2.7%' },
-  ];
-
-  const genderSplit: AudienceMetric[] = [
-    { label: 'Men', value: 67.3, display: '67.3%' },
-    { label: 'Women', value: 32.7, display: '32.7%', color: 'linear-gradient(90deg, #7c3cff, #9b63ff)' },
-  ];
-
-  const panelStyle: React.CSSProperties = {
-    border: '1px solid rgba(255,255,255,0.12)',
-    background: 'rgba(4,7,13,0.54)',
-    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
-    padding: 24,
-  };
 
   return (
     <main className="w-full bg-black text-white">
@@ -857,6 +825,14 @@ export function PostureLanding() {
             pointer-events: none;
           }
 
+          .frame-story-card.is-contained .frame-story-iframe {
+            top: 50%;
+            bottom: auto;
+            height: 84%;
+            transform: translateY(-50%);
+            background: #000;
+          }
+
           .frame-story-description p {
             margin: 0;
             font-weight: 700;
@@ -940,6 +916,14 @@ export function PostureLanding() {
             width: 100%;
             height: 100%;
             border: 0;
+            background: #000;
+          }
+
+          .frame-story-modal-card.is-contained .frame-story-modal-iframe {
+            top: 50%;
+            bottom: auto;
+            height: 84%;
+            transform: translateY(-50%);
             background: #000;
           }
 
@@ -1536,42 +1520,10 @@ export function PostureLanding() {
           <GhostSectionTitle text="AUDIENCE" style={{ maxWidth: 900 }} />
 
           <div className="audience-globe-layout" style={{ flex: 1 }}>
-            <div style={{ display: 'grid', gap: 26 }}>
-              <div>
-                <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.68)', marginBottom: 18 }}>
-                  Top countries
-                </p>
-                <div className="audience-country-grid">
-                  {topCountries.map((metric, index) => (
-                    <div
-                      key={metric.label}
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '32px 1fr auto',
-                        alignItems: 'center',
-                        gap: 12,
-                        padding: '12px 0',
-                        borderBottom: '1px solid rgba(255,255,255,0.1)',
-                      }}
-                    >
-                      <span style={{ ...labelStyle, color: 'rgba(255,255,255,0.26)', fontSize: '0.52rem' }}>
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
-                      <span style={{ color: 'rgba(255,255,255,0.88)', fontSize: 'clamp(0.98rem, 1.7vw, 1.42rem)', lineHeight: 1 }}>
-                        {metric.label}
-                      </span>
-                      <span style={{ ...labelStyle, color: 'rgba(255,255,255,0.72)', fontSize: '0.58rem' }}>
-                        {metric.display}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gap: 8 }}>
-                <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.68)' }}>
-                  Primary geo
-                </p>
+            <div style={{ display: 'grid', gap: 8, alignSelf: 'center' }}>
+              <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.68)' }}>
+                Primary GEO
+              </p>
                 {primaryGeo.map(item => (
                   <p
                     key={item}
@@ -1586,7 +1538,6 @@ export function PostureLanding() {
                     {item}
                   </p>
                 ))}
-              </div>
             </div>
 
             <div
@@ -1606,12 +1557,6 @@ export function PostureLanding() {
                 globeOpacity={0.5}
                 density={500}
               />
-              <div
-                className="audience-map-caption pointer-events-none absolute left-5 top-5"
-                style={{ ...labelStyle, color: 'rgba(255,255,255,0.3)', fontSize: '0.5rem' }}
-              >
-                United States 38.8% / Thailand 9.7% / Canada 4.3% / India 4.0% / Germany 3.4% / Ukraine
-              </div>
             </div>
           </div>
 
@@ -1635,16 +1580,50 @@ export function PostureLanding() {
         style={{
           borderTop: '1px solid rgba(255,255,255,0.08)',
           fontFamily: '"Space Grotesk", "Inter", sans-serif',
-          minHeight: 'clamp(260px, 36vh, 420px)',
+          minHeight: 'clamp(360px, 48vh, 560px)',
         }}
       >
         <style>
           {`
             @keyframes clientMarquee {
               from { transform: translateX(0); }
-              to { transform: translateX(-33.333%); }
+              to { transform: translateX(-50%); }
             }
 
+            .client-marquee-window {
+              width: 100%;
+              overflow: hidden;
+              -webkit-mask-image: linear-gradient(90deg, transparent, #000 11%, #000 89%, transparent);
+              mask-image: linear-gradient(90deg, transparent, #000 11%, #000 89%, transparent);
+            }
+
+            .client-marquee-track {
+              display: flex;
+              align-items: center;
+              gap: clamp(14px, 2vw, 26px);
+              width: max-content;
+              will-change: transform;
+            }
+
+            .client-marquee-window:hover .client-marquee-track {
+              animation-play-state: paused;
+            }
+
+            .client-logo-card {
+              transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), border-color 420ms ease, box-shadow 420ms ease;
+            }
+
+            .client-logo-card:hover {
+              transform: translateY(-6px) scale(1.04);
+              border-color: rgba(245,255,114,0.38) !important;
+              box-shadow: 0 28px 86px rgba(0,0,0,0.4), 0 0 42px rgba(245,255,114,0.12), inset 0 1px 0 rgba(255,255,255,0.16) !important;
+            }
+
+            @media (max-width: 767px) {
+              .client-marquee-track {
+                gap: 12px;
+              }
+            }
           `}
         </style>
 
@@ -1656,22 +1635,25 @@ export function PostureLanding() {
         />
 
         <div
-          className="relative z-40 flex flex-col justify-center gap-9 px-0 py-14 sm:py-16"
+          className="relative z-40 flex flex-col justify-center gap-7 px-0 py-14 sm:py-16"
           style={{ color: 'rgba(255,255,255,0.94)' }}
         >
-          <div style={{ overflow: 'hidden', width: '100%' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                width: 'max-content',
-                animation: 'clientMarquee 28s linear infinite',
-              }}
-            >
-              {[...clientLogos, ...clientLogos, ...clientLogos].map((logo, index) => (
-                <ClientLogoTile key={`${logo.name}-${index}`} logo={logo} />
-              ))}
-            </div>
+          <div style={{ display: 'grid', gap: 'clamp(14px, 2vw, 24px)' }}>
+            {clientLogoRows.map((row, rowIndex) => (
+              <div key={rowIndex} className="client-marquee-window">
+                <div
+                  className="client-marquee-track"
+                  style={{
+                    animation: `clientMarquee ${rowIndex === 0 ? 34 : 39}s linear infinite`,
+                    animationDirection: rowIndex === 0 ? 'normal' : 'reverse',
+                  }}
+                >
+                  {[...row, ...row].map((logo, index) => (
+                    <ClientLogoTile key={`${logo.name}-${rowIndex}-${index}`} logo={logo} />
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'center' }}>
