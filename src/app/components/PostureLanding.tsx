@@ -16,7 +16,10 @@ interface ClientLogo {
   fit?: 'contain' | 'cover';
   scale?: number;
   position?: string;
+  inset?: string;
   tileBackground?: string;
+  overlayOpacity?: number;
+  filter?: string;
 }
 
 interface ShowcaseWork {
@@ -36,9 +39,11 @@ interface GlobeMorphProps {
   globeOpacity?: number;
   density?: number;
   style?: React.CSSProperties;
+  iframeRef?: React.RefObject<HTMLIFrameElement>;
+  onLoad?: () => void;
 }
 
-const GLOBE_URL = 'https://tkartik.com/globe-to-flat-map/van-der-grinten-map.html';
+const GLOBE_URL = '/globe-morph.html';
 const GLOBE_DEFAULTS = {
   hex: '#ffffff',
   ocean: '#000000',
@@ -91,9 +96,11 @@ function GlobeMorph(props: GlobeMorphProps) {
       }}
     >
       <iframe
+        ref={props.iframeRef}
         src={src}
         title="Globe Morph"
         loading="lazy"
+        onLoad={props.onLoad}
         style={{
           position: 'absolute',
           top: 0,
@@ -122,14 +129,18 @@ const clientLogos: ClientLogo[] = [
   { name: 'Astraux', src: new URL('../../img/astraux)logo.webp', import.meta.url).href, fit: 'contain', scale: 1.22 },
   { name: 'DeepPocket', src: new URL('../../img/deeppocket_logo.png', import.meta.url).href, fit: 'cover' },
   { name: 'GameDev', src: new URL('../../img/gamedev_logo.jpg', import.meta.url).href, fit: 'cover', position: '50% 50%' },
-  { name: 'HeyGen', src: new URL('../../img/heygenai.jpg', import.meta.url).href, fit: 'contain', scale: 0.94 },
-  { name: 'Ledger', src: new URL('../../img/ledger_logo.png', import.meta.url).href, fit: 'cover', scale: 1.1 },
+  { name: 'HeyGen', src: new URL('../../img/heygen_logo_transparent.png', import.meta.url).href, fit: 'contain', scale: 0.9, inset: '12%', tileBackground: '#ffffff', overlayOpacity: 0, filter: 'none' },
+  { name: 'IronHack', src: new URL('../../img/ironhack_logo.png', import.meta.url).href, fit: 'cover' },
+  { name: 'Hinoter', src: new URL('../../img/hinoter_logo.png', import.meta.url).href, fit: 'cover' },
+  { name: 'MiniMax', src: new URL('../../img/minimax_logo.png', import.meta.url).href, fit: 'contain', scale: 0.96, inset: '10%', tileBackground: '#ffffff', overlayOpacity: 0, filter: 'none' },
+  { name: 'Higgsfield', src: new URL('../../img/higgsfield_logo.png', import.meta.url).href, fit: 'cover', tileBackground: '#d1fe17', overlayOpacity: 0, filter: 'none' },
+  { name: 'Ledger', src: new URL('../../img/ledger_logo.png', import.meta.url).href, fit: 'contain', scale: 0.86, inset: '18%', tileBackground: '#000000', overlayOpacity: 0, filter: 'drop-shadow(0 0 14px rgba(255,255,255,0.16))' },
   { name: 'Lovable', src: new URL('../../img/lovable_logo.png', import.meta.url).href, fit: 'contain', scale: 1.2 },
-  { name: 'SheCodes', src: new URL('../../img/shecodes_logo.png', import.meta.url).href, fit: 'contain', scale: 1.2 },
+  { name: 'SheCodes', src: new URL('../../img/shecodes_logo_transparent.png', import.meta.url).href, fit: 'contain', scale: 1.04, inset: '13%', tileBackground: '#ffffff', overlayOpacity: 0, filter: 'none' },
   { name: 'Tangem', src: new URL('../../img/tangem.png', import.meta.url).href, fit: 'cover', position: '50% 50%' },
   { name: 'Verdent', src: new URL('../../img/verdent_logo.jpeg', import.meta.url).href, fit: 'cover', position: '50% 50%' },
-  { name: 'Virtuals', src: new URL('../../img/virtuals.png', import.meta.url).href, fit: 'contain', scale: 1.18 },
-  { name: 'Bluedot', src: new URL('../../img/images.png', import.meta.url).href, fit: 'contain', scale: 1.24 },
+  { name: 'Virtuals', src: new URL('../../img/virtuals_logo_transparent.png', import.meta.url).href, fit: 'contain', scale: 1.02, inset: '12%', tileBackground: '#dbf8e4', overlayOpacity: 0, filter: 'none' },
+  { name: 'Bluedot', src: new URL('../../img/bluedot_logo_transparent.png', import.meta.url).href, fit: 'contain', scale: 1.04, inset: '11%', tileBackground: '#ffffff', overlayOpacity: 0, filter: 'none' },
 ];
 
 const clientLogoRows = [
@@ -275,7 +286,13 @@ function GhostSectionTitle({
 
 function ClientLogoTile({ logo }: { logo: ClientLogo }) {
   const imageFit = logo.fit ?? 'contain';
-  const imageInset = imageFit === 'cover' ? 0 : '16%';
+  const imageInset = logo.inset ?? (imageFit === 'cover' ? 0 : '16%');
+  const containedSize =
+    typeof imageInset === 'number'
+      ? `calc(100% - ${imageInset * 2}px)`
+      : imageInset.endsWith('%')
+        ? `calc(100% - ${Number.parseFloat(imageInset) * 2}%)`
+        : `calc(100% - (${imageInset} * 2))`;
 
   return (
     <div
@@ -304,7 +321,7 @@ function ClientLogoTile({ logo }: { logo: ClientLogo }) {
           position: 'absolute',
           inset: 0,
           background: 'radial-gradient(circle at 28% 22%, rgba(245,255,114,0.16), transparent 34%), radial-gradient(circle at 74% 78%, rgba(240,47,232,0.18), transparent 36%)',
-          opacity: 0.68,
+          opacity: logo.overlayOpacity ?? 0.68,
         }}
       />
       <img
@@ -314,14 +331,14 @@ function ClientLogoTile({ logo }: { logo: ClientLogo }) {
         style={{
           position: 'absolute',
           inset: imageInset,
-          height: imageFit === 'cover' ? '100%' : `calc(100% - ${typeof imageInset === 'number' ? imageInset * 2 : '32%'})`,
-          width: imageFit === 'cover' ? '100%' : `calc(100% - ${typeof imageInset === 'number' ? imageInset * 2 : '32%'})`,
+          height: imageFit === 'cover' ? '100%' : containedSize,
+          width: imageFit === 'cover' ? '100%' : containedSize,
           maxWidth: '100%',
           objectFit: imageFit,
           objectPosition: logo.position ?? '50% 50%',
           display: 'block',
           transform: `scale(${logo.scale ?? 1})`,
-          filter: 'drop-shadow(0 0 18px rgba(240,47,232,0.2))',
+          filter: logo.filter ?? 'drop-shadow(0 0 18px rgba(240,47,232,0.2))',
         }}
       />
     </div>
@@ -584,9 +601,23 @@ export function PostureLanding() {
   const [mousePosition, setMousePosition] = useState({ x: -9999, y: -9999 });
   const [torchPosition, setTorchPosition] = useState({ x: -9999, y: -9999 });
   const [mouseTrail, setMouseTrail] = useState<TrailPoint[]>([]);
+  const [audienceProjection, setAudienceProjection] = useState<'globe' | 'flat'>('globe');
   const containerRef = useRef<HTMLDivElement>(null);
+  const audienceGlobeRef = useRef<HTMLIFrameElement>(null);
   const rafRef = useRef<number>(0);
   const pendingPos = useRef({ x: -9999, y: -9999 });
+
+  const sendAudienceProjection = useCallback((mode: 'globe' | 'flat') => {
+    audienceGlobeRef.current?.contentWindow?.postMessage({ type: 'globe-mode', mode }, '*');
+  }, []);
+
+  const toggleAudienceProjection = useCallback(() => {
+    setAudienceProjection(current => {
+      const next = current === 'globe' ? 'flat' : 'globe';
+      sendAudienceProjection(next);
+      return next;
+    });
+  }, [sendAudienceProjection]);
 
   useEffect(() => {
     const loop = () => {
@@ -672,14 +703,6 @@ export function PostureLanding() {
     verticalAlign: 'middle',
     flexShrink: 0,
   };
-
-  const primaryGeo = [
-    'India: 29.1%',
-    'United States: 10.8%',
-    'Canada: 4.1%',
-    'Brazil: 3.9%',
-    'Germany: 3.7%',
-  ];
 
   return (
     <main className="w-full bg-black text-white">
@@ -1491,6 +1514,7 @@ export function PostureLanding() {
       </div>
 
       <section
+        id="audience"
         className="relative min-h-screen overflow-hidden bg-black"
         style={{
           borderTop: '1px solid rgba(255,255,255,0.08)',
@@ -1505,60 +1529,83 @@ export function PostureLanding() {
         />
 
         <div
-          className="audience-mobile-stack relative z-40 flex min-h-screen flex-col gap-8 px-8 py-10"
-          style={{ color: 'rgba(255,255,255,0.94)' }}
+          className="audience-globe-frame absolute inset-0 z-10"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            height: '100%',
+            minHeight: '100vh',
+            overflow: 'hidden',
+            background: '#0a0a0a',
+            boxShadow: '0 0 120px rgba(255,255,255,0.08)',
+          }}
+        >
+          <GlobeMorph
+            iframeRef={audienceGlobeRef}
+            hex="#ffffff"
+            ocean="#000000"
+            bg="#000000"
+            landOpacity={1}
+            globeOpacity={0.5}
+            density={500}
+            onLoad={() => sendAudienceProjection(audienceProjection)}
+          />
+        </div>
+
+        <div
+          className="absolute inset-0 z-20 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 42%, transparent 0%, transparent 42%, rgba(0,0,0,0.22) 78%), linear-gradient(180deg, rgba(0,0,0,0.44), transparent 24%, transparent 68%, rgba(0,0,0,0.54))',
+          }}
+        />
+
+        <div
+          className="audience-mobile-stack relative z-40 flex min-h-screen flex-col justify-between gap-8 px-8 py-10"
+          style={{ color: 'rgba(255,255,255,0.94)', pointerEvents: 'none' }}
         >
           <div className="audience-topline flex items-start justify-between gap-6">
-            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.42)' }}>
-              Globe morph<br />country density
-            </p>
-            <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.58)', textAlign: 'right' }}>
-              Actual audience data<br />top geographies
-            </p>
+            <span aria-hidden="true" />
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', gap: 14 }}>
+              <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.58)', textAlign: 'right' }}>
+                Actual audience data<br />top geographies
+              </p>
+              <button
+                type="button"
+                onClick={toggleAudienceProjection}
+                aria-label={`Switch audience map to ${audienceProjection === 'globe' ? 'flat map' : 'globe'}`}
+                style={{
+                  pointerEvents: 'auto',
+                  width: 46,
+                  height: 46,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  borderRadius: 12,
+                  border: '1px solid rgba(255,255,255,0.18)',
+                  background: 'rgba(0,0,0,0.48)',
+                  color: 'rgba(255,255,255,0.92)',
+                  cursor: 'pointer',
+                  backdropFilter: 'blur(14px)',
+                  boxShadow: '0 0 28px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.1)',
+                  transition: 'transform 180ms ease, border-color 180ms ease, background 180ms ease',
+                }}
+              >
+                {audienceProjection === 'globe' ? (
+                  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor">
+                    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13a1 1 0 0 1-1.52.85l-2.82-1.73-3.14 1.76a1 1 0 0 1-.98 0L8.4 17.62l-2.88 1.74A1 1 0 0 1 4 18.5v-13Zm4.1.05-2.1 1.27v9.9l1.9-1.14a1 1 0 0 1 1.01-.01l2.1 1.18V6.86L8.92 5.7a1 1 0 0 0-.82-.15Zm4.9 1.3v9.9l2.08-1.16a1 1 0 0 1 1.01.02L18 16.77V6.82L15.9 5.55a1 1 0 0 0-.82.15L13 6.85Z" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor">
+                    <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 17.93A8.01 8.01 0 0 1 4.21 10.2L9 15v1a2 2 0 0 0 2 2v1.93Zm6.9-2.54A1.99 1.99 0 0 0 16 16h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41A8 8 0 0 1 17.9 17.39Z" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
 
           <GhostSectionTitle text="AUDIENCE" style={{ maxWidth: 900 }} />
-
-          <div className="audience-globe-layout" style={{ flex: 1 }}>
-            <div style={{ display: 'grid', gap: 8, alignSelf: 'center' }}>
-              <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.68)' }}>
-                Primary GEO
-              </p>
-                {primaryGeo.map(item => (
-                  <p
-                    key={item}
-                    style={{
-                      ...labelStyle,
-                      color: 'rgba(255,255,255,0.38)',
-                      fontSize: '0.54rem',
-                      letterSpacing: '0.13em',
-                    }}
-                  >
-                    <span style={{ ...dotStyle, width: 4, height: 4, marginRight: 8 }} />
-                    {item}
-                  </p>
-                ))}
-            </div>
-
-            <div
-              className="audience-globe-frame"
-              style={{
-                position: 'relative',
-                overflow: 'hidden',
-                background: '#0a0a0a',
-                boxShadow: '0 0 90px rgba(255,255,255,0.08)',
-              }}
-            >
-              <GlobeMorph
-                hex="#ffffff"
-                ocean="#000000"
-                bg="#000000"
-                landOpacity={1}
-                globeOpacity={0.5}
-                density={500}
-              />
-            </div>
-          </div>
 
           <div style={{ display: 'flex', justifyContent: 'center', whiteSpace: 'nowrap' }}>
             <span
