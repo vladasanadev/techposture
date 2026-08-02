@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Check, Copy } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import baseImage from '../../imports/ChatGPT_Image_Jun_18__2026__12_33_46_PM.png';
 import helmetImage from '../../imports/ChatGPT_Image_Jun_18__2026__12_41_58_PM.png';
@@ -130,6 +131,7 @@ const clientLogos: ClientLogo[] = [
   { name: 'DeepPocket', src: new URL('../../img/deeppocket_logo.png', import.meta.url).href, fit: 'cover' },
   { name: 'GameDev', src: new URL('../../img/gamedev_logo.jpg', import.meta.url).href, fit: 'cover', position: '50% 50%' },
   { name: 'HeyGen', src: new URL('../../img/heygen_logo_transparent.png', import.meta.url).href, fit: 'contain', scale: 0.9, inset: '12%', tileBackground: '#ffffff', overlayOpacity: 0, filter: 'none' },
+  { name: 'HEADOUT', src: new URL('../../img/headout_logo.png', import.meta.url).href, fit: 'contain', scale: 1, inset: 0, tileBackground: '#7e00ff', overlayOpacity: 0, filter: 'none' },
   { name: 'IronHack', src: new URL('../../img/ironhack_logo.png', import.meta.url).href, fit: 'cover' },
   { name: 'Hinoter', src: new URL('../../img/hinoter_logo.png', import.meta.url).href, fit: 'cover' },
   { name: 'MiniMax', src: new URL('../../img/minimax_logo.png', import.meta.url).href, fit: 'contain', scale: 0.96, inset: '10%', tileBackground: '#ffffff', overlayOpacity: 0, filter: 'none' },
@@ -243,6 +245,378 @@ const eventsWorks: ShowcaseWork[] = [
   },
 ];
 
+const claudeMdUpdatedAt = 'August 2, 2026';
+
+const claudeMdContent = `## CRITICAL CONSTRAINTS
+
+- NO introductory fluff, apologies, or conversational filler.
+- NO "AI smell": Avoid "delve," "tapestry," "unlock," "fast-paced," "game-changer," "testament," "vibrant," "realm," or "shaping the future."
+- NO em dashes (—); use commas or parentheses. NO exclamation points.
+- NO "AI triplets" (e.g., "efficient, scalable, and robust"). Vary sentence length.
+- NO restating the prompt or "In conclusion" summaries.
+- ADD small imperfections to make output seem realistically human.
+
+## ROLE & TONE
+
+- High-level technical advisor/business strategist. Tone: Direct, no-nonsense, objective.
+- Technical Peer: Skip basic definitions. Focus on implementation, edge cases, and architectural trade-offs.
+- Anti-Pedantry: Skip all "It's important to note" or "As an AI..." qualifiers.
+
+## FORMATTING
+
+- Default to bullet points. Bold key terms.
+- Use H3 (###) headers for sections to save vertical space in the macOS UI.
+- Code: Provide minimal diffs/concise snippets; omit obvious comments.
+
+## STRATEGY & LOGIC
+
+- Use internal Chain of Thought.
+- Never hallucinate; state uncertainty for specific versions.
+- Recommendations: Present 2-3 distinct approaches. For each, identify a "Critical Failure Mode" (how it fails at scale).
+- Debugging: Identify Root Cause -> Minimal Diff -> Edge Case Check.
+
+## AI TROPES
+
+You must avoid the following writing patterns, as they are often used by AI and are undesirable.
+
+### Word Choice
+
+#### "Quietly" and Other Magic Adverbs
+
+Overuse of "quietly" and similar adverbs to convey subtle importance or understated power. AI reaches for these adverbs to make mundane descriptions feel significant. Also includes: "deeply", "fundamentally", "remarkably", "arguably".
+
+**Avoid patterns like:**
+
+- "quietly orchestrating workflows, decisions, and interactions"
+- "the one that quietly suffocates everything else"
+- "a quiet intelligence behind it"
+
+#### "Delve" and Friends
+
+Used to be the most infamous AI tell. "Delve" went from an uncommon English word to appearing in a staggering percentage of AI-generated text. Part of a family of overused AI vocabulary including "certainly", "utilize", "leverage" (as a verb), "robust", "streamline", and "harness".
+
+**Avoid patterns like:**
+
+- "Let's delve into the details..."
+- "Delving deeper into this topic..."
+- "We certainly need to leverage these robust frameworks..."
+
+#### "Tapestry" and "Landscape"
+
+Overuse of ornate or grandiose nouns where simpler words would do. "Tapestry" is used to describe anything interconnected. "Landscape" is used to describe any field or domain. Other offenders: "paradigm", "synergy", "ecosystem", "framework".
+
+**Avoid patterns like:**
+
+- "The rich tapestry of human experience..."
+- "Navigating the complex landscape of modern AI..."
+- "The ever-evolving landscape of technology..."
+
+#### The "Serves As" Dodge
+
+Replacing simple "is" or "are" with pompous alternatives like "serves as", "stands as", "marks", or "represents". AI avoids basic copulas because its repetition penalty pushes it toward fancier alternatives (I've studied this!).
+
+**Avoid patterns like:**
+
+- "The building serves as a reminder of the city's heritage."
+- "Gallery 825 serves as LAAA's exhibition space for contemporary art."
+- "The station marks a pivotal moment in the evolution of regional transit."
+
+### Sentence Structure
+
+#### Negative Parallelism
+
+The "It's not X -- it's Y" pattern, often with an em dash. The single most commonly identified AI writing tell. Man I f*cking hate it. AI uses this to create false profundity by framing everything as a surprising reframe. One in a piece can be effective; ten in a blog post is a genuine insult to the reader. Before LLMs, people simply did not write like this at scale. Includes the causal variant "not because X, but because Y" where every explanation is framed as a surprise reveal, the em-dash dismissal "X -- not Y", and the cross-sentence reframe where the same noun is negated then repositioned: "The question isn't X. The question is Y."
+
+**Avoid patterns like:**
+
+- "It's not bold. It's backwards."
+- "Feeding isn't nutrition. It's dialysis."
+- "Half the bugs you chase aren't in your code. They're in your head."
+
+#### "Not X. Not Y. Just Z."
+
+The dramatic countdown pattern. AI builds tension by negating two or more things before revealing the actual point. Creates a false sense of narrowing down to the truth.
+
+**Avoid patterns like:**
+
+- "Not a bug. Not a feature. A fundamental design flaw."
+- "Not ten. Not fifty. Five hundred and twenty-three lint violations across 67 files."
+- "not recklessly, not completely, but enough"
+
+#### "The X? A Y."
+
+Self-posed rhetorical questions answered immediately in the next sentence or clause. The model asks a question nobody was asking, then answers it for dramatic effect. Thinks this is the epitome of great writing.
+
+**Avoid patterns like:**
+
+- "The result? Devastating."
+- "The worst part? Nobody saw it coming."
+- "The scary part? This attack vector is perfect for developers."
+
+#### Anaphora Abuse
+
+Repeating the same sentence opening multiple times in quick succession.
+
+**Avoid patterns like:**
+
+- "They assume that users will pay... They assume that developers will build... They assume that ecosystems will emerge... They assume that..."
+- "They could expose... They could offer... They could provide... They could create... They could let... They could unlock..."
+- "They have built engines, but not vehicles. They have built power, but not leverage. They have built walls, but not doors."
+
+#### Tricolon Abuse
+
+Overuse of the rule-of-three pattern, often extended to four or five. A single tricolon is elegant; three back-to-back tricolons are a pattern recognition failure.
+
+**Avoid patterns like:**
+
+- "Products impress people; platforms empower them. Products solve problems; platforms create worlds. Products scale linearly; platforms scale exponentially."
+- "identity, payments, compute, distribution"
+- "workflows, decisions, and interactions"
+
+#### "It's Worth Noting"
+
+Filler transitions that signal nothing. AI uses these phrases to introduce new points without actually connecting them to the previous argument. Also includes: "It bears mentioning", "Importantly", "Interestingly", "Notably".
+
+**Avoid patterns like:**
+
+- "It's worth noting that this approach has limitations."
+- "Importantly, we must consider the broader implications."
+- "Interestingly, this pattern repeats across industries."
+
+#### Superficial Analyses
+
+Tacking a present participle ("-ing") phrase onto the end of a sentence to inject shallow analysis that says nothing. The model attaches significance, legacy, or broader meaning to mundane facts using phrases like "highlighting its importance", "reflecting broader trends", or "contributing to the development of...".
+
+**Avoid patterns like:**
+
+- "contributing to the region's rich cultural heritage"
+- "This etymology highlights the enduring legacy of the community's resistance and the transformative power of unity in shaping its identity."
+- "underscoring its role as a dynamic hub of activity and culture"
+
+#### False Ranges
+
+Using "from X to Y" constructions where X and Y aren't on any real scale. In legitimate use, "from X to Y" implies a spectrum with a meaningful middle. AI uses it as a fancy way to list two loosely related things. "From innovation to cultural transformation" -- what's in between???? Nothing!
+
+**Avoid patterns like:**
+
+- "From innovation to implementation to cultural transformation."
+- "From the singularity of the Big Bang to the grand cosmic web."
+- "From problem-solving and tool-making to scientific discovery, artistic expression, and technological innovation."
+
+### Paragraph Structure
+
+#### Short Punchy Fragments
+
+Excessive use of very short sentences or sentence fragments as standalone paragraphs for manufactured emphasis. RLHF training has pushed models toward "writing for readability" aimed at the lowest common denominator: one thought per sentence, no mental state-keeping required. It's an inhuman style. No real person writes first drafts this way because it doesn't match how humans think or speak.
+
+**Avoid patterns like:**
+
+- "He published this. Openly. In a book. As a priest."
+- "These weren't just products. And the software side matched. Then it professionalised. But I adapted."
+- "Platforms do."
+
+#### Listicle in a Trench Coat
+
+Numbered or labeled points dressed up as continuous prose. The model writes what is essentially a listicle but wraps each point in a paragraph that starts with "The first... The second... The third..." to disguise the format. Perhaps you told it to stop generating lists and it decided to do this instead... still very common.
+
+**Avoid patterns like:**
+
+- "The first wall is the absence of a free, scoped API... The second wall is the lack of delegated access... The third wall is the absence of scoped permissions..."
+- "The second takeaway is that... The third takeaway is that... The fourth takeaway is that..."
+
+### Tone
+
+#### "Here's the Kicker"
+
+False suspense transitions that promise a revelation but deliver a point that did NOT need the buildup. The model uses these phrases to manufacture drama before an otherwise unremarkable observation LOL. Also includes: "Here's the thing", "Here's where it gets interesting", "Here's what most people miss", "Here's the starting point", "Here's the deal".
+
+**Avoid patterns like:**
+
+- "Here's the kicker."
+- "Here's the thing about AI adoption."
+- "Here's where it gets interesting."
+
+#### "Think of It As..."
+
+The patronizing analogy. AI constantly reaches for "Think of it as..." or "It's like a..." to simplify concepts. The model defaults to teacher mode and assumes the reader needs a metaphor to understand anything. Often produces analogies that are less clear than the original concept.
+
+**Avoid patterns like:**
+
+- "Think of it like a highway system for data."
+- "Think of it as a Swiss Army knife for your workflow."
+- "It's like asking someone to buy a car they're only allowed to sit in while it's parked."
+
+#### "Imagine a World Where..."
+
+The classic AI invitation to futurism. To sell the argument usually begins with "Imagine" followed by a list of wonderful things that will happen if the reader agrees with the premise.
+
+**Avoid patterns like:**
+
+- "Imagine a world where every tool you use -- your calendar, your inbox, your documents, your CRM, your code editor -- has a quiet intelligence behind it..."
+- "In that world, workflows stop being collections of manual steps and start becoming orchestrations."
+
+#### False Vulnerability
+
+Simulated self-awareness or honesty that reads as performative. The model pretends to break the fourth wall or admit a bias, creating a false sense of authenticity. Real vulnerability is specific and uncomfortable; AI vulnerability is polished and risk-free!!!!
+
+**Avoid patterns like:**
+
+- "And yes, I'm openly in love with the platform model"
+- "And yes, since we're being honest: I'm looking at you, OpenAI, Google, Anthropic, Meta"
+- "This is not a rant; it's a diagnosis"
+
+#### "The Truth Is Simple"
+
+Asserting that something is obvious, clear or simple instead of actually proving it. If you have to tell the reader your point is clear, it very likely isn't. Also includes the dramatic reveal variant: "but none of them is the real story. The real story is..." -- claiming privileged insight while waving away everything before it.
+
+**Avoid patterns like:**
+
+- "The reality is simpler and less flattering"
+- "History is unambiguous on this point"
+- "History is clear, the metrics are clear, the examples are clear"
+
+#### Grandiose Stakes Inflation
+
+Everything is the most important thing ever. AI inflates the stakes of every argument to world-historical significance. A blog post about API pricing becomes a meditation on the fate of civilization.
+
+**Avoid patterns like:**
+
+- "This will fundamentally reshape how we think about everything."
+- "will define the next era of computing"
+- "something entirely new"
+
+#### "Let's Break This Down"
+
+The pedagogical voice that assumes the reader needs hand-holding. AI defaults to a teacher-student dynamic even when writing for expert audiences. Also includes: "Let's unpack this", "Let's explore", "Let's dive in".
+
+**Avoid patterns like:**
+
+- "Let's break this down step by step."
+- "Let's unpack what this really means."
+- "Let's explore this idea further."
+
+#### Vague Attributions
+
+Attributing claims to unnamed authorities instead of being specific. AI loves to invoke "experts", "observers", "industry reports", and "several publications" without naming anyone. It also inflates the quantity of sources -- presenting what one person said as a widely held view, or writing "several publications have cited" when it means two. If you can't name the expert, you don't have a source.
+
+**Avoid patterns like:**
+
+- "Experts argue that this approach has significant drawbacks."
+- "Industry reports suggest that adoption is accelerating."
+- "Observers have cited the initiative as a turning point."
+
+#### Invented Concept Labels
+
+AI clusters invented compound labels that sound analytical without being grounded. It appends abstract problem-nouns (paradox, trap, creep, divide, vacuum, inversion) to domain words — "supervision paradox", "acceleration trap", "workload creep" — and uses them as if they're established, rigorously defined terms. They function as rhetorical shorthand: name a thing, skip the argument. Multiple such labels in the same piece is a strong signal of AI slop.
+
+**Avoid patterns like:**
+
+- "the supervision paradox"
+- "the acceleration trap"
+- "workload creep"
+
+### Formatting
+
+#### Em-Dash Addiction
+
+Compulsive overuse of em dashes for dramatic pauses, parenthetical asides and pivot points. A human writer might use 2-3 per piece (and naturally); AI will use 20+.
+
+**Avoid patterns like:**
+
+- "The problem -- and this is the part nobody talks about -- is systemic."
+- "The tinkerer spirit didn't die of natural causes -- it was bought out."
+- "Not recklessly, not completely -- but enough -- enough to matter."
+
+#### Bold-First Bullets
+
+Every bullet point or list item starts with a bolded phrase or sentence. Extremely common in Claude and ChatGPT markdown output. Almost nobody formats lists this way when writing by hand. It's a telltale sign of AI-generated documentation and blog posts AND README files (especially with emojis).
+
+**Avoid patterns like:**
+
+- "Every single bullet point begins with a bold keyword."
+- "**Security**: Environment-based configuration with..."
+- "**Performance**: Lazy loading of expensive resources..."
+
+#### Unicode Decoration
+
+Use of unicode arrows (->), smart/curly quotes, and other special characters that can't be easily typed on a standard keyboard. Real writers typing in a text editor produce straight quotes and -> or =>. Claude in particular loves the -> arrow.
+
+**Avoid patterns like:**
+
+- "Input → Processing → Output"
+- "This leads to better outcomes → which means higher engagement"
+- "“Smart quotes” instead of straight "quotes" that you’d actually type"
+
+### Composition
+
+#### Fractal Summaries
+
+"What I'm going to tell you; what I'm telling you; what I just told you" -- applied at every level of the document. Every subsection gets a summary. Every section gets a summary. The document itself gets a summary.
+
+**Avoid patterns like:**
+
+- "In this section, we'll explore... [3000 words later] ...as we've seen in this section."
+- "A conclusion that restates every point already made in the previous 3000 words"
+- "And so we return to where we began."
+
+#### The Dead Metaphor
+
+Latching onto a single metaphor and beating it into the ground across the entire thing. A human writer would introduce a metaphor, use it then move on. AI will repeat the same metaphor 5-10 times.
+
+**Avoid patterns like:**
+
+- "The ecosystem needs ecosystems to build ecosystem value."
+- "Walls and doors used 30+ times in the same article"
+- "Every paragraph finds a way to say "primitives" again"
+
+#### Historical Analogy Stacking
+
+ESPECIALLY COMMON IN TECHNICAL WRITING: Rapid-fire listing of historical companies or tech revolutions to build false authority.
+
+**Avoid patterns like:**
+
+- "Apple didn't build Uber. Facebook didn't build Spotify. Stripe didn't build Shopify. AWS didn't build Airbnb."
+- "Every major technological shift -- the web, mobile, social, cloud -- followed the same pattern."
+- "Take Spotify... Or consider Uber... Airbnb followed a similar path... Shopify is another example... Even Discord..."
+
+#### One-Point Dilution
+
+Making a single argument and restating it in 10 different ways across thousands of words. The model pads a simple thesis to feel "comprehensive" by rephrasing the same idea with different metaphors, examples, and framings. An 800-word argument becomes 4000 words of circular repetition.
+
+**Avoid patterns like:**
+
+- "The same point, restated eight ways across 4000 words."
+- "Each section rephrases the thesis with a different metaphor but adds nothing new"
+
+#### Content Duplication
+
+Repeating entire sections or paragraphs verbatim within the same piece. This happens when the model loses track of what it has already written, especially in longer pieces. A dead giveaway of unedited AI output. Less common nowadays.
+
+**Avoid patterns like:**
+
+- "The same section appeared twice, word-for-word identical"
+- "Paragraph 3 and paragraph 17 are the same sentence reworded"
+
+#### The Signposted Conclusion
+
+Explicitly announcing the conclusion with "In conclusion", "To sum up", or "In summary". Competent writing doesn't need to tell you it's concluding. The reader can feel it. AI signals its structural moves because it's following a template, not writing organically.
+
+**Avoid patterns like:**
+
+- "In conclusion, the future of AI depends on..."
+- "To sum up, we've explored three key themes..."
+- "In summary, the evidence suggests..."
+
+#### "Despite Its Challenges..."
+
+The rigid formula where AI acknowledges problems only to immediately dismiss them. Always follows the same beat: "Despite its [positive words], [subject] faces challenges..." then ends with "Despite these challenges, [optimistic conclusion].".
+
+**Avoid patterns like:**
+
+- "Despite these challenges, the initiative continues to thrive."
+- "Despite its industrial and residential prosperity, Korattur faces challenges typical of urban areas."
+- "Despite their promising applications, pyroelectric materials face several challenges that must be addressed for broader adoption."`;
+
 function GhostSectionTitle({
   text,
   align = 'left',
@@ -281,6 +655,227 @@ function GhostSectionTitle({
         {text}
       </h2>
     </div>
+  );
+}
+
+function BlogStyles() {
+  return (
+    <style>
+      {`
+        .tech-blog-index-layout {
+          width: min(100%, 1180px);
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: minmax(260px, 0.9fr) minmax(320px, 0.7fr);
+          align-items: center;
+          gap: clamp(30px, 5vw, 76px);
+        }
+
+        .tech-blog-single-card {
+          width: min(100%, 560px);
+          grid-template-columns: 1fr;
+        }
+
+        .tech-blog-intro {
+          display: grid;
+          gap: 24px;
+        }
+
+        .tech-blog-intro p {
+          max-width: 560px;
+          margin: 0;
+          color: rgba(255,255,255,0.6);
+          font-size: clamp(0.95rem, 1.25vw, 1.1rem);
+          line-height: 1.8;
+        }
+
+        .tech-post-card {
+          min-height: 320px;
+          display: grid;
+          align-content: end;
+          gap: 16px;
+          padding: clamp(22px, 3vw, 34px);
+          border: 1px solid rgba(255,255,255,0.14);
+          border-radius: 18px;
+          background:
+            radial-gradient(circle at 22% 18%, rgba(245,255,114,0.12), transparent 34%),
+            rgba(255,255,255,0.045);
+          color: rgba(255,255,255,0.92);
+          text-decoration: none;
+          box-shadow: 0 24px 90px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.1);
+          transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+        }
+
+        .tech-post-card:hover {
+          transform: translateY(-4px);
+          border-color: rgba(245,255,114,0.36);
+          background:
+            radial-gradient(circle at 22% 18%, rgba(245,255,114,0.16), transparent 34%),
+            rgba(255,255,255,0.07);
+        }
+
+        .tech-post-card small,
+        .blog-coming-tabs span,
+        .claude-post-footer {
+          font-size: 0.6rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+
+        .tech-post-card small {
+          color: rgba(255,255,255,0.42);
+        }
+
+        .tech-post-card h3 {
+          margin: 0;
+          font-size: clamp(2rem, 5vw, 4.4rem);
+          line-height: 0.92;
+          letter-spacing: 0;
+        }
+
+        .tech-post-card p {
+          max-width: 440px;
+          margin: 0;
+          color: rgba(255,255,255,0.58);
+          line-height: 1.7;
+        }
+
+        .blog-coming-tabs {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px;
+        }
+
+        .blog-coming-tabs span {
+          padding: 9px 13px;
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 999px;
+          color: rgba(255,255,255,0.44);
+          background: rgba(255,255,255,0.035);
+        }
+
+        .claude-post-wrap {
+          width: min(100% - 32px, 980px);
+          min-height: 100vh;
+          margin: 0 auto;
+          display: grid;
+          grid-template-rows: 1fr auto;
+          align-items: center;
+          gap: 22px;
+          padding: clamp(22px, 4vw, 54px) 0;
+        }
+
+        .claude-code-shell {
+          overflow: hidden;
+          border-radius: 18px;
+          border: 1px solid rgba(255,255,255,0.14);
+          background: rgba(5,5,8,0.86);
+          box-shadow:
+            0 0 72px rgba(240,47,232,0.14),
+            0 24px 90px rgba(0,0,0,0.62),
+            inset 0 1px 0 rgba(255,255,255,0.1);
+          backdrop-filter: blur(18px);
+        }
+
+        .claude-code-topbar {
+          height: 48px;
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+          gap: 14px;
+          padding: 0 12px 0 16px;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.54);
+          font-family: monospace;
+          font-size: 0.68rem;
+          letter-spacing: 0.08em;
+        }
+
+        .claude-window-dots {
+          display: flex;
+          gap: 7px;
+        }
+
+        .claude-window-dots span {
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          background: rgba(255,255,255,0.24);
+        }
+
+        .claude-window-dots span:nth-child(1) {
+          background: rgba(240,47,232,0.72);
+        }
+
+        .claude-window-dots span:nth-child(2) {
+          background: rgba(245,255,114,0.72);
+        }
+
+        .claude-copy-button {
+          justify-self: end;
+          min-height: 32px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 7px;
+          padding: 0 12px;
+          border: 1px solid rgba(255,255,255,0.18);
+          border-radius: 999px;
+          background: rgba(255,255,255,0.08);
+          color: rgba(255,255,255,0.88);
+          cursor: pointer;
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          font-size: 0.62rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .claude-code-block {
+          max-height: min(72vh, 760px);
+          margin: 0;
+          padding: clamp(18px, 2.5vw, 30px);
+          overflow: auto;
+          color: rgba(236,238,246,0.92);
+          font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+          font-size: clamp(0.72rem, 0.9vw, 0.88rem);
+          line-height: 1.72;
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+          background:
+            linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+            linear-gradient(180deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+          background-size: 34px 34px;
+        }
+
+        .claude-post-footer {
+          display: flex;
+          justify-content: space-between;
+          gap: 16px;
+          color: rgba(255,255,255,0.46);
+        }
+
+        .claude-post-footer a {
+          color: rgba(255,255,255,0.72);
+          text-decoration: none;
+        }
+
+        @media (max-width: 767px) {
+          .tech-blog-index-layout {
+            grid-template-columns: 1fr;
+          }
+
+          .claude-code-topbar {
+            grid-template-columns: auto 1fr auto;
+          }
+
+          .claude-code-topbar > span {
+            justify-self: center;
+          }
+        }
+      `}
+    </style>
   );
 }
 
@@ -341,6 +936,7 @@ function ClientLogoTile({ logo }: { logo: ClientLogo }) {
           filter: logo.filter ?? 'drop-shadow(0 0 18px rgba(240,47,232,0.2))',
         }}
       />
+      <span className="client-logo-hover-name">{logo.name}</span>
     </div>
   );
 }
@@ -597,11 +1193,107 @@ function FrameStoryShowcase({ stories, label }: { stories: ShowcaseWork[]; label
   );
 }
 
+function TechBlogIndexPage() {
+  return (
+    <main
+      className="tech-blog-page min-h-screen bg-black text-white"
+      style={{ fontFamily: '"Space Grotesk", "Inter", sans-serif' }}
+    >
+      <BlogStyles />
+      <div
+        className="relative min-h-screen overflow-hidden px-8 py-10"
+        style={{
+          background: 'radial-gradient(circle at 18% 18%, rgba(245,255,114,0.11), transparent 30%), radial-gradient(circle at 78% 36%, rgba(240,47,232,0.16), transparent 34%), linear-gradient(180deg, rgba(8,4,20,0.96), #000 58%, #000 100%)',
+        }}
+      >
+        <div className="relative z-10 grid min-h-[calc(100vh-80px)] grid-rows-[auto_1fr_auto] gap-10">
+          <div className="flex items-start justify-between gap-6">
+            <a
+              href="/"
+              style={{
+                fontSize: '0.6rem',
+                letterSpacing: '0.18em',
+                color: 'rgba(255,255,255,0.58)',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                lineHeight: 1.5,
+              }}
+            >
+              vladasanadev
+            </a>
+            <p style={{ fontSize: '0.6rem', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.48)', textTransform: 'uppercase', lineHeight: 1.5, textAlign: 'right' }}>
+              Evangelist Portfolio<br />tech blog
+            </p>
+          </div>
+
+          <div className="tech-blog-index-layout tech-blog-single-card">
+            <a className="tech-post-card" href="/techblog/claude-dot-md">
+              <h3>Claude.md</h3>
+              <p>My operating file for cleaner AI-assisted writing, technical taste, and creator workflow defaults.</p>
+              <small>{claudeMdUpdatedAt}</small>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function ClaudeMdPostPage({
+  copied,
+  onCopy,
+}: {
+  copied: boolean;
+  onCopy: () => void;
+}) {
+  return (
+    <main
+      className="claude-md-post min-h-screen bg-black text-white"
+      style={{
+        fontFamily: '"Space Grotesk", "Inter", sans-serif',
+        background: 'linear-gradient(180deg, rgba(8,4,20,0.96), #000 64%, #000 100%)',
+      }}
+    >
+      <BlogStyles />
+      <div className="claude-post-wrap">
+        <div className="claude-code-shell">
+            <div className="claude-code-topbar">
+              <div className="claude-window-dots" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </div>
+              <span>CLAUDE.md</span>
+              <button
+                type="button"
+                className="claude-copy-button"
+                onClick={onCopy}
+                aria-label="Copy Claude.md"
+              >
+                {copied ? <Check size={15} aria-hidden="true" /> : <Copy size={15} aria-hidden="true" />}
+                {copied ? 'Copied' : 'Copy'}
+              </button>
+            </div>
+            <pre className="claude-code-block">
+              <code>{claudeMdContent}</code>
+            </pre>
+        </div>
+
+        <footer className="claude-post-footer">
+          <a href="/">vladasanadev</a>
+          <span>{claudeMdUpdatedAt}</span>
+        </footer>
+      </div>
+    </main>
+  );
+}
+
 export function PostureLanding() {
   const [mousePosition, setMousePosition] = useState({ x: -9999, y: -9999 });
   const [torchPosition, setTorchPosition] = useState({ x: -9999, y: -9999 });
   const [mouseTrail, setMouseTrail] = useState<TrailPoint[]>([]);
   const [audienceProjection, setAudienceProjection] = useState<'globe' | 'flat'>('globe');
+  const [isClaudeCopied, setIsClaudeCopied] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const audienceGlobeRef = useRef<HTMLIFrameElement>(null);
   const rafRef = useRef<number>(0);
@@ -618,6 +1310,12 @@ export function PostureLanding() {
       return next;
     });
   }, [sendAudienceProjection]);
+
+  const handleCopyClaudeMd = useCallback(async () => {
+    await navigator.clipboard.writeText(claudeMdContent);
+    setIsClaudeCopied(true);
+    window.setTimeout(() => setIsClaudeCopied(false), 1800);
+  }, []);
 
   useEffect(() => {
     const loop = () => {
@@ -672,6 +1370,16 @@ export function PostureLanding() {
     }, 80);
     return () => clearInterval(id);
   }, []);
+
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname.replace(/\/$/, '') || '/' : '/';
+
+  if (currentPath === '/techblog/claude-dot-md') {
+    return <ClaudeMdPostPage copied={isClaudeCopied} onCopy={handleCopyClaudeMd} />;
+  }
+
+  if (currentPath === '/techblog') {
+    return <TechBlogIndexPage />;
+  }
 
   const now = Date.now();
   const TRAIL_LIFETIME = 900;
@@ -1180,6 +1888,35 @@ export function PostureLanding() {
             transform: translateY(-2px);
           }
 
+          .work-options {
+            width: min(100%, 760px);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 26px;
+          }
+
+          .work-options span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            padding: 0 13px;
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 999px;
+            background: rgba(0,0,0,0.34);
+            color: rgba(255,255,255,0.78);
+            backdrop-filter: blur(12px);
+            font-family: "Space Grotesk", "Inter", sans-serif;
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            line-height: 1.2;
+            text-transform: uppercase;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 26px rgba(0,0,0,0.24);
+          }
+
           .hero-social-icon {
             width: 34px;
             height: 34px;
@@ -1213,6 +1950,193 @@ export function PostureLanding() {
             box-shadow:
               inset 0 0 0 1px rgba(255,255,255,0.12),
               0 0 30px rgba(255,255,255,0.2);
+          }
+
+          .portfolio-nav-tabs {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 999px;
+            background: rgba(0,0,0,0.42);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 0 28px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.08);
+          }
+
+          .portfolio-nav-tabs a {
+            min-height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 13px;
+            border-radius: 999px;
+            color: rgba(255,255,255,0.74);
+            text-decoration: none;
+            font-family: "Space Grotesk", "Inter", sans-serif;
+            font-size: 0.56rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+          }
+
+          .portfolio-nav-tabs a:hover {
+            color: rgba(0,0,0,0.9);
+            background: rgba(255,255,255,0.9);
+            transform: translateY(-1px);
+          }
+
+          .claude-md-inner {
+            grid-template-rows: auto 1fr auto;
+          }
+
+          .claude-md-layout {
+            display: grid;
+            grid-template-columns: minmax(240px, 0.72fr) minmax(420px, 1.28fr);
+            align-items: center;
+            gap: clamp(28px, 5vw, 78px);
+            width: min(100%, 1280px);
+            margin: 0 auto;
+          }
+
+          .claude-md-heading {
+            display: grid;
+            gap: 22px;
+          }
+
+          .claude-md-heading p {
+            max-width: 440px;
+            margin: 0;
+            color: rgba(255,255,255,0.58);
+            font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+            line-height: 1.8;
+          }
+
+          .claude-code-shell {
+            overflow: hidden;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(5,5,8,0.86);
+            box-shadow:
+              0 0 72px rgba(240,47,232,0.14),
+              0 24px 90px rgba(0,0,0,0.62),
+              inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(18px);
+          }
+
+          .claude-code-topbar {
+            height: 48px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 14px;
+            padding: 0 12px 0 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.54);
+            font-family: monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.08em;
+          }
+
+          .claude-window-dots {
+            display: flex;
+            gap: 7px;
+          }
+
+          .claude-window-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.24);
+          }
+
+          .claude-window-dots span:nth-child(1) {
+            background: rgba(240,47,232,0.72);
+          }
+
+          .claude-window-dots span:nth-child(2) {
+            background: rgba(245,255,114,0.72);
+          }
+
+          .claude-copy-button {
+            justify-self: end;
+            min-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 0 12px;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.88);
+            cursor: pointer;
+            font-family: "Space Grotesk", "Inter", sans-serif;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+          }
+
+          .claude-copy-button:hover {
+            transform: translateY(-1px);
+            border-color: rgba(245,255,114,0.42);
+            background: rgba(255,255,255,0.14);
+          }
+
+          .claude-code-block {
+            max-height: min(62vh, 680px);
+            margin: 0;
+            padding: clamp(18px, 2.5vw, 30px);
+            overflow: auto;
+            color: rgba(236,238,246,0.92);
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+            font-size: clamp(0.72rem, 0.9vw, 0.88rem);
+            line-height: 1.72;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            background:
+              linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+              linear-gradient(180deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+            background-size: 34px 34px;
+          }
+
+          @media (max-width: 767px) {
+            .portfolio-nav-tabs {
+              gap: 4px;
+              max-width: calc(100vw - 24px);
+            }
+
+            .portfolio-nav-tabs a {
+              min-height: 28px;
+              padding: 0 9px;
+              font-size: 0.48rem;
+              letter-spacing: 0.1em;
+            }
+
+            .claude-md-inner {
+              min-height: auto;
+              padding: 28px 24px 36px;
+            }
+
+            .claude-md-layout {
+              grid-template-columns: 1fr;
+              gap: 28px;
+            }
+
+            .claude-code-topbar {
+              grid-template-columns: auto 1fr auto;
+            }
+
+            .claude-code-topbar > span {
+              justify-self: center;
+            }
+
+            .claude-code-block {
+              max-height: 68vh;
+            }
           }
 
           @keyframes titleShine {
@@ -1336,6 +2260,16 @@ export function PostureLanding() {
         </a>
       </div>
 
+      <nav
+        className="portfolio-nav-tabs absolute pointer-events-auto"
+        aria-label="Portfolio sections"
+        style={{ top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 45 }}
+      >
+        <a href="#tech-ai">Social Media</a>
+        <a href="/techblog">Tech Blog</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
       {/* LEFT MIDDLE — vertical ASCII rule + label */}
       <div
         className="absolute pointer-events-none"
@@ -1365,7 +2299,7 @@ export function PostureLanding() {
             letterSpacing: '0',
           }}
         >
-          Hello, I&apos;m Vlada
+          Hello World, I&apos;m Vlada
         </h2>
         <p
           style={{
@@ -1377,9 +2311,9 @@ export function PostureLanding() {
             marginBottom: 20,
           }}
         >
-          I create short-form content for a 25K+ audience of developers, AI users, founders,
-          and tech professionals, showing how modern tools fit into real workflows through
-          practical, high-retention videos that feel native, not like ads.
+          I&apos;m a content creator, builder, and Developer Advocate creating videos and campaigns
+          for a 30K+ audience of developers, AI users, founders, and tech professionals.
+          I turn complex tools into practical stories, demos, and launches people actually understand.
         </p>
         <a
           href="#contact"
@@ -1446,7 +2380,7 @@ export function PostureLanding() {
             filter: 'blur(22px)',
           }}
         >
-          PORTFOLIO
+          EVANGELIST
         </h1>
 
         {/* Sharp layer */}
@@ -1462,7 +2396,7 @@ export function PostureLanding() {
             filter: `blur(${textBlur}px)`,
           }}
         >
-          PORTFOLIO
+          EVANGELIST
         </h1>
       </div>
 
@@ -1623,6 +2557,7 @@ export function PostureLanding() {
       </section>
 
       <section
+        id="brands"
         className="relative overflow-hidden bg-black"
         style={{
           borderTop: '1px solid rgba(255,255,255,0.08)',
@@ -1664,6 +2599,35 @@ export function PostureLanding() {
               transform: translateY(-6px) scale(1.04);
               border-color: rgba(245,255,114,0.38) !important;
               box-shadow: 0 28px 86px rgba(0,0,0,0.4), 0 0 42px rgba(245,255,114,0.12), inset 0 1px 0 rgba(255,255,255,0.16) !important;
+            }
+
+            .client-logo-hover-name {
+              position: absolute;
+              left: 10px;
+              right: 10px;
+              bottom: 10px;
+              z-index: 4;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              min-height: 24px;
+              border-radius: 999px;
+              background: rgba(0,0,0,0.72);
+              color: rgba(255,255,255,0.92);
+              opacity: 0;
+              transform: translateY(5px);
+              pointer-events: none;
+              font-family: "Space Grotesk", "Inter", sans-serif;
+              font-size: 0.52rem;
+              font-weight: 700;
+              letter-spacing: 0.12em;
+              text-transform: uppercase;
+              transition: opacity 180ms ease, transform 180ms ease;
+            }
+
+            .client-logo-card:hover .client-logo-hover-name {
+              opacity: 1;
+              transform: translateY(0);
             }
 
             @media (max-width: 767px) {
@@ -1719,6 +2683,7 @@ export function PostureLanding() {
       </section>
 
       <section
+        id="tech-ai"
         className="relative min-h-screen overflow-hidden bg-black"
         style={{
           borderTop: '1px solid rgba(255,255,255,0.08)',
@@ -1894,10 +2859,18 @@ export function PostureLanding() {
         <div
           className="absolute left-1/2 z-40 flex -translate-x-1/2 flex-col items-center px-6 text-center"
           style={{
-            top: '68%',
+            top: '60%',
             color: 'rgba(255,255,255,0.94)',
           }}
         >
+          <div className="work-options">
+            <span>Developer advocacy</span>
+            <span>Tech video campaign strategy</span>
+            <span>Launch education</span>
+            <span>Technical demos</span>
+            <span>Workshops</span>
+            <span>Evangelist campaigns</span>
+          </div>
           <a
             className="email-button inline-flex h-10 items-center justify-center px-10 text-[0.58rem] uppercase tracking-[0.42em] sm:h-11 sm:px-12"
             href="https://mail.google.com/mail/?view=cm&fs=1&to=hello.vladasana@gmail.com"
