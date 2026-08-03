@@ -245,7 +245,7 @@ const eventsWorks: ShowcaseWork[] = [
   },
 ];
 
-const claudeMdUpdatedAt = 'August 2, 2026';
+const claudeMdUpdatedAt = 'August 3, 2026';
 
 const claudeMdContent = `## CRITICAL CONSTRAINTS
 
@@ -666,56 +666,59 @@ function BlogStyles() {
           width: min(100%, 1180px);
           margin: 0 auto;
           display: grid;
-          grid-template-columns: minmax(260px, 0.9fr) minmax(320px, 0.7fr);
-          align-items: center;
-          gap: clamp(30px, 5vw, 76px);
+          gap: clamp(28px, 4vw, 54px);
         }
 
-        .tech-blog-single-card {
-          width: min(100%, 560px);
-          grid-template-columns: 1fr;
-        }
-
-        .tech-blog-intro {
-          display: grid;
-          gap: 24px;
-        }
-
-        .tech-blog-intro p {
-          max-width: 560px;
+        .blog-display-title {
           margin: 0;
-          color: rgba(255,255,255,0.6);
-          font-size: clamp(0.95rem, 1.25vw, 1.1rem);
-          line-height: 1.8;
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          font-weight: 800;
+          font-size: clamp(2.7rem, 10vw, 10rem);
+          line-height: 0.9;
+          letter-spacing: 0.1em;
+          color: rgba(255,255,255,0.95);
+          text-align: center;
+          text-shadow: 0 0 48px rgba(255,255,255,0.18);
+        }
+
+        .blog-secondary-text {
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          font-size: 0.6rem;
+          font-weight: 400;
+          letter-spacing: 0.18em;
+          color: rgba(255,255,255,0.72);
+          text-transform: uppercase;
+          line-height: 1.5;
+        }
+
+        .tech-post-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: clamp(16px, 2.4vw, 28px);
         }
 
         .tech-post-card {
-          min-height: 320px;
+          min-height: clamp(300px, 38vh, 430px);
           display: grid;
           align-content: end;
           gap: 16px;
           padding: clamp(22px, 3vw, 34px);
-          border: 1px solid rgba(255,255,255,0.14);
+          border: 1px solid rgba(255,255,255,0.2);
           border-radius: 18px;
-          background:
-            radial-gradient(circle at 22% 18%, rgba(245,255,114,0.12), transparent 34%),
-            rgba(255,255,255,0.045);
-          color: rgba(255,255,255,0.92);
+          background: #d02e2e;
+          color: #fff;
           text-decoration: none;
-          box-shadow: 0 24px 90px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.1);
+          box-shadow: 0 24px 70px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.12);
           transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
         }
 
         .tech-post-card:hover {
           transform: translateY(-4px);
-          border-color: rgba(245,255,114,0.36);
-          background:
-            radial-gradient(circle at 22% 18%, rgba(245,255,114,0.16), transparent 34%),
-            rgba(255,255,255,0.07);
+          border-color: rgba(255,255,255,0.48);
+          background: #bc2929;
         }
 
         .tech-post-card small,
-        .blog-coming-tabs span,
         .claude-post-footer {
           font-size: 0.6rem;
           letter-spacing: 0.18em;
@@ -723,36 +726,229 @@ function BlogStyles() {
         }
 
         .tech-post-card small {
-          color: rgba(255,255,255,0.42);
+          color: rgba(255,255,255,0.68);
+          font-weight: 400;
         }
 
         .tech-post-card h3 {
           margin: 0;
-          font-size: clamp(2rem, 5vw, 4.4rem);
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          font-weight: 800;
+          font-size: clamp(2.2rem, 5.6vw, 5.4rem);
           line-height: 0.92;
-          letter-spacing: 0;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
         }
 
         .tech-post-card p {
           max-width: 440px;
           margin: 0;
-          color: rgba(255,255,255,0.58);
+          color: rgba(255,255,255,0.86);
+          font-weight: 400;
           line-height: 1.7;
         }
 
-        .blog-coming-tabs {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 10px;
+        .article-shell {
+          width: min(100%, 1040px);
+          margin: 0 auto;
+          display: grid;
+          gap: clamp(24px, 4vw, 44px);
         }
 
-        .blog-coming-tabs span {
-          padding: 9px 13px;
-          border: 1px solid rgba(255,255,255,0.12);
+        .article-kicker {
+          margin: 0;
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          font-size: 0.6rem;
+          font-weight: 400;
+          letter-spacing: 0.18em;
+          color: rgba(255,255,255,0.72);
+          text-transform: uppercase;
+          line-height: 1.5;
+        }
+
+        .article-card {
+          display: grid;
+          gap: 26px;
+          padding: clamp(24px, 4vw, 44px);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 18px;
+          background: #d02e2e;
+          color: #fff;
+          box-shadow: 0 24px 70px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+
+        .article-card a {
+          color: #fff;
+          text-decoration: underline;
+          text-underline-offset: 3px;
+        }
+
+        .article-note {
+          display: grid;
+          gap: 10px;
+          padding: 18px;
+          border: 1px solid rgba(255,255,255,0.22);
+          border-radius: 12px;
+          background: rgba(255,255,255,0.1);
+        }
+
+        .article-need-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .article-need-item {
+          display: grid;
+          gap: 8px;
+          padding: 16px;
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 12px;
+          background: rgba(0,0,0,0.12);
+        }
+
+        .article-need-item span {
+          color: rgba(255,255,255,0.68);
+          font-size: 0.6rem;
+          font-weight: 400;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+
+        .article-need-item h3 {
+          margin: 0;
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          font-size: 1rem;
+          font-weight: 800;
+          line-height: 1;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        .article-two-col {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 18px;
+        }
+
+        .article-mini-card {
+          display: grid;
+          gap: 8px;
+          padding: 16px;
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 12px;
+          background: rgba(0,0,0,0.12);
+        }
+
+        .article-cta-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          align-items: center;
+        }
+
+        .article-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 38px;
+          padding: 0 16px;
+          border: 1px solid rgba(255,255,255,0.42);
           border-radius: 999px;
-          color: rgba(255,255,255,0.44);
-          background: rgba(255,255,255,0.035);
+          color: #fff;
+          text-decoration: none !important;
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          font-size: 0.6rem;
+          font-weight: 400;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+
+        .article-section {
+          display: grid;
+          gap: 12px;
+          padding-top: 24px;
+          border-top: 1px solid rgba(255,255,255,0.22);
+        }
+
+        .article-section:first-child {
+          padding-top: 0;
+          border-top: 0;
+        }
+
+        .article-section h2 {
+          margin: 0;
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          font-size: clamp(1.3rem, 2.8vw, 2.4rem);
+          font-weight: 800;
+          line-height: 0.95;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        .article-section p,
+        .article-section li {
+          margin: 0;
+          color: rgba(255,255,255,0.88);
+          font-size: clamp(0.94rem, 1.2vw, 1.06rem);
+          font-weight: 400;
+          line-height: 1.75;
+        }
+
+        .article-section ul,
+        .article-section ol {
+          margin: 0;
+          padding-left: 1.2rem;
+          display: grid;
+          gap: 8px;
+        }
+
+        .article-prompt {
+          margin: 6px 0 0;
+          padding: 18px;
+          overflow: auto;
+          border-radius: 12px;
+          border: 1px solid rgba(255,255,255,0.22);
+          background: rgba(0,0,0,0.18);
+          color: rgba(255,255,255,0.92);
+          font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+          font-size: 0.76rem;
+          line-height: 1.65;
+          white-space: pre-wrap;
+        }
+
+        .article-prompt-shell {
+          position: relative;
+          margin-top: 6px;
+        }
+
+        .article-prompt-shell .article-prompt {
+          margin: 0;
+          padding-right: 66px;
+        }
+
+        .article-prompt-copy {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          width: 36px;
+          height: 36px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgba(255,255,255,0.22);
+          border-radius: 999px;
+          background: rgba(0,0,0,0.24);
+          color: rgba(255,255,255,0.92);
+          cursor: pointer;
+          backdrop-filter: blur(10px);
+          transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+        }
+
+        .article-prompt-copy:hover {
+          transform: translateY(-1px);
+          border-color: rgba(255,255,255,0.5);
+          background: rgba(0,0,0,0.34);
         }
 
         .claude-post-wrap {
@@ -863,6 +1059,19 @@ function BlogStyles() {
 
         @media (max-width: 767px) {
           .tech-blog-index-layout {
+            grid-template-columns: 1fr;
+          }
+
+          .blog-display-title {
+            text-align: left;
+          }
+
+          .tech-post-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .article-need-grid,
+          .article-two-col {
             grid-template-columns: 1fr;
           }
 
@@ -1193,6 +1402,31 @@ function FrameStoryShowcase({ stories, label }: { stories: ShowcaseWork[]; label
   );
 }
 
+function CopyablePrompt({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  }, [text]);
+
+  return (
+    <div className="article-prompt-shell">
+      <pre className="article-prompt">{text}</pre>
+      <button
+        type="button"
+        className="article-prompt-copy"
+        onClick={handleCopy}
+        aria-label={`Copy ${label}`}
+        title={copied ? 'Copied' : 'Copy prompt'}
+      >
+        {copied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
+      </button>
+    </div>
+  );
+}
+
 function TechBlogIndexPage() {
   return (
     <main
@@ -1202,9 +1436,7 @@ function TechBlogIndexPage() {
       <BlogStyles />
       <div
         className="relative min-h-screen overflow-hidden px-8 py-10"
-        style={{
-          background: 'radial-gradient(circle at 18% 18%, rgba(245,255,114,0.11), transparent 30%), radial-gradient(circle at 78% 36%, rgba(240,47,232,0.16), transparent 34%), linear-gradient(180deg, rgba(8,4,20,0.96), #000 58%, #000 100%)',
-        }}
+        style={{ background: '#3D3982' }}
       >
         <div className="relative z-10 grid min-h-[calc(100vh-80px)] grid-rows-[auto_1fr_auto] gap-10">
           <div className="flex items-start justify-between gap-6">
@@ -1221,18 +1453,284 @@ function TechBlogIndexPage() {
             >
               vladasanadev
             </a>
-            <p style={{ fontSize: '0.6rem', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.48)', textTransform: 'uppercase', lineHeight: 1.5, textAlign: 'right' }}>
+            <p className="blog-secondary-text" style={{ textAlign: 'right' }}>
               Evangelist Portfolio<br />tech blog
             </p>
           </div>
 
-          <div className="tech-blog-index-layout tech-blog-single-card">
-            <a className="tech-post-card" href="/techblog/claude-dot-md">
-              <h3>Claude.md</h3>
-              <p>My operating file for cleaner AI-assisted writing, technical taste, and creator workflow defaults.</p>
-              <small>{claudeMdUpdatedAt}</small>
+          <div className="tech-blog-index-layout">
+            <h1 className="blog-display-title">TECH BLOG</h1>
+            <div className="tech-post-grid">
+              <a className="tech-post-card" href="/techblog/claude-dot-md">
+                <h3>Claude.md</h3>
+                <p>My operating file for cleaner AI-assisted writing, technical taste, and creator workflow defaults.</p>
+                <small>{claudeMdUpdatedAt}</small>
+              </a>
+              <a className="tech-post-card" href="/techblog/3-simple-ai-agents-that-run-my-content">
+                <h3>3 Simple AI Agents That Run My Content</h3>
+                <p>A tiny Claude content team: morning brief, email replies, and a 24H viral-content analyst.</p>
+                <small>August 3, 2026</small>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function AiAgentsPostPage() {
+  return (
+    <main
+      className="tech-blog-page min-h-screen bg-black text-white"
+      style={{ fontFamily: '"Space Grotesk", "Inter", sans-serif' }}
+    >
+      <BlogStyles />
+      <div
+        className="relative min-h-screen overflow-hidden px-8 py-10"
+        style={{ background: '#3D3982' }}
+      >
+        <div className="relative z-10 grid min-h-[calc(100vh-80px)] grid-rows-[auto_1fr_auto] gap-10">
+          <div className="flex items-start justify-between gap-6">
+            <a className="blog-secondary-text" href="/techblog" style={{ color: 'rgba(255,255,255,0.58)', textDecoration: 'none' }}>
+              back to tech blog
+            </a>
+            <a className="blog-secondary-text" href="https://claude.ai/" target="_blank" rel="noreferrer" style={{ color: 'rgba(255,255,255,0.72)', textAlign: 'right', textDecoration: 'none' }}>
+              start today
             </a>
           </div>
+
+          <article className="article-shell">
+            <h1 className="blog-display-title">3 Simple AI Agents That Run My Content</h1>
+            <div className="article-card">
+              <section className="article-section">
+                <h2>A tiny AI content team</h2>
+                <p>
+                  A tiny AI content team you can set up without becoming an automation engineer. Three copy-paste Claude
+                  agents for the morning brief, email replies, and a 24-hour viral content report.
+                </p>
+              </section>
+
+              <section className="article-section">
+                <h2>What you actually need</h2>
+                <p>Four things. Nothing fancy.</p>
+                <div className="article-need-grid">
+                  <div className="article-need-item">
+                    <span>01</span>
+                    <h3>A Claude account</h3>
+                    <p>Free to start. Connectors work on any plan.</p>
+                  </div>
+                  <div className="article-need-item">
+                    <span>02</span>
+                    <h3>Gmail, Calendar and Drive</h3>
+                    <p>All three connected to Claude from Settings {'→'} Connectors.</p>
+                  </div>
+                  <div className="article-need-item">
+                    <span>03</span>
+                    <h3>A paid Claude plan</h3>
+                    <p>Only if you want the agents to run on a schedule. Pro, Max, Team or Enterprise.</p>
+                  </div>
+                  <div className="article-need-item">
+                    <span>04</span>
+                    <h3>A free Apify account</h3>
+                    <p>For agent 3 (the viral content scout). Usage can cost extra.</p>
+                  </div>
+                </div>
+                <div className="article-note">
+                  <p>
+                    Google Workspace connectors are available to all Claude users, but Cowork scheduled tasks require
+                    a paid Claude plan: Pro, Max, Team or Enterprise.
+                  </p>
+                </div>
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">01 · Agent 01</p>
+                <h2>Morning Brief</h2>
+                <p>Wake up to one calm page instead of five apps shouting your name.</p>
+                <ol>
+                  <li>Connect your tools. In Claude, open Settings {'→'} Connectors. Connect Gmail and Google Calendar.</li>
+                  <li>Paste the prompt. Use it manually whenever you need a brief. No technical setup required.</li>
+                  <li>Optional: schedule it. In Cowork, type /schedule, or open Scheduled {'→'} New task. Set it for weekdays at your preferred morning time.</li>
+                </ol>
+                <p className="article-kicker">Copy-paste prompt</p>
+                <CopyablePrompt
+                  label="morning brief prompt"
+                  text={`Use my connected Gmail and Google Calendar to create my morning brief for today.
+
+Include:
+- today's meetings in chronological order, with times, attendees and any preparation I should do
+- emails that are urgent, need a reply, contain approvals, deadlines or collaboration updates
+- the three most important actions for today
+- anything important I may have missed during the last 24 hours
+
+Keep it concise and easy to scan. Do not send emails, edit calendar events or take any external action without my explicit approval.`}
+                />
+                <div className="article-two-col">
+                  <div className="article-mini-card">
+                    <p className="article-kicker">Input</p>
+                    <p>Gmail + Google Calendar</p>
+                  </div>
+                  <div className="article-mini-card">
+                    <p className="article-kicker">Output</p>
+                    <p>Meetings, urgent messages and your top three priorities</p>
+                  </div>
+                </div>
+                <p>Best first move: run this manually tomorrow morning. Schedule it only after you like the format.</p>
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">02 · Agent 02</p>
+                <h2>Email Answer Agent</h2>
+                <p>Claude handles the blank-page part. You remain the final boss of Send.</p>
+                <div className="article-note">
+                  <p>Recommended cadence. Run at 08:00 and again at 15:00. Create two daily scheduled tasks using the same prompt, one for each time.</p>
+                </div>
+                <p className="article-kicker">Copy-paste prompt</p>
+                <CopyablePrompt
+                  label="email answer prompt"
+                  text={`Use my connected Gmail. Check new emails and active threads that need a reply.
+
+For each email:
+- summarize the context in one sentence
+- tell me exactly what the sender needs
+- draft a concise reply in my natural tone
+- flag missing information, deadlines, money, contracts or anything sensitive
+
+Never send, archive, delete, label or modify any email. Prepare draft text only and wait for my approval.`}
+                />
+                <div className="article-note">
+                  <p>
+                    The safety rule. Keep the scheduled task draft-only. A useful email agent removes typing, not judgment.
+                    Review names, numbers, deadlines and attachments before sending anything.
+                  </p>
+                </div>
+                <div className="article-two-col">
+                  <div className="article-mini-card">
+                    <p className="article-kicker">What Claude does</p>
+                    <ul>
+                      <li>Reads the thread</li>
+                      <li>Explains the ask</li>
+                      <li>Writes the reply</li>
+                    </ul>
+                  </div>
+                  <div className="article-mini-card">
+                    <p className="article-kicker">What you do</p>
+                    <ul>
+                      <li>Check the context</li>
+                      <li>Add missing facts</li>
+                      <li>Approve and send</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="article-note">
+                  <p>
+                    Little win for today: Connect Gmail and Google Calendar, paste the Morning Brief prompt,
+                    and run it once manually. That gives you a useful win before you touch the more technical setup.
+                  </p>
+                  <div className="article-cta-row">
+                    <a className="article-button" href="https://claude.ai/" target="_blank" rel="noreferrer">Start today</a>
+                  </div>
+                </div>
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">03 · Agent 03</p>
+                <h2>24H Viral Content Agent</h2>
+                <p>
+                  This one needs two pipes. A prompt cannot see your industry by telepathy, so we connect it to real
+                  sources and real performance data.
+                </p>
+                <p>What it does:</p>
+                <ul>
+                  <li>Scan public content in your niche from the last 24 hours or seven days.</li>
+                  <li>Find breakout posts and explain the hook, format, topic and visual pattern.</li>
+                  <li>Compare market patterns with your own content performance.</li>
+                  <li>Suggest original ideas instead of copying somebody else's script.</li>
+                </ul>
+              </section>
+
+              <section className="article-section">
+                <h2>Pipe 1: connect Apify (powers the scout)</h2>
+                <ol>
+                  <li>Create an account. Open <a href="https://apify.com" target="_blank" rel="noreferrer">apify.com</a> and create a free account. Apify is a platform full of ready-made web scrapers called Actors. MCP simply means a connector Claude can use as a tool.</li>
+                  <li>Connect it to Claude. In Claude Desktop, go to Settings {'→'} Connectors {'→'} Add custom connector and use https://mcp.apify.com. Sign in when the browser opens.</li>
+                  <li>Use it in Claude Code. Run /plugins, add the Apify Claude Code plugin marketplace, install the Apify plugin, then run /mcp to enable and authenticate it.</li>
+                </ol>
+                <p>Apify plugin marketplace: <a href="https://github.com/apify/apify-claude-code-plugin" target="_blank" rel="noreferrer">github.com/apify/apify-claude-code-plugin</a></p>
+                <p>
+                  What the scout can use: Ask Claude to choose the right Apify Actor for each source, a website crawler
+                  for newsletters and industry sites, an X scraper for expert voices, and Instagram or TikTok scrapers
+                  for public post metrics. Scraper availability, platform rules and pricing can change, so review the Actor before running it.
+                </p>
+              </section>
+
+              <section className="article-section">
+                <h2>Pipe 2: build a performance sheet</h2>
+                <p>
+                  The analyst needs memory. Your Google Sheet becomes the boring-but-brilliant record it can study across months.
+                </p>
+                <p>
+                  One row per post: date · platform · creator · post URL · hook · format · topic · views · likes · comments · shares / saves · notes
+                </p>
+                <ol>
+                  <li>Start with public metrics. Schedule an Apify Instagram or TikTok profile scraper to run daily and capture new posts, views, likes and comments. TikTok may expose shares; Instagram public fields can be more limited.</li>
+                  <li>Send the data to Google Sheets. Use an Apify integration, Make or Albato to append each result as a new row. Begin simple. Add platform APIs later if you need private account metrics.</li>
+                  <li>Connect Google Drive. In Claude, connect Google Drive so the analyst can read the Sheet every time it runs.</li>
+                </ol>
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">Claude Code / Cowork prompt</p>
+                <CopyablePrompt
+                  label="viral content analyst prompt"
+                  text={`You are my 24H Viral Content Analyst.
+
+Use Apify to collect top-performing public content from [YOUR NICHE] from the last 24 hours. Expand to seven days if the sample is too small.
+
+Use my connected Google Drive to read [SHEET NAME], which contains my own post history and metrics.
+
+Create a report with:
+1. ten breakout posts, including creator, link, views and engagement signals
+2. the hook, format, topic and visual pattern behind each post
+3. repeated patterns across the market
+4. which patterns match or contradict my own performance
+5. five original ideas for me, each with a hook, format, angle and reason it could work
+
+Do not copy scripts. Clearly separate evidence from your guesses. Save the report as [FOLDER]/viral-report-YYYY-MM-DD.md.`}
+                />
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">Make it run without you</p>
+                <h2>Schedule, costs and the honest version</h2>
+                <p>
+                  The sleep magic comes from the schedule plus the connections. The prompt alone is only a very polite instruction sitting on a chair.
+                </p>
+                <p>Where to schedule:</p>
+                <ul>
+                  <li>Cowork: open Scheduled {'→'} New task, or type /schedule inside a Cowork task.</li>
+                  <li>Claude Code: create a cloud routine from the web, Desktop app, or /schedule in the CLI.</li>
+                  <li>Remote Cowork tasks and Claude Code cloud routines can run while your laptop is closed.</li>
+                  <li>No schedule yet? Run the same prompts manually. The output is the same, you press go.</li>
+                </ul>
+              </section>
+
+              <section id="start" className="article-section">
+                <h2>Start today</h2>
+                <p>
+                  Connect Gmail and Google Calendar, paste the Morning Brief prompt, and run it once manually.
+                  That gives you a useful win before you touch the more technical setup.
+                </p>
+                <div className="article-cta-row">
+                  <a className="article-button" href="https://claude.ai/" target="_blank" rel="noreferrer">Done, I&apos;m starting</a>
+                  <a className="article-button" href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noreferrer">Instagram: @vlada.asana</a>
+                  <a className="article-button" href="https://docs.google.com/forms/d/e/1FAIpQLSezqkTT8Htx6nAKedL4nRbl8qUwlBEd8C-SNsIqIGUQWhVWSA/viewform" target="_blank" rel="noreferrer">Request a consultation</a>
+                </div>
+                <p className="article-kicker">Built by @vlada.asana · 3 simple agents that run my content</p>
+              </section>
+            </div>
+          </article>
         </div>
       </div>
     </main>
@@ -1251,7 +1749,7 @@ function ClaudeMdPostPage({
       className="claude-md-post min-h-screen bg-black text-white"
       style={{
         fontFamily: '"Space Grotesk", "Inter", sans-serif',
-        background: 'linear-gradient(180deg, rgba(8,4,20,0.96), #000 64%, #000 100%)',
+        background: '#3D3982',
       }}
     >
       <BlogStyles />
@@ -1375,6 +1873,10 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/claude-dot-md') {
     return <ClaudeMdPostPage copied={isClaudeCopied} onCopy={handleCopyClaudeMd} />;
+  }
+
+  if (currentPath === '/techblog/3-simple-ai-agents-that-run-my-content') {
+    return <AiAgentsPostPage />;
   }
 
   if (currentPath === '/techblog') {
