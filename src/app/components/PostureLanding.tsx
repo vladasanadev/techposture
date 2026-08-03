@@ -693,16 +693,17 @@ function BlogStyles() {
 
         .tech-post-grid {
           display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: clamp(16px, 2.4vw, 28px);
+          grid-template-columns: 1fr;
+          gap: 14px;
         }
 
         .tech-post-card {
-          min-height: clamp(300px, 38vh, 430px);
+          min-height: 148px;
           display: grid;
-          align-content: end;
-          gap: 16px;
-          padding: clamp(22px, 3vw, 34px);
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: end;
+          gap: clamp(18px, 3vw, 34px);
+          padding: clamp(18px, 2.5vw, 28px);
           border: 1px solid rgba(255,255,255,0.2);
           border-radius: 18px;
           background: #d02e2e;
@@ -734,8 +735,8 @@ function BlogStyles() {
           margin: 0;
           font-family: "Space Grotesk", "Inter", sans-serif;
           font-weight: 800;
-          font-size: clamp(2.2rem, 5.6vw, 5.4rem);
-          line-height: 0.92;
+          font-size: clamp(1.55rem, 4.2vw, 3.8rem);
+          line-height: 0.96;
           letter-spacing: 0.04em;
           text-transform: uppercase;
         }
@@ -746,6 +747,14 @@ function BlogStyles() {
           color: rgba(255,255,255,0.86);
           font-weight: 400;
           line-height: 1.7;
+        }
+
+        .tech-post-meta {
+          display: grid;
+          gap: 12px;
+          justify-items: end;
+          text-align: right;
+          min-width: 132px;
         }
 
         .article-shell {
@@ -1068,6 +1077,30 @@ function BlogStyles() {
 
           .tech-post-grid {
             grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          .tech-post-card {
+            min-height: 156px;
+            grid-template-columns: 1fr;
+            align-items: end;
+            gap: 14px;
+            padding: 18px;
+          }
+
+          .tech-post-card h3 {
+            font-size: clamp(1.55rem, 12vw, 3rem);
+          }
+
+          .tech-post-card p {
+            font-size: 0.9rem;
+            line-height: 1.55;
+          }
+
+          .tech-post-meta {
+            justify-items: start;
+            text-align: left;
+            min-width: 0;
           }
 
           .article-need-grid,
@@ -1454,22 +1487,32 @@ function TechBlogIndexPage() {
               vladasanadev
             </a>
             <p className="blog-secondary-text" style={{ textAlign: 'right' }}>
-              Evangelist Portfolio<br />tech blog
+              Portfolio<br />blog
             </p>
           </div>
 
           <div className="tech-blog-index-layout">
-            <h1 className="blog-display-title">TECH BLOG</h1>
+            <h1 className="blog-display-title">BLOG</h1>
             <div className="tech-post-grid">
               <a className="tech-post-card" href="/techblog/claude-dot-md">
-                <h3>Claude.md</h3>
-                <p>My operating file for cleaner AI-assisted writing, technical taste, and creator workflow defaults.</p>
-                <small>{claudeMdUpdatedAt}</small>
+                <div>
+                  <h3>Claude.md</h3>
+                  <p>My operating file for cleaner AI-assisted writing, technical taste, and creator workflow defaults.</p>
+                </div>
+                <div className="tech-post-meta">
+                  <small>{claudeMdUpdatedAt}</small>
+                  <small>Read article</small>
+                </div>
               </a>
               <a className="tech-post-card" href="/techblog/3-simple-ai-agents-that-run-my-content">
-                <h3>3 Simple AI Agents That Run My Content</h3>
-                <p>A tiny Claude content team: morning brief, email replies, and a 24H viral-content analyst.</p>
-                <small>August 3, 2026</small>
+                <div>
+                  <h3>3 Simple AI Agents That Run My Content</h3>
+                  <p>A tiny Claude content team: morning brief, email replies, and a 24H viral-content analyst.</p>
+                </div>
+                <div className="tech-post-meta">
+                  <small>August 3, 2026</small>
+                  <small>Read article</small>
+                </div>
               </a>
             </div>
           </div>
@@ -1493,7 +1536,7 @@ function AiAgentsPostPage() {
         <div className="relative z-10 grid min-h-[calc(100vh-80px)] grid-rows-[auto_1fr_auto] gap-10">
           <div className="flex items-start justify-between gap-6">
             <a className="blog-secondary-text" href="/techblog" style={{ color: 'rgba(255,255,255,0.58)', textDecoration: 'none' }}>
-              back to tech blog
+              back to blog
             </a>
             <a className="blog-secondary-text" href="https://claude.ai/" target="_blank" rel="noreferrer" style={{ color: 'rgba(255,255,255,0.72)', textAlign: 'right', textDecoration: 'none' }}>
               start today
@@ -2391,32 +2434,33 @@ export function PostureLanding() {
           }
 
           .work-options {
-            width: min(100%, 760px);
+            width: min(100%, 860px);
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 26px;
+            gap: 10px 18px;
+            margin-bottom: 22px;
           }
 
           .work-options span {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-height: 32px;
-            padding: 0 13px;
-            border: 1px solid rgba(255,255,255,0.22);
-            border-radius: 999px;
-            background: rgba(0,0,0,0.34);
-            color: rgba(255,255,255,0.78);
-            backdrop-filter: blur(12px);
+            min-height: 24px;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            color: rgba(255,255,255,0.84);
+            backdrop-filter: none;
             font-family: "Space Grotesk", "Inter", sans-serif;
-            font-size: 0.58rem;
-            font-weight: 700;
-            letter-spacing: 0.14em;
+            font-size: clamp(0.72rem, 1.2vw, 1rem);
+            font-weight: 400;
+            letter-spacing: 0.04em;
             line-height: 1.2;
-            text-transform: uppercase;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 26px rgba(0,0,0,0.24);
+            text-transform: lowercase;
+            text-shadow: 0 0 16px rgba(0,0,0,0.38);
+            box-shadow: none;
           }
 
           .hero-social-icon {
@@ -2639,6 +2683,18 @@ export function PostureLanding() {
             .claude-code-block {
               max-height: 68vh;
             }
+
+            .work-options {
+              width: min(100%, 360px);
+              flex-direction: column;
+              align-items: center;
+              gap: 8px;
+              margin-bottom: 18px;
+            }
+
+            .work-options span {
+              font-size: 0.7rem;
+            }
           }
 
           @keyframes titleShine {
@@ -2768,7 +2824,7 @@ export function PostureLanding() {
         style={{ top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 45 }}
       >
         <a href="#tech-ai">Social Media</a>
-        <a href="/techblog">Tech Blog</a>
+        <a href="/techblog">Blog</a>
         <a href="#contact">Contact</a>
       </nav>
 
@@ -2882,7 +2938,7 @@ export function PostureLanding() {
             filter: 'blur(22px)',
           }}
         >
-          EVANGELIST
+          PORTFOLIO
         </h1>
 
         {/* Sharp layer */}
@@ -2898,7 +2954,7 @@ export function PostureLanding() {
             filter: `blur(${textBlur}px)`,
           }}
         >
-          EVANGELIST
+          PORTFOLIO
         </h1>
       </div>
 
@@ -3361,17 +3417,14 @@ export function PostureLanding() {
         <div
           className="absolute left-1/2 z-40 flex -translate-x-1/2 flex-col items-center px-6 text-center"
           style={{
-            top: '60%',
+            top: '70%',
             color: 'rgba(255,255,255,0.94)',
           }}
         >
           <div className="work-options">
-            <span>Developer advocacy</span>
-            <span>Tech video campaign strategy</span>
-            <span>Launch education</span>
-            <span>Technical demos</span>
-            <span>Workshops</span>
-            <span>Evangelist campaigns</span>
+            <span>#technology</span>
+            <span>#developeradvocacy</span>
+            <span>#videocampaigns</span>
           </div>
           <a
             className="email-button inline-flex h-10 items-center justify-center px-10 text-[0.58rem] uppercase tracking-[0.42em] sm:h-11 sm:px-12"
