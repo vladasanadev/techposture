@@ -246,6 +246,7 @@ const eventsWorks: ShowcaseWork[] = [
 ];
 
 const claudeMdUpdatedAt = 'August 3, 2026';
+const lazymaxxingUpdatedAt = 'August 6, 2026';
 
 const claudeMdContent = `## CRITICAL CONSTRAINTS
 
@@ -912,6 +913,15 @@ function BlogStyles() {
           gap: 8px;
         }
 
+        .article-section code {
+          padding: 0.16rem 0.38rem;
+          border-radius: 6px;
+          background: rgba(0,0,0,0.18);
+          color: rgba(255,255,255,0.94);
+          font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+          font-size: 0.82em;
+        }
+
         .article-prompt {
           margin: 6px 0 0;
           padding: 18px;
@@ -1514,6 +1524,16 @@ function TechBlogIndexPage() {
                   <small>Read article</small>
                 </div>
               </a>
+              <a className="tech-post-card" href="/techblog/lazymaxxing-video-edit">
+                <div>
+                  <h3>Lazymaxxing Higgsfield Video Editor</h3>
+                  <p>A simple guide for lazy editing: reference video, Claude scene prompts, Higgsfield clips, and CapCut polish.</p>
+                </div>
+                <div className="tech-post-meta">
+                  <small>{lazymaxxingUpdatedAt}</small>
+                  <small>Read article</small>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -1780,6 +1800,204 @@ Do not copy scripts. Clearly separate evidence from your guesses. Save the repor
   );
 }
 
+function LazymaxxingVideoEditPostPage() {
+  const consultationFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSezqkTT8Htx6nAKedL4nRbl8qUwlBEd8C-SNsIqIGUQWhVWSA/viewform';
+  const instagramUrl = 'https://www.instagram.com/vlada.asana/';
+
+  return (
+    <main
+      className="tech-blog-page min-h-screen bg-black text-white"
+      style={{ fontFamily: '"Space Grotesk", "Inter", sans-serif' }}
+    >
+      <BlogStyles />
+      <div
+        className="relative min-h-screen overflow-hidden px-8 py-10"
+        style={{ background: '#3D3982' }}
+      >
+        <div className="relative z-10 grid min-h-[calc(100vh-80px)] grid-rows-[auto_1fr_auto] gap-10">
+          <div className="flex items-start justify-between gap-6">
+            <a className="blog-secondary-text" href="/techblog" style={{ color: 'rgba(255,255,255,0.58)', textDecoration: 'none' }}>
+              back to blog
+            </a>
+            <a className="blog-secondary-text" href="#start" style={{ color: 'rgba(255,255,255,0.72)', textAlign: 'right', textDecoration: 'none' }}>
+              start now
+            </a>
+          </div>
+
+          <article className="article-shell">
+            <h1 className="blog-display-title">Lazymaxxing Higgsfield Video Editor</h1>
+            <div className="article-card">
+              <section className="article-section">
+                <div className="article-note">
+                  <p>
+                    <strong>Heads up.</strong> This is a free guide. I make tech video campaigns for brands and
+                    clients (cinematic product films, UGC ads, brand identity, the whole thing). Want a custom
+                    creative direction or a campaign built for your brand? Request a consultation from me through{' '}
+                    <a href={consultationFormUrl} target="_blank" rel="noreferrer">this short form</a> and I will get back to you.
+                  </p>
+                </div>
+              </section>
+
+              <section className="article-section">
+                <p>
+                  A free guide by{' '}
+                  <a href={instagramUrl} target="_blank" rel="noreferrer">@vlada.asana</a>
+                </p>
+                <p className="article-kicker">For creators</p>
+                <h2>My simple guide for lazy editing</h2>
+                <p>
+                  A free, no-fluff guide for shipping a Higgsfield video without becoming a video editor.
+                </p>
+              </section>
+
+              <section className="article-section">
+                <h2>What you will need</h2>
+                <p>Four things. Nothing fancy.</p>
+                <div className="article-need-grid">
+                  <div className="article-need-item">
+                    <span>01</span>
+                    <h3>Claude</h3>
+                    <p>To analyze the reference and break your script into scenes.</p>
+                  </div>
+                  <div className="article-need-item">
+                    <span>02</span>
+                    <h3>Higgsfield Seedance</h3>
+                    <p>To generate each scene as an 8 to 10 second video clip.</p>
+                  </div>
+                  <div className="article-need-item">
+                    <span>03</span>
+                    <h3>A reference video</h3>
+                    <p>Any clip whose style you want to steal. From Reels, YouTube, anywhere.</p>
+                  </div>
+                  <div className="article-need-item">
+                    <span>04</span>
+                    <h3>Your script</h3>
+                    <p>The words you want in the final video.</p>
+                  </div>
+                </div>
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">01 · Step 01</p>
+                <h2>Find your reference video</h2>
+                <p>Start with the look you love.</p>
+                <ul>
+                  <li>Go to Instagram Reels or YouTube.</li>
+                  <li>Search: <code>kinetic typography reel</code>, <code>motion design short</code>, or <code>AI video edit style</code>.</li>
+                  <li>Find 1 or 2 videos with the energy you want. Screen-record or save the file.</li>
+                </ul>
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">02 · Step 02</p>
+                <h2>Open Claude and upload your reference</h2>
+                <p>Let AI read the style for you.</p>
+                <p>Open Claude. Upload your reference video (or screenshots from it). Paste your script too. Then paste this prompt:</p>
+                <p className="article-kicker">Copy-paste prompt</p>
+                <CopyablePrompt
+                  label="Higgsfield reference analysis prompt"
+                  text={`I'm attaching a reference video and my script. I want to recreate this video's STYLE for my own script using Higgsfield.
+
+Step 1: Analyze the reference video. Describe:
+- Animation style (2D, 3D, kinetic typography, flat design)
+- How things move (speed, easing, bounce, snappy or smooth)
+- Transitions (cuts, wipes, morphs, zooms)
+- Color palette and background
+- Typography style and where text appears
+- Camera behavior (static, zoom, pan, shake)
+- Overall mood and pacing
+- Sound feel (whooshes, bass hits, music style)
+
+Step 2: Break my script into scenes of 8 to 10 seconds each.
+
+Step 3: For EACH scene, write one prompt that includes:
+- What appears on screen and how it animates
+- Exact text shown on screen (max 5 to 6 words)
+- Colors, background, and typography matching the reference
+- Camera movement and transition into the next scene
+- Sound effects and music mood
+
+Here is my script:
+
+[PASTE YOUR SCRIPT HERE]`}
+                />
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">03 · Step 03</p>
+                <h2>Copy your scene prompts</h2>
+                <p>Adjust here.</p>
+                <p>
+                  Claude will give you one prompt per scene. Each scene is 8 to 10 seconds, the max Higgsfield
+                  generates per clip. You will get something like:
+                </p>
+                <div className="article-note">
+                  <p><strong>Scene 1.</strong> Hook 0 to 8 sec. Bold text slams in. Bass hit. Dark background.</p>
+                  <p><strong>Scene 2.</strong> Proof 8 to 17 sec. Glitch transition. Zoom punch on key word.</p>
+                  <p><strong>Scene 3.</strong> Breakdown 17 to 25 sec. Sticker icons pop in. Paper slap sound.</p>
+                  <p><strong>Scene 4.</strong> CTA 25 to 35 sec. Spin FX. Text bounces. Crowd cheer.</p>
+                </div>
+                <p>Copy each prompt. You will paste them one at a time into Higgsfield.</p>
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">04 · Step 04</p>
+                <h2>Generate in Higgsfield</h2>
+                <p>One scene at a time.</p>
+                <ul>
+                  <li>Open Higgsfield. Select the video model, Seedance.</li>
+                  <li>Paste Scene 1 prompt. Attach your reference video. Hit generate. Repeat for every scene.</li>
+                </ul>
+                <div className="article-note">
+                  <p><strong>Always attach your reference video to every generation.</strong></p>
+                </div>
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">05 · Step 05</p>
+                <h2>Fix anything in plain language</h2>
+                <p>Talk to it like a friend.</p>
+                <p>If a scene looks wrong, just tell Higgsfield in chat. It will redo it.</p>
+                <ul>
+                  <li>Make the text bigger</li>
+                  <li>Slow down the animation</li>
+                  <li>Change the background to red</li>
+                  <li>Add more glitch on the transition</li>
+                </ul>
+                <p>Keep the best version of each clip.</p>
+              </section>
+
+              <section className="article-section">
+                <p className="article-kicker">06 · Step 06</p>
+                <h2>Assemble in CapCut</h2>
+                <p>Final polish.</p>
+                <p>Drop all clips into CapCut. Arrange in order. Add music or voiceover. Export.</p>
+                <div className="article-note">
+                  <p>
+                    <strong>If any text looks messy or wrong, fix it directly in CapCut.</strong> AI still struggles
+                    with clean text sometimes. Always check before posting.
+                  </p>
+                </div>
+              </section>
+
+              <section id="start" className="article-section">
+                <h2>That&apos;s it.</h2>
+                <p>Save this and try it with your next video.</p>
+                <div className="article-cta-row">
+                  <a className="article-button" href="#start">Done, I&apos;m starting</a>
+                  <a className="article-button" href={instagramUrl} target="_blank" rel="noreferrer">Instagram: @vlada.asana</a>
+                  <a className="article-button" href={consultationFormUrl} target="_blank" rel="noreferrer">Request a consultation</a>
+                </div>
+                <p className="article-kicker">Built by @vlada.asana · Lazymaxxing Higgsfield Video Editor</p>
+              </section>
+            </div>
+          </article>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 function ClaudeMdPostPage({
   copied,
   onCopy,
@@ -1920,6 +2138,10 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/3-simple-ai-agents-that-run-my-content') {
     return <AiAgentsPostPage />;
+  }
+
+  if (currentPath === '/techblog/lazymaxxing-video-edit') {
+    return <LazymaxxingVideoEditPostPage />;
   }
 
   if (currentPath === '/techblog') {
