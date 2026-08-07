@@ -814,10 +814,13 @@ function BlogStyles() {
 
         .article-demo-figure img {
           width: 100%;
+          box-sizing: border-box;
           height: auto;
           display: block;
           border-radius: 14px;
           border: 1px solid rgba(255,255,255,0.22);
+          object-fit: cover;
+          object-position: center;
           box-shadow: 0 20px 52px rgba(0,0,0,0.26);
         }
 
@@ -1142,6 +1145,10 @@ function BlogStyles() {
           .article-need-grid,
           .article-two-col {
             grid-template-columns: 1fr;
+          }
+
+          .article-demo-figure img {
+            aspect-ratio: 4 / 5;
           }
 
           .claude-code-topbar {
