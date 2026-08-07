@@ -246,7 +246,7 @@ const eventsWorks: ShowcaseWork[] = [
 ];
 
 const claudeMdUpdatedAt = 'August 3, 2026';
-const lazymaxxingUpdatedAt = 'August 6, 2026';
+const lazymaxxingUpdatedAt = 'August 7, 2026';
 
 const claudeMdContent = `## CRITICAL CONSTRAINTS
 
@@ -682,6 +682,10 @@ function BlogStyles() {
           text-shadow: 0 0 48px rgba(255,255,255,0.18);
         }
 
+        .article-display-title {
+          letter-spacing: 0.025em;
+        }
+
         .blog-secondary-text {
           font-family: "Space Grotesk", "Inter", sans-serif;
           font-size: 0.6rem;
@@ -800,6 +804,28 @@ function BlogStyles() {
           border: 1px solid rgba(255,255,255,0.22);
           border-radius: 12px;
           background: rgba(255,255,255,0.1);
+        }
+
+        .article-demo-figure {
+          margin: 4px 0 0;
+          display: grid;
+          gap: 10px;
+        }
+
+        .article-demo-figure img {
+          width: 100%;
+          height: auto;
+          display: block;
+          border-radius: 14px;
+          border: 1px solid rgba(255,255,255,0.22);
+          box-shadow: 0 20px 52px rgba(0,0,0,0.26);
+        }
+
+        .article-demo-figure figcaption {
+          color: rgba(255,255,255,0.72);
+          font-size: 0.72rem;
+          font-weight: 400;
+          line-height: 1.5;
         }
 
         .article-need-grid {
@@ -1526,7 +1552,7 @@ function TechBlogIndexPage() {
               </a>
               <a className="tech-post-card" href="/techblog/lazymaxxing-video-edit">
                 <div>
-                  <h3>Lazymaxxing Higgsfield Video Editor</h3>
+                  <h3>Lazymaxxing Video Edit</h3>
                   <p>A simple guide for lazy editing: reference video, Claude scene prompts, Higgsfield clips, and CapCut polish.</p>
                 </div>
                 <div className="tech-post-meta">
@@ -1803,6 +1829,7 @@ Do not copy scripts. Clearly separate evidence from your guesses. Save the repor
 function LazymaxxingVideoEditPostPage() {
   const consultationFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSezqkTT8Htx6nAKedL4nRbl8qUwlBEd8C-SNsIqIGUQWhVWSA/viewform';
   const instagramUrl = 'https://www.instagram.com/vlada.asana/';
+  const higgsfieldDemoUrl = 'https://higgsfield.ai/s/higgsfield-app-builder-x-fable-5-vlada.asana-vIRDqG';
 
   return (
     <main
@@ -1825,7 +1852,7 @@ function LazymaxxingVideoEditPostPage() {
           </div>
 
           <article className="article-shell">
-            <h1 className="blog-display-title">Lazymaxxing Higgsfield Video Editor</h1>
+            <h1 className="blog-display-title article-display-title">Lazymaxxing Video Edit</h1>
             <div className="article-card">
               <section className="article-section">
                 <div className="article-note">
@@ -1951,6 +1978,17 @@ Here is my script:
                 <div className="article-note">
                   <p><strong>Always attach your reference video to every generation.</strong></p>
                 </div>
+                <figure className="article-demo-figure">
+                  <img
+                    src="/blog-assets/lazymaxxing-higgsfield-demo.jpg"
+                    alt="Higgsfield Seedance generation interface showing Vlada's generated vertical video clip"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>
+                    My Step 04 demo inside Higgsfield Seedance, scene prompt on the side, generated 9:16 video in the preview.
+                  </figcaption>
+                </figure>
               </section>
 
               <section className="article-section">
@@ -1984,11 +2022,11 @@ Here is my script:
                 <h2>That&apos;s it.</h2>
                 <p>Save this and try it with your next video.</p>
                 <div className="article-cta-row">
-                  <a className="article-button" href="#start">Done, I&apos;m starting</a>
+                  <a className="article-button" href={higgsfieldDemoUrl} target="_blank" rel="noreferrer">Done, I&apos;m starting</a>
                   <a className="article-button" href={instagramUrl} target="_blank" rel="noreferrer">Instagram: @vlada.asana</a>
                   <a className="article-button" href={consultationFormUrl} target="_blank" rel="noreferrer">Request a consultation</a>
                 </div>
-                <p className="article-kicker">Built by @vlada.asana · Lazymaxxing Higgsfield Video Editor</p>
+                <p className="article-kicker">Built by @vlada.asana · Lazymaxxing Video Edit</p>
               </section>
             </div>
           </article>
