@@ -2682,7 +2682,7 @@ export function PostureLanding() {
               background 220ms ease,
               box-shadow 220ms ease,
               transform 220ms ease;
-          }
+image in broken on my main side          }
 
           .email-button:hover {
             background: rgba(255,255,255,0.1);
