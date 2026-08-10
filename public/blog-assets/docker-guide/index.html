@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Everything you need to know about Docker, by @vlada.asana</title>
+<meta name="description" content="A DevOps interview cheat sheet for Docker and Kubernetes. Images vs containers, Dockerfile best practices, pods, deployments, services, health probes, scaling. Interview-ready." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="#">@vlada.asana <span class="topbar__sep">·</span> Docker Cheat Sheet</a>
+    <a class="topbar__cta" href="#contents">CONTENTS</a>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+    <p class="hero__byline">A DevOps cheat sheet by <a href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">@vlada.asana</a></p>
+    <p class="eyebrow">System design interviews</p>
+    <h1 class="hero__title">Everything you need to know about <span class="hero__title-accent">DOCKER</span></h1>
+    <p class="hero__lede">Docker images and layers, writing a good Dockerfile, Kubernetes pods and deployments, services and networking, health probes, scaling, config and secrets. Interview-ready.</p>
+  </section>
+
+  <!-- ============================================================
+       TABLE OF CONTENTS
+       ============================================================ -->
+  <section class="toc" id="contents">
+    <p class="eyebrow">Contents</p>
+    <h2 class="toc__title">11 sections. Click to jump.</h2>
+
+    <ol class="toc__list">
+      <li><a href="#why"><span class="toc__num">01</span> Why Containers, Not VMs</a></li>
+      <li><a href="#images"><span class="toc__num">02</span> Images and Layers</a></li>
+      <li><a href="#dockerfile"><span class="toc__num">03</span> Writing a Good Dockerfile</a></li>
+      <li><a href="#runtime"><span class="toc__num">04</span> Containers, Volumes and Networking</a></li>
+      <li><a href="#why-k8s"><span class="toc__num">05</span> Why Kubernetes</a></li>
+      <li><a href="#objects"><span class="toc__num">06</span> Core Objects: Pods, Deployments, Services</a></li>
+      <li><a href="#networking"><span class="toc__num">07</span> Kubernetes Networking</a></li>
+      <li><a href="#probes"><span class="toc__num">08</span> Health Probes and Scaling</a></li>
+      <li><a href="#config"><span class="toc__num">09</span> Config, Secrets and Storage</a></li>
+      <li><a href="#mistakes"><span class="toc__num">10</span> Common Mistakes and Pitfalls</a></li>
+      <li><a href="#interview"><span class="toc__num">11</span> Interview Quick Reference</a></li>
+    </ol>
+  </section>
+
+  <!-- ============================================================
+       SECTION 01: WHY CONTAINERS, NOT VMS
+       ============================================================ -->
+  <article class="section" id="why">
+    <p class="section__eyebrow">Section 01</p>
+    <h2 class="section__title">Why Containers, Not VMs</h2>
+
+    <div class="section__body">
+      <p>This is increasingly asked even in non-DevOps interviews, as a filter for "does this candidate understand how their code actually ships." The core idea: containers share the host OS kernel. Virtual machines each run a full, separate OS.</p>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Aspect</span>
+          <span>Virtual Machine</span>
+          <span>Container</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>What's isolated</strong></span>
+          <span>A full guest OS, including its own kernel</span>
+          <span>Just the process and its filesystem view. Kernel is shared with the host.</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Startup time</strong></span>
+          <span>Seconds to minutes. Boots an entire OS.</span>
+          <span>Milliseconds to seconds. Just starts a process.</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Size</strong></span>
+          <span>Gigabytes. Includes a full OS.</span>
+          <span>Megabytes to low gigabytes. Just app and dependencies.</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Isolation strength</strong></span>
+          <span>Stronger. Separate kernels, harder to escape.</span>
+          <span>Weaker by default. Shared kernel means a kernel exploit can affect the host.</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Density</strong></span>
+          <span>Fewer VMs per host. Each carries full OS overhead.</span>
+          <span>Many more containers per host. Minimal per-container overhead.</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Container or VM?</p>
+        <ol class="rules__list">
+          <li><strong>Application workload, web service, microservice?</strong> Container.</li>
+          <li><strong>Strong kernel-level isolation between untrusted tenants?</strong> VM.</li>
+          <li><strong>Need a specific kernel version or custom kernel module?</strong> VM.</li>
+          <li><strong>Stateless service that must boot in under a second?</strong> Container, no contest.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"A container is not a lightweight VM. It is just a regular process on the host, isolated using Linux namespaces for what it can see, and cgroups for what resources it can use. There is no hypervisor and no second kernel involved."</em> This is the single sentence that separates candidates who have read a diagram from candidates who understand the mechanism.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: name the two Linux kernel primitives specifically.</strong> Say <em>"Namespaces give a process its own isolated view of things like the process list, network interfaces, and filesystem mounts. Cgroups limit and account for what resources, like CPU, memory, and I/O, that process is allowed to use. Docker is really just a friendly interface over both."</em> Most candidates know Docker uses "some kernel magic" but cannot name the two actual mechanisms. Naming them is a clear differentiator.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know containers share the host kernel; VMs each run their own</li>
+        <li>You can name namespaces and cgroups as the actual underlying mechanisms</li>
+        <li>You know the practical tradeoff: containers are faster and denser, VMs are more strongly isolated</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> containers for most application workloads, fast and dense and disposable. VMs when you need strong kernel-level isolation between untrusted tenants.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 02: IMAGES & LAYERS
+       ============================================================ -->
+  <article class="section" id="images">
+    <p class="section__eyebrow">Section 02</p>
+    <h2 class="section__title">Images and Layers</h2>
+
+    <div class="section__body">
+      <p>A Docker image is a read-only template built from a stack of layers. A container is a running instance of an image, with one thin writable layer on top. Understanding layers is what makes Dockerfile ordering make sense instead of feeling arbitrary.</p>
+
+      <h3 class="section__h3">2.1 How Layers Work</h3>
+      <p>Each instruction in a Dockerfile that changes the filesystem (<code>RUN</code>, <code>COPY</code>, <code>ADD</code>) creates a new layer. Layers are cached. If a layer's inputs have not changed, Docker reuses the cached layer instead of rebuilding it. This is why instruction order in a Dockerfile directly affects build speed.</p>
+
+      <div class="graph-figure">
+        <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="150" y="170" width="260" height="30" fill="none" stroke="#2f2d2d" stroke-width="2"/>
+          <text x="280" y="190" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#2f2d2d">base image (OS layer)</text>
+          <rect x="150" y="140" width="260" height="30" fill="none" stroke="#a82525" stroke-width="2"/>
+          <text x="280" y="160" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#a82525">install dependencies</text>
+          <rect x="150" y="110" width="260" height="30" fill="none" stroke="#a82525" stroke-width="2"/>
+          <text x="280" y="130" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#a82525">copy app code</text>
+          <rect x="150" y="80" width="260" height="30" fill="#d02e2e" opacity="0.18" stroke="#d02e2e" stroke-width="2"/>
+          <text x="280" y="100" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#d02e2e">writable container layer</text>
+          <text x="280" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#6e6c6a">image = stacked read-only layers, cached individually</text>
+        </svg>
+        <p class="graph-caption">Each layer is cached. Change the top layer, keep everything below it.</p>
+      </div>
+
+      <h3 class="section__h3">2.2 The Caching Rule That Matters Most</h3>
+      <p>Docker invalidates a layer's cache, and every layer after it, the moment anything in that layer's inputs changes. This is why <code>COPY</code>-ing your entire app before installing dependencies is a common performance mistake. Every code change forces a full dependency reinstall.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Dockerfile layer ordering</span>
+        </div>
+<pre><code># SLOW: any code change invalidates the dependency install layer below it
+COPY . .
+RUN npm install
+
+# FAST: dependency layer only rebuilds when package.json actually changes
+COPY package.json package-lock.json ./
+RUN npm install
+COPY . .</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Layer Order in a Dockerfile</p>
+        <ol class="rules__list">
+          <li><strong>Least-frequently-changing stuff first.</strong> Base image, system packages, then app dependencies.</li>
+          <li><strong>Most-frequently-changing stuff last.</strong> Source code, config files, build artifacts.</li>
+          <li><strong>Each <code>RUN</code>, <code>COPY</code>, <code>ADD</code> is a new layer.</strong> Combine related shell steps in one RUN to keep the layer count down.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"I would copy just the dependency manifest first and install dependencies before copying the rest of the source code, so that layer stays cached across builds unless dependencies actually change. Code edits alone will not trigger a full reinstall."</em> This is the single most practical Dockerfile optimization and interviewers listen for it specifically.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: mention multi-stage builds.</strong> Say <em>"For a compiled language, I would use a multi-stage build. One stage with the full compiler toolchain to build the binary, then a second, minimal final stage that only copies the compiled artifact in. That keeps the shipped image small without needing the build tools present in production."</em> This is a real production technique that shows depth beyond a single-stage Dockerfile.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know an image is layers, a container is a running instance plus a writable layer</li>
+        <li>You order Dockerfile instructions to maximize cache reuse, least-frequently-changing first</li>
+        <li>You know multi-stage builds keep final images small by discarding build-time tooling</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> order layers from least to most frequently changing, and use multi-stage builds to keep the shipped image lean.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 03: WRITING A GOOD DOCKERFILE
+       ============================================================ -->
+  <article class="section" id="dockerfile">
+    <p class="section__eyebrow">Section 03</p>
+    <h2 class="section__title">Writing a Good Dockerfile</h2>
+
+    <div class="section__body">
+      <p>Beyond layer ordering, there are a handful of concrete practices that separate a Dockerfile that "works" from one that is actually production-appropriate.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Production-style Dockerfile</span>
+        </div>
+<pre><code>FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
+
+FROM node:20-alpine
+WORKDIR /app
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+COPY --from=builder /app/node_modules ./node_modules
+COPY . .
+USER appuser
+EXPOSE 3000
+HEALTHCHECK CMD wget -qO- http://localhost:3000/health || exit 1
+CMD ["node", "server.js"]</code></pre>
+      </div>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Practice</span>
+          <span>Why It Matters</span>
+        </div>
+        <div class="tgrid__row"><span>Use a specific, minimal base tag (<code>node:20-alpine</code>, not <code>node:latest</code>)</span><span><code>latest</code> is a moving target. Your build is not reproducible and can silently break.</span></div>
+        <div class="tgrid__row"><span>Run as a non-root <code>USER</code></span><span>If the container is compromised, the attacker does not get root inside it. Meaningfully reduces blast radius.</span></div>
+        <div class="tgrid__row"><span>Use <code>.dockerignore</code></span><span>Keeps <code>.git</code>, <code>node_modules</code>, and secrets out of the build context and final image</span></div>
+        <div class="tgrid__row"><span>Prefer <code>COPY</code> over <code>ADD</code></span><span><code>ADD</code> has implicit behaviors (auto-extracting archives, fetching URLs) that are easy to trigger by accident</span></div>
+        <div class="tgrid__row"><span>One process per container</span><span>Keeps scaling, restarting, and log collection simple and independent per concern</span></div>
+        <div class="tgrid__row"><span>Use <code>HEALTHCHECK</code></span><span>Lets Docker and orchestrators know the container is actually ready, not just running</span></div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Dockerfile Review Checklist</p>
+        <ol class="rules__list">
+          <li><strong>Base image pinned to a specific version?</strong> <code>node:20-alpine</code>, never <code>latest</code>.</li>
+          <li><strong>Running as a non-root user?</strong> Switch with <code>USER</code>, even for simple images.</li>
+          <li><strong><code>.dockerignore</code> exists and excludes <code>.git</code>, secrets, build artifacts?</strong></li>
+          <li><strong>Dependency layer separated from source layer?</strong> Manifest first, install, then code.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If asked to review a Dockerfile, check these first, out loud: <em>"Is the base image pinned to a specific version? Is it running as a non-root user? Is there a .dockerignore? Is the dependency-install layer separated from the code-copy layer for caching?"</em> A checklist answer like this reads as someone who has actually shipped containers to production, not someone reciting Docker syntax.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: mention distroless or scratch for the security extra mile.</strong> Say <em>"For a compiled binary with no runtime dependencies, I could go even further than Alpine and use a distroless or scratch base image. No shell, no package manager, nothing an attacker could use even if they got code execution inside the container."</em> This is genuinely advanced and rarely mentioned unprompted.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You pin base image versions instead of using <code>latest</code></li>
+        <li>You run as a non-root user by default</li>
+        <li>You use <code>.dockerignore</code> and prefer <code>COPY</code> over <code>ADD</code></li>
+        <li>You know <code>HEALTHCHECK</code> exists and what problem it solves</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> pinned minimal base image, non-root user, .dockerignore, dependency layer cached separately from code, one process per container.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 04: CONTAINERS, VOLUMES & NETWORKING
+       ============================================================ -->
+  <article class="section" id="runtime">
+    <p class="section__eyebrow">Section 04</p>
+    <h2 class="section__title">Containers, Volumes and Networking</h2>
+
+    <div class="section__body">
+      <p>A container's writable layer disappears the moment the container is removed. This surprises people who expect files written inside a container to persist. They do not, unless you explicitly opt in with a volume.</p>
+
+      <h3 class="section__h3">4.1 Volumes: Where Persistent Data Actually Lives</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Type</span>
+          <span>What It Is</span>
+          <span>Use For</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Named Volume</strong></span>
+          <span>Docker-managed storage, lives outside any single container's lifecycle</span>
+          <span>Databases, anything that must survive container removal</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Bind Mount</strong></span>
+          <span>Maps a specific host directory directly into the container</span>
+          <span>Local development. Edit code on the host, see changes live in the container.</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>tmpfs Mount</strong></span>
+          <span>In-memory only, never touches disk</span>
+          <span>Sensitive temporary data that should not persist anywhere</span>
+        </div>
+      </div>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Volume types in docker run</span>
+        </div>
+<pre><code>docker run -v mydata:/var/lib/postgresql/data postgres     # named volume
+docker run -v $(pwd):/app node:20                            # bind mount, local dev
+docker run --tmpfs /tmp/secrets alpine                        # in-memory only</code></pre>
+      </div>
+
+      <h3 class="section__h3">4.2 Docker Compose for Local Multi-Container Setups</h3>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">docker-compose.yml</span>
+        </div>
+<pre><code>services:
+  web:
+    build: .
+    ports: ["3000:3000"]
+    depends_on: [db]
+  db:
+    image: postgres:16
+    volumes: ["dbdata:/var/lib/postgresql/data"]
+    environment:
+      POSTGRES_PASSWORD: local_dev_only
+volumes:
+  dbdata:</code></pre>
+      </div>
+      <p>Compose defines a private network automatically. Services reach each other by service name (<code>db</code>, not an IP address), which is exactly how Kubernetes Services will behave later, so Compose is a genuinely useful mental model bridge.</p>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Volume Type?</p>
+        <ol class="rules__list">
+          <li><strong>Data that must survive container removal?</strong> Named volume.</li>
+          <li><strong>Local development with live code reload?</strong> Bind mount.</li>
+          <li><strong>Sensitive temporary data, must never hit disk?</strong> tmpfs mount.</li>
+          <li><strong>Anything else?</strong> You probably do not need a volume. Default to ephemeral.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If asked why a container "lost its data" after a restart, say <em>"Anything written to the container's own writable layer is gone the moment the container is removed. It needs to be in a named volume to persist. This is one of the most common surprises for people new to Docker, expecting the container to behave like a persistent VM."</em>
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: <code>depends_on</code> does not mean readiness.</strong> Say <em>"depends_on in Compose controls startup order, not readiness. My app container might start before Postgres is actually accepting connections. I would add a retry loop in the app's startup, or a proper healthcheck-based wait, rather than assuming depends_on alone guarantees the database is ready."</em> This is a real bug people hit constantly and rarely explain correctly.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know a container's own filesystem is ephemeral without an explicit volume</li>
+        <li>You can distinguish named volumes, bind mounts, and tmpfs by use case</li>
+        <li>You know <code>depends_on</code> controls start order, not readiness</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> named volumes for anything that must persist, bind mounts for local dev only, and never assume startup order implies readiness.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 05: WHY KUBERNETES
+       ============================================================ -->
+  <article class="section" id="why-k8s">
+    <p class="section__eyebrow">Section 05</p>
+    <h2 class="section__title">Why Kubernetes</h2>
+
+    <div class="section__body">
+      <p>Docker runs one container. Kubernetes runs a fleet of containers across many machines, and keeps them running the way you declared, even as individual machines fail. The mental shift: you do not tell Kubernetes what to do step by step. You declare the desired end state, and a control loop continuously works to make reality match it.</p>
+
+      <h3 class="section__h3">5.1 The Problem Kubernetes Actually Solves</h3>
+      <ul class="block__list">
+        <li><strong>Scheduling</strong>: deciding which machine runs which container, based on available resources</li>
+        <li><strong>Self-healing</strong>: if a container crashes or a machine dies, Kubernetes restarts or reschedules it automatically</li>
+        <li><strong>Scaling</strong>: adding or removing container instances based on load, without manual intervention</li>
+        <li><strong>Service discovery</strong>: containers can find and talk to each other by stable names, even as individual instances come and go</li>
+        <li><strong>Rolling updates</strong>: deploying a new version gradually, with automatic rollback if it starts failing</li>
+      </ul>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: When Is Kubernetes Worth It?</p>
+        <ol class="rules__list">
+          <li><strong>One service on one machine?</strong> Docker Compose is enough. Skip Kubernetes.</li>
+          <li><strong>A few services, manual deploys, predictable load?</strong> Docker Compose or a single-host setup.</li>
+          <li><strong>Many services, autoscaling, zero-downtime deploys, multi-node?</strong> Kubernetes pays off.</li>
+          <li><strong>Need scheduled batch jobs and long-running services in one cluster?</strong> Kubernetes.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"Kubernetes is a declarative control loop. I describe the desired state, like 'run 3 replicas of this container,' and Kubernetes continuously reconciles actual state to match it. If a pod dies, the control loop notices the mismatch and starts a new one. I do not write that recovery logic myself."</em> "Declarative control loop" is the specific phrase that signals real understanding versus memorized object names.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: distinguish build tool from orchestrator.</strong> Say <em>"Kubernetes does not build or run containers itself directly. It orchestrates them via a container runtime, like containerd. Docker is one way to build the images. Kubernetes is a separate layer deciding where and how many of those images actually run."</em> This distinction, build tool vs orchestrator, is commonly blurred by candidates who have only used Docker locally.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You describe Kubernetes as declarative: desired state plus a reconciling control loop</li>
+        <li>You can name the concrete problems it solves: scheduling, self-healing, scaling, discovery, rollout</li>
+        <li>You know Kubernetes and Docker solve different problems, not the same problem at different scale</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> declare desired state, let the control loop reconcile it. Do not think in terms of imperative commands once you are on Kubernetes.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 06: CORE OBJECTS
+       ============================================================ -->
+  <article class="section" id="objects">
+    <p class="section__eyebrow">Section 06</p>
+    <h2 class="section__title">Core Objects: Pods, Deployments, Services</h2>
+
+    <div class="section__body">
+      <p>Three objects cover most of what comes up in an interview. Learn them in this order. Each one wraps and manages the one before it.</p>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Object</span>
+          <span>What It Is</span>
+          <span>Key Fact</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Pod</strong></span>
+          <span>The smallest deployable unit. One or more containers that share network and storage.</span>
+          <span>Pods are disposable and do not self-heal on their own. You almost never create one directly.</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Deployment</strong></span>
+          <span>Manages a set of identical pod replicas, handles rollouts and self-healing</span>
+          <span>This is what you actually create in practice, not a bare Pod</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Service</strong></span>
+          <span>A stable network identity and load balancer in front of a changing set of pods</span>
+          <span>Pods get new IPs constantly as they are recreated. Services give you a fixed address that does not change.</span>
+        </div>
+      </div>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Deployment + Service, the canonical pair</span>
+        </div>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels: { app: checkout-api }
+  template:
+    metadata:
+      labels: { app: checkout-api }
+    spec:
+      containers:
+        - name: checkout-api
+          image: myregistry/checkout-api:1.4.2
+          ports: [{ containerPort: 3000 }]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: checkout-api
+spec:
+  selector: { app: checkout-api }
+  ports: [{ port: 80, targetPort: 3000 }]</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Object to Create</p>
+        <ol class="rules__list">
+          <li><strong>Stateless service that should self-heal and roll out?</strong> Deployment.</li>
+          <li><strong>Need a stable address and load balancing in front of a set of pods?</strong> Service.</li>
+          <li><strong>Database or anything that needs a stable network identity and persistent storage?</strong> StatefulSet, not Deployment.</li>
+          <li><strong>Need one pod per node for logging or monitoring?</strong> DaemonSet.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"I never create bare Pods in practice. I define a Deployment, which manages a ReplicaSet, which ensures the desired number of Pods are always running and handles rolling updates. In front of that I would put a Service, since Pod IPs change every time a Pod is recreated, and I need something stable to route traffic to."</em> This three-object chain, said fluently, is the single most-tested piece of Kubernetes knowledge.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: labels and selectors are the actual glue.</strong> Say <em>"There is no hardcoded link between a Deployment and a Service. They are connected purely by label selectors. The Service selects any Pod with a matching label, which is what lets me swap which Pods receive traffic just by changing labels, without touching the Service definition at all."</em> Understanding labels as the connective tissue, rather than memorizing YAML shape, is what actually lets you debug a broken cluster.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know the Deployment to ReplicaSet to Pod chain and why each layer exists</li>
+        <li>You know Pods get new IPs on recreation, which is exactly why Services exist</li>
+        <li>You understand labels and selectors as the actual connective mechanism, not magic linking</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> Deployment for the desired state and self-healing, Service for a stable network identity, labels as the glue connecting them.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 07: KUBERNETES NETWORKING
+       ============================================================ -->
+  <article class="section" id="networking">
+    <p class="section__eyebrow">Section 07</p>
+    <h2 class="section__title">Kubernetes Networking</h2>
+
+    <div class="section__body">
+      <p>Every Pod gets its own IP, and any Pod can reach any other Pod directly by default, without NAT. Services exist on top of this to solve the problem of Pod IPs being unstable, and to distribute traffic across multiple matching Pods.</p>
+
+      <h3 class="section__h3">7.1 Service Types</h3>
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Type</span>
+          <span>What It Does</span>
+          <span>Use For</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>ClusterIP</strong> (default)</span>
+          <span>A stable internal-only IP, reachable only inside the cluster</span>
+          <span>Internal service-to-service communication. Most Services are this type.</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>NodePort</strong></span>
+          <span>Exposes the Service on a static port on every node's own IP</span>
+          <span>Simple external access, mostly for development or testing, rarely production</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>LoadBalancer</strong></span>
+          <span>Provisions an actual external load balancer via the cloud provider</span>
+          <span>Production external access to a Service</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Ingress</strong></span>
+          <span>Not technically a Service type. An HTTP(S) router in front of multiple Services, handling routing rules, TLS, and hostnames.</span>
+          <span>Exposing many Services under one external IP with path or host-based routing</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Service Type?</p>
+        <ol class="rules__list">
+          <li><strong>Internal service-to-service call, no external access?</strong> ClusterIP. Default.</li>
+          <li><strong>Quick external access for dev or testing?</strong> NodePort.</li>
+          <li><strong>One production service needing its own external IP?</strong> LoadBalancer.</li>
+          <li><strong>Many services behind one external IP, HTTP(S) routing?</strong> Ingress.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"For internal traffic between services I would use the default ClusterIP. For external access, I would generally reach for an Ingress rather than a separate LoadBalancer Service per app, since Ingress lets me route multiple services under one external IP and handle TLS termination in one place instead of provisioning a cloud load balancer for every single service."</em> Naming Ingress specifically, and why it is usually preferred over one LoadBalancer per service, is a strong cost-awareness signal.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: DNS-based service discovery.</strong> Say <em>"Kubernetes runs an internal DNS server, so a Pod can reach another Service just by its name, like http://checkout-api, or the fully qualified checkout-api.default.svc.cluster.local across namespaces. I never hardcode Pod IPs, since they are not stable anyway."</em> This is the mechanism that actually makes microservice-to-microservice calls work, and it is often glossed over as "magic."
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know ClusterIP is the default and correct choice for internal traffic</li>
+        <li>You know Ingress is generally preferred over per-service LoadBalancers for cost and routing flexibility</li>
+        <li>You know service discovery happens via internal DNS by service name, never hardcoded IPs</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> ClusterIP internally, Ingress for external HTTP(S) traffic across multiple services, DNS names instead of hardcoded IPs everywhere.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 08: HEALTH PROBES & SCALING
+       ============================================================ -->
+  <article class="section" id="probes">
+    <p class="section__eyebrow">Section 08</p>
+    <h2 class="section__title">Health Probes and Scaling</h2>
+
+    <div class="section__body">
+      <p>Kubernetes cannot know whether your application is actually healthy unless you tell it how to check. This is where "how would you deploy this" system design questions frequently go once the basic objects are covered.</p>
+
+      <h3 class="section__h3">8.1 Liveness vs Readiness Probes</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Probe</span>
+          <span>Question It Answers</span>
+          <span>Failure Response</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Liveness</strong></span>
+          <span>"Is this container still functioning, or is it stuck or deadlocked?"</span>
+          <span>Kubernetes restarts the container</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Readiness</strong></span>
+          <span>"Is this container ready to accept traffic right now?"</span>
+          <span>Kubernetes stops sending it traffic, but does NOT restart it</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Startup</strong></span>
+          <span>"Has this container finished its (possibly slow) initial startup?"</span>
+          <span>Delays liveness and readiness checks until startup succeeds, preventing a slow-starting app from being killed prematurely</span>
+        </div>
+      </div>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Probe configuration</span>
+        </div>
+<pre><code>livenessProbe:
+  httpGet: { path: /health, port: 3000 }
+  initialDelaySeconds: 10
+  periodSeconds: 15
+readinessProbe:
+  httpGet: { path: /ready, port: 3000 }
+  initialDelaySeconds: 5
+  periodSeconds: 10</code></pre>
+      </div>
+
+      <h3 class="section__h3">8.2 Scaling: HPA</h3>
+      <p>A HorizontalPodAutoscaler (HPA) automatically adjusts the number of pod replicas based on observed metrics, most commonly CPU or memory utilization, though custom metrics (queue depth, request latency) are also supported.</p>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">HorizontalPodAutoscaler</span>
+        </div>
+<pre><code>apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata: { name: checkout-api-hpa }
+spec:
+  scaleTargetRef: { kind: Deployment, name: checkout-api }
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+    - type: Resource
+      resource: { name: cpu, target: { type: Utilization, averageUtilization: 70 } }</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Liveness, Readiness, or Startup?</p>
+        <ol class="rules__list">
+          <li><strong>Process is hung or deadlocked and only a restart will fix it?</strong> Liveness.</li>
+          <li><strong>Process is alive but cannot serve traffic yet (warming up, DB reconnecting)?</strong> Readiness.</li>
+          <li><strong>App takes a long time to start (JVM, large import)?</strong> Startup probe, to prevent liveness from killing it during boot.</li>
+          <li><strong>Default for most services?</strong> Liveness on a lightweight endpoint, readiness on a dependency-aware endpoint, startup for slow boots.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"I would add both a liveness probe hitting a lightweight health endpoint, and a separate readiness probe that also checks downstream dependencies like the database connection. The pod is only marked ready once it can genuinely serve a request, not just once the process has started."</em> Distinguishing what each probe checks, not just that both exist, is the actual signal.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: CPU is often the wrong scaling signal.</strong> Say <em>"For a queue-processing service, CPU utilization is often a poor scaling signal. I would scale on queue depth instead, using a custom metrics adapter, since a service can be CPU-idle while still falling behind on a growing backlog."</em> This shows you think about the actual bottleneck, not just reach for the default HPA config.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know liveness restarts, readiness only removes from traffic, and why that distinction matters</li>
+        <li>You know startup probes exist for slow-starting apps to avoid premature restarts</li>
+        <li>You know HPA can scale on custom metrics, not just CPU, when CPU is not the real bottleneck</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> lightweight liveness probe, dependency-aware readiness probe, startup probe for slow boots, and scale on the metric that actually reflects load.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 09: CONFIG, SECRETS & STORAGE
+       ============================================================ -->
+  <article class="section" id="config">
+    <p class="section__eyebrow">Section 09</p>
+    <h2 class="section__title">Config, Secrets and Storage</h2>
+
+    <div class="section__body">
+      <p>Containers should be built once and configured per environment, not rebuilt for each one. Kubernetes gives you two objects for exactly this, plus a storage abstraction for anything that needs to persist.</p>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Object</span>
+          <span>What It Holds</span>
+          <span>Key Fact</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>ConfigMap</strong></span>
+          <span>Non-sensitive configuration. URLs, feature flags, log levels.</span>
+          <span>Stored in plain text, visible to anyone with cluster read access</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Secret</strong></span>
+          <span>Sensitive data. Passwords, API keys, TLS certs.</span>
+          <span>Base64-encoded by default, which is encoding, not encryption. Treat this as a common security trap.</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>PersistentVolume / PersistentVolumeClaim</strong></span>
+          <span>Durable storage that outlives any individual Pod</span>
+          <span>A Pod's own filesystem is ephemeral, exactly like a plain Docker container. PVs are the Kubernetes-level fix.</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: ConfigMap vs Secret vs PV</p>
+        <ol class="rules__list">
+          <li><strong>Non-sensitive config that varies by environment?</strong> ConfigMap.</li>
+          <li><strong>Passwords, API keys, TLS certs?</strong> Secret, ideally backed by an external secrets manager.</li>
+          <li><strong>Data that must survive a pod restart (DB files, uploads)?</strong> PersistentVolume + PersistentVolumeClaim.</li>
+          <li><strong>Highly sensitive secrets?</strong> Mount as a file, not an env var, to reduce leak surface.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"I would put non-sensitive config in a ConfigMap and sensitive values in a Secret, injected as environment variables or mounted files rather than baked into the image. That lets the same image run across dev, staging, and production with different config, without rebuilding it per environment."</em> "Build once, configure per environment" is the actual principle interviewers are checking for.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: mount Secrets as files, not env vars, for sensitive credentials.</strong> Say <em>"Environment variables can leak more easily, through crash dumps, logs, or child processes inheriting them. For highly sensitive values, I would mount the Secret as a file instead, which is a narrower exposure surface, and pair it with a tool like Vault Agent for automatic rotation."</em> This env-var-vs-file distinction for secrets is a real production concern most candidates never mention.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You separate ConfigMaps (non-sensitive) from Secrets (sensitive) by default</li>
+        <li>You know base64 is encoding, not encryption, and name a real mitigation</li>
+        <li>You know Pod storage is ephemeral and PersistentVolumes are the fix, same as Docker volumes</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> build the image once, inject environment-specific config via ConfigMaps and Secrets, never trust base64 alone to protect sensitive values.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 10: COMMON MISTAKES
+       ============================================================ -->
+  <article class="section" id="mistakes">
+    <p class="section__eyebrow">Section 10</p>
+    <h2 class="section__title">Common Mistakes and Pitfalls</h2>
+
+    <div class="section__body">
+      <p>The gap between "I know Docker and Kubernetes commands" and "I have actually run this in production" shows up almost entirely in this list.</p>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Symptom</span>
+          <span>Likely Cause</span>
+          <span>Fix</span>
+        </div>
+        <div class="tgrid__row">
+          <span>Container works locally, fails in the cluster</span>
+          <span>No resource requests or limits set. Pod gets scheduled onto a node without enough actual capacity, or gets OOM-killed.</span>
+          <span>Always set CPU and memory <code>requests</code> and <code>limits</code> on every container</span>
+        </div>
+        <div class="tgrid__row">
+          <span>Deployment update takes down the app briefly</span>
+          <span>No readiness probe, or rollout strategy is not configured. Traffic hits Pods before they are ready.</span>
+          <span>Add a real readiness probe and use a RollingUpdate strategy with <code>maxUnavailable</code> tuned appropriately</span>
+        </div>
+        <div class="tgrid__row">
+          <span>"Works on my machine" image behaves differently in production</span>
+          <span>Base image tag drifted (<code>:latest</code>), or environment-specific config baked into the image</span>
+          <span>Pin exact image digests or tags, externalize all config via ConfigMaps and Secrets</span>
+        </div>
+        <div class="tgrid__row">
+          <span>Pod restarts repeatedly (CrashLoopBackOff)</span>
+          <span>App crashes on startup, often from missing config, a failing dependency, or an over-aggressive liveness probe</span>
+          <span><code>kubectl logs</code> and <code>kubectl describe pod</code> first. Do not guess, read the actual failure.</span>
+        </div>
+        <div class="tgrid__row">
+          <span>Secrets visible in <code>kubectl</code> output or CI logs</span>
+          <span>Secrets echoed in build logs, or base64 mistaken for real protection</span>
+          <span>Never log Secret values, enable etcd encryption at rest, consider an external secrets manager</span>
+        </div>
+        <div class="tgrid__row">
+          <span>Cluster costs balloon unexpectedly</span>
+          <span>Over-provisioned resource requests, or a LoadBalancer Service per app instead of shared Ingress</span>
+          <span>Right-size requests based on actual usage, consolidate external access behind Ingress</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: The Production-Readiness Checklist</p>
+        <ol class="rules__list">
+          <li><strong>Resource requests and limits set on every container?</strong></li>
+          <li><strong>Liveness and readiness probes both present, checking the right things?</strong></li>
+          <li><strong>Rolling update strategy with sensible <code>maxUnavailable</code> and <code>maxSurge</code>?</strong></li>
+          <li><strong>External traffic going through Ingress, not one LoadBalancer per service?</strong></li>
+          <li><strong>Secrets backed by an external manager, not just base64 in YAML?</strong></li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> When describing any deployment, narrate production-readiness as you go, not after being asked: <em>"I would set resource requests and limits so the scheduler places this sensibly and it cannot starve other pods, add a readiness probe so it only receives traffic once actually ready, and use RollingUpdate so deploys do not cause downtime."</em> Saying this proactively is worth more than a technically complete YAML file with none of it mentioned out loud.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: the mistake that actually costs interview points.</strong> It is rarely picking the wrong Service type. It is forgetting resource requests, resource limits, and health probes entirely when sketching a deployment. These are treated as baseline production-readiness, the same way indexing is baseline for a database design answer. An interviewer sketching a "deploy this" scenario is almost always listening for whether you mention these unprompted, not whether you can recite every field in a Deployment spec from memory.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You mention resource requests and limits and health probes without being prompted</li>
+        <li>You debug with <code>kubectl logs</code> and <code>kubectl describe pod</code> first, rather than guessing</li>
+        <li>You know CrashLoopBackOff means "investigate the actual failure," not "restart harder"</li>
+        <li>You treat base64 Secrets and default configs as things to actively question, not trust</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> resource limits, health probes, and RollingUpdate are baseline for every deployment. Narrate them unprompted, and debug from actual logs, never guesses.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 11: INTERVIEW QUICK REFERENCE
+       ============================================================ -->
+  <article class="section" id="interview">
+    <p class="section__eyebrow">Section 11</p>
+    <h2 class="section__title">Interview Quick Reference</h2>
+
+    <div class="section__body">
+      <h3 class="section__h3">Time Allocation</h3>
+      <p>In a system design interview, deployment and infra questions usually come at the end, in 3 to 5 minutes, once the API and data layer are settled. Keep the answer tight: containerize, orchestrate, expose, observe, in that order.</p>
+
+      <h3 class="section__h3">What to Cover (in order)</h3>
+      <ul class="block__list">
+        <li>Containerize the app with a minimal, pinned, non-root Dockerfile</li>
+        <li>Deploy it via a Kubernetes Deployment with resource requests and limits set</li>
+        <li>Add liveness and readiness probes. Say what each one actually checks.</li>
+        <li>Expose it via a Service (ClusterIP internally, Ingress for external HTTP)</li>
+        <li>Mention autoscaling on the metric that reflects real load, and rolling updates for zero-downtime deploys</li>
+      </ul>
+
+      <h3 class="section__h3">Signal Words and Your Response</h3>
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>If the interviewer says</span>
+          <span>Your response</span>
+        </div>
+        <div class="tgrid__row"><span>"How would you deploy this"</span><span>Dockerize, Deployment + Service, probes, resource limits, Ingress for external traffic</span></div>
+        <div class="tgrid__row"><span>"Zero-downtime deploys"</span><span>RollingUpdate strategy, readiness probes so new pods only get traffic once actually ready</span></div>
+        <div class="tgrid__row"><span>"Handle traffic spikes"</span><span>HorizontalPodAutoscaler, scaled on the metric that reflects the real bottleneck</span></div>
+        <div class="tgrid__row"><span>"Store secrets" or "API keys"</span><span>Kubernetes Secret, mounted as a file, ideally backed by an external secrets manager</span></div>
+        <div class="tgrid__row"><span>"Persist data" (database, uploads)</span><span>PersistentVolume and PersistentVolumeClaim, never rely on a Pod's own ephemeral filesystem</span></div>
+        <div class="tgrid__row"><span>"Multiple services, one domain"</span><span>Ingress with path or host-based routing, not one LoadBalancer per service</span></div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: The Deployment Answer</p>
+        <ol class="rules__list">
+          <li><strong>Containerize (10s):</strong> <em>"Minimal pinned base image, non-root user, multi-stage build if compiled."</em></li>
+          <li><strong>Orchestrate (15s):</strong> <em>"Deployment with N replicas, resource requests and limits set."</em></li>
+          <li><strong>Health (10s):</strong> <em>"Readiness probe checks dependencies, liveness probe is lightweight and separate."</em></li>
+          <li><strong>Expose (10s):</strong> <em>"ClusterIP internally, Ingress for external HTTP with TLS termination."</em></li>
+          <li><strong>Scale (10s):</strong> <em>"HPA on the metric that actually reflects load, not CPU by default if that is not the bottleneck."</em></li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Have one specific incident story ready: a CrashLoopBackOff you debugged, a bad rollout you rolled back, a resource limit you had to tune. The pattern-matching table above gets you through the knowledge check. One real story is what makes the DevOps portion of an interview memorable rather than just correct.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: name the build-once principle.</strong> Say <em>"The image should be built once and promoted through dev, staging, and production unchanged. Anything that varies per environment, like config, secrets, and feature flags, is injected at runtime, not baked into the image."</em> That single principle, said once, signals you have shipped containers the way mature teams actually ship them, not just the way a tutorial does.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You covered containerize to orchestrate to expose to scale in a tight, ordered answer</li>
+        <li>You mentioned resource limits and health probes without being asked specifically</li>
+        <li>You know Ingress over per-service LoadBalancers, and PersistentVolumes over ephemeral Pod storage</li>
+        <li>You have one real debugging story ready, not just definitions</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> containerize with a lean, non-root, pinned image. Deploy with resource limits and real health probes. Expose via Ingress. Scale on the metric that matches actual load.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       CLOSING
+       ============================================================ -->
+  <section class="closing">
+    <h2 class="closing__h">That's it.</h2>
+    <p class="closing__sub">11 sections, one cheat sheet. Bookmark it before your next infra or system design round.</p>
+    <a href="#contents" class="cta cta--lg">BACK TO CONTENTS</a>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <a class="footer__ig" href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">Instagram: @vlada.asana</a>
+  <p class="footer__small">Companion piece to "Everything you need to know about API," "...about Git," "...about Database Design," and "...about Big-O" · Built by @vlada.asana</p>
+</footer>
+
+<!-- Toast for copy buttons -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Everything you need to know about Database Design, by @vlada.asana</title>
+<meta name="description" content="A system design cheat sheet for databases. SQL vs NoSQL, normalization, indexing, transactions, CAP theorem, replication, sharding, caching. Interview-ready." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="#">@vlada.asana <span class="topbar__sep">·</span> Database Cheat Sheet</a>
+    <a class="topbar__cta" href="#contents">CONTENTS</a>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+    <p class="hero__byline">A system design cheat sheet by <a href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">@vlada.asana</a></p>
+    <p class="eyebrow">System design interviews</p>
+    <h1 class="hero__title">Everything you need to know about <span class="hero__title-accent">DATABASE DESIGN</span></h1>
+    <p class="hero__lede">SQL vs NoSQL, normalization, indexing, transactions and ACID, the CAP theorem, replication, sharding, and caching. Interview-ready.</p>
+  </section>
+
+  <!-- ============================================================
+       TABLE OF CONTENTS
+       ============================================================ -->
+  <section class="toc" id="contents">
+    <p class="eyebrow">Contents</p>
+    <h2 class="toc__title">11 sections. Click to jump.</h2>
+
+    <ol class="toc__list">
+      <li><a href="#choosing"><span class="toc__num">01</span> Choosing the Right Database</a></li>
+      <li><a href="#modeling"><span class="toc__num">02</span> Relational Modeling and Normalization</a></li>
+      <li><a href="#indexing"><span class="toc__num">03</span> Indexing</a></li>
+      <li><a href="#transactions"><span class="toc__num">04</span> Transactions and ACID</a></li>
+      <li><a href="#nosql"><span class="toc__num">05</span> NoSQL Data Models</a></li>
+      <li><a href="#cap"><span class="toc__num">06</span> CAP Theorem and Consistency</a></li>
+      <li><a href="#replication"><span class="toc__num">07</span> Replication</a></li>
+      <li><a href="#sharding"><span class="toc__num">08</span> Sharding and Partitioning</a></li>
+      <li><a href="#caching"><span class="toc__num">09</span> Caching Layers</a></li>
+      <li><a href="#mistakes"><span class="toc__num">10</span> Common Mistakes and Perf Pitfalls</a></li>
+      <li><a href="#interview"><span class="toc__num">11</span> Interview Quick Reference</a></li>
+    </ol>
+  </section>
+
+  <!-- ============================================================
+       SECTION 01: CHOOSING THE RIGHT DATABASE
+       ============================================================ -->
+  <article class="section" id="choosing">
+    <p class="section__eyebrow">Section 01</p>
+    <h2 class="section__title">Choosing the Right Database</h2>
+
+    <div class="section__body">
+      <p>Default to a relational database unless the requirements give you a clear reason not to. This mirrors the API cheat sheet's protocol advice for a reason. In both cases, interviewers are testing judgment, not encyclopedic knowledge of every option.</p>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Type</span>
+          <span>Best For</span>
+          <span>Signals to Listen For</span>
+          <span>Avoid When</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Relational (SQL)</strong></span>
+          <span>Structured data, relationships, transactions</span>
+          <span>Orders, payments, users, anything needing joins or consistency</span>
+          <span>Schema changes constantly, data is naturally a document</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Document (NoSQL)</strong></span>
+          <span>Semi-structured, nested, evolving data</span>
+          <span>Product catalogs, CMS content, user profiles with varying fields</span>
+          <span>Heavy cross-entity relationships and joins</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Key-Value</strong></span>
+          <span>Simple lookups by ID, extreme speed</span>
+          <span>Session storage, caching, feature flags</span>
+          <span>You need to query by anything other than the key</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Wide-Column</strong></span>
+          <span>Massive write throughput, time-series</span>
+          <span>IoT sensor data, event logging, metrics at huge scale</span>
+          <span>Small datasets, complex ad-hoc queries</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Graph</strong></span>
+          <span>Relationships ARE the data</span>
+          <span>Social networks, recommendation engines, fraud detection</span>
+          <span>Data is mostly tabular with few relationships</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Database Type?</p>
+        <ol class="rules__list">
+          <li><strong>Does the data have clear structure and relationships?</strong> Use relational (SQL).</li>
+          <li><strong>Does the schema change often, or is data naturally nested?</strong> Consider a document store.</li>
+          <li><strong>Do you only ever look things up by a single key, at huge scale?</strong> Consider key-value.</li>
+          <li><strong>Is the question "who is connected to whom, and how"?</strong> Consider graph.</li>
+          <li><strong>Is write volume the dominant constraint, more than query flexibility?</strong> Consider wide-column.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Do not open with "SQL vs NoSQL" as a binary. Say <em>"I will start with PostgreSQL because the data has clear entities and relationships, and I need transactional guarantees on orders. If read scale becomes the bottleneck later, I would add a cache or a read replica before reaching for a different database entirely."</em> This shows you reach for the boring, well-understood option first.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: NoSQL is not one thing.</strong> Say <em>"NoSQL is not a category with one tradeoff. A document store, a key-value store, and a graph database solve completely different problems. I would pick based on the access pattern, not because NoSQL sounds more scalable."</em> This single sentence separates candidates who have shipped real systems from those repeating a 2015-era blog post.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You default to relational unless there is a specific reason not to</li>
+        <li>You know NoSQL is a family of different tradeoffs, not one option</li>
+        <li>You tie the choice to the access pattern, not to a trend</li>
+        <li>You are willing to combine types, SQL as source of truth and Redis as cache, rather than picking exactly one</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> relational for the source of truth, specialize into document/key-value/graph only where the access pattern clearly demands it.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 02: RELATIONAL MODELING & NORMALIZATION
+       ============================================================ -->
+  <article class="section" id="modeling">
+    <p class="section__eyebrow">Section 02</p>
+    <h2 class="section__title">Relational Modeling and Normalization</h2>
+
+    <div class="section__body">
+      <p>Normalization is about eliminating redundancy so updates only need to happen in one place. Denormalization is the deliberate, informed reversal of that. Trading redundancy for read speed. Both are tools, not a moral hierarchy.</p>
+
+      <h3 class="section__h3">2.1 The Normal Forms, Practically</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Form</span>
+          <span>Rule</span>
+          <span>Fixes</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>1NF</strong></span>
+          <span>Every column holds a single, atomic value</span>
+          <span>No comma-separated lists crammed into one column</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>2NF</strong></span>
+          <span>Every non-key column depends on the whole primary key</span>
+          <span>Removes partial dependencies in composite-key tables</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>3NF</strong></span>
+          <span>Every non-key column depends only on the key, not on other non-key columns</span>
+          <span>Removes transitive dependencies (e.g. storing city AND zip when zip determines city)</span>
+        </div>
+      </div>
+      <p>In practice: most production schemas target 3NF and stop. Higher normal forms (BCNF, 4NF, 5NF) exist but rarely come up outside academic settings.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Normalization example</span>
+        </div>
+<pre><code>-- Un-normalized: city is redundant, repeated per order, and can drift out of sync
+orders(id, customer_name, customer_city, customer_zip, item, price)
+
+-- Normalized to 3NF: customer data lives once, orders reference it
+customers(id, name, city, zip)
+orders(id, customer_id REFERENCES customers(id), item, price)</code></pre>
+      </div>
+
+      <h3 class="section__h3">2.2 When to Denormalize</h3>
+      <p>Denormalization means intentionally duplicating data to avoid expensive joins on hot read paths. It is not a mistake. It is a tradeoff you make explicitly, after normalizing first.</p>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Normalize or Denormalize?</p>
+        <ol class="rules__list">
+          <li><strong>Designing the schema from scratch?</strong> Normalize to 3NF first, always.</li>
+          <li><strong>A specific read path is slow due to repeated joins?</strong> Denormalize that specific path, do not rewrite the whole schema.</li>
+          <li><strong>Data changes frequently and consistency matters?</strong> Stay normalized. Duplication risks drift.</li>
+          <li><strong>Data is written once and read constantly (analytics, feeds)?</strong> Denormalize freely.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"I would normalize the schema first to avoid update anomalies, then denormalize specific hot read paths once I have evidence a join is actually the bottleneck. Not preemptively."</em> This shows you do not treat denormalization as a starting point, which is a common junior mistake.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: bring up materialized views.</strong> Say <em>"Instead of denormalizing the actual schema, I could use a materialized view that pre-joins and pre-aggregates the data, refreshed on a schedule or on write. That gives me fast reads without duplicating source-of-truth data."</em> This is the answer that shows you know a third option exists between "always join" and "duplicate everything."
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You can explain 1NF/2NF/3NF in plain terms, not just recite definitions</li>
+        <li>You normalize by default and denormalize with evidence, not by instinct</li>
+        <li>You know materialized views as a middle-ground option</li>
+        <li>You understand denormalization's real cost: data can drift out of sync</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> normalize to 3NF, denormalize only specific proven-slow read paths, consider materialized views before duplicating source data.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 03: INDEXING
+       ============================================================ -->
+  <article class="section" id="indexing">
+    <p class="section__eyebrow">Section 03</p>
+    <h2 class="section__title">Indexing</h2>
+
+    <div class="section__body">
+      <p>An index is a separate data structure that lets the database find rows without scanning the entire table. It trades write speed and storage for read speed. Every index you add makes every write slightly slower, because the index has to be updated too.</p>
+
+      <h3 class="section__h3">3.1 Index Types</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Type</span>
+          <span>How It Works</span>
+          <span>Best For</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>B-Tree</strong></span>
+          <span>Balanced tree, sorted, O(log n) lookup</span>
+          <span>Default index type: equality, range queries, sorting</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Hash</strong></span>
+          <span>Direct key-to-location mapping, O(1) lookup</span>
+          <span>Exact-match lookups only, no ranges or sorting</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Composite</strong></span>
+          <span>Index across multiple columns, in a specific order</span>
+          <span>Queries that filter or sort on multiple columns together</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Covering</strong></span>
+          <span>Index includes every column the query needs</span>
+          <span>Lets the database answer entirely from the index, skipping the table</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Full-Text</strong></span>
+          <span>Inverted index over word tokens</span>
+          <span>Text search: "contains," not just "equals"</span>
+        </div>
+      </div>
+
+      <h3 class="section__h3">3.2 The Composite Index Column-Order Rule</h3>
+      <p>This is the most commonly missed indexing detail in interviews. A composite index on <code>(user_id, created_at)</code> can efficiently serve queries filtering on <code>user_id</code> alone, or on <code>user_id AND created_at</code> together. But it cannot efficiently serve a query filtering on <code>created_at</code> alone. The leftmost column must be part of the query for the index to help.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Leftmost prefix in action</span>
+        </div>
+<pre><code>CREATE INDEX idx_user_created ON orders(user_id, created_at);
+
+-- Fast: uses the index
+SELECT * FROM orders WHERE user_id = 42;
+SELECT * FROM orders WHERE user_id = 42 AND created_at &gt; '2026-01-01';
+
+-- Slow: created_at alone cannot use this index, full scan instead
+SELECT * FROM orders WHERE created_at &gt; '2026-01-01';</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Index Type?</p>
+        <ol class="rules__list">
+          <li><strong>Equality, range, or sort on a single column?</strong> Default B-tree.</li>
+          <li><strong>Filtering or sorting on multiple columns together?</strong> Composite, most selective column first.</li>
+          <li><strong>Need exact-match only, blazing fast?</strong> Hash index.</li>
+          <li><strong>Need to search text content, not just match exact values?</strong> Full-text or trigram index.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If asked to speed up a slow query, do not jump straight to "add an index." Say <em>"First I would run EXPLAIN to see whether it is doing a full table scan, then add an index matching the actual WHERE and ORDER BY columns, with the most selective column first in a composite index."</em> Naming <code>EXPLAIN</code> shows you diagnose before prescribing.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: mention index selectivity.</strong> Say <em>"An index on a boolean column like is_active is nearly useless. With only two possible values, the database often decides a full scan is cheaper than using the index. Indexes pay off most on high-cardinality columns, where the value narrows the result set a lot."</em> This is a real optimizer behavior most candidates never mention.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know indexes trade write speed for read speed, not free performance</li>
+        <li>You know composite index column order matters: leftmost-prefix rule</li>
+        <li>You diagnose with EXPLAIN before adding indexes blindly</li>
+        <li>You understand selectivity: low-cardinality columns do not benefit much</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> index based on real query patterns from EXPLAIN output, put the most selective column first in composites, and resist indexing every column "just in case."</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 04: TRANSACTIONS AND ACID
+       ============================================================ -->
+  <article class="section" id="transactions">
+    <p class="section__eyebrow">Section 04</p>
+    <h2 class="section__title">Transactions and ACID</h2>
+
+    <div class="section__body">
+      <p>A transaction groups multiple operations so they succeed or fail as one unit. ACID is the set of guarantees a proper transactional database makes about that unit.</p>
+
+      <h3 class="section__h3">4.1 The Four Guarantees</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Letter</span>
+          <span>Guarantee</span>
+          <span>Plain English</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Atomicity</strong></span>
+          <span>All operations succeed, or none do</span>
+          <span>No half-finished transfer where money leaves one account but never arrives in the other</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Consistency</strong></span>
+          <span>Every transaction moves the database from one valid state to another</span>
+          <span>Constraints, foreign keys, and rules are never violated, even mid-transaction</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Isolation</strong></span>
+          <span>Concurrent transactions do not see each other's uncommitted changes</span>
+          <span>Two people booking the last seat cannot both succeed</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Durability</strong></span>
+          <span>Once committed, it survives a crash</span>
+          <span>A confirmed payment does not vanish if the server reboots a second later</span>
+        </div>
+      </div>
+
+      <h3 class="section__h3">4.2 Isolation Levels and the Anomalies They Prevent</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Level</span>
+          <span>Prevents</span>
+          <span>Allows</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Read Uncommitted</strong></span>
+          <span>Nothing</span>
+          <span>Dirty reads: you see another transaction's uncommitted changes</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Read Committed</strong></span>
+          <span>Dirty reads</span>
+          <span>Non-repeatable reads: same query, different results, within one transaction</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Repeatable Read</strong></span>
+          <span>Dirty reads, non-repeatable reads</span>
+          <span>Phantom reads: new rows matching your WHERE clause appear mid-transaction</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Serializable</strong></span>
+          <span>All of the above</span>
+          <span>Nothing, but at the highest performance cost. Transactions behave as if run one at a time.</span>
+        </div>
+      </div>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Transactional transfer with row lock</span>
+        </div>
+<pre><code>BEGIN;
+SELECT balance FROM accounts WHERE id = 1 FOR UPDATE;  -- locks the row
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Isolation Level?</p>
+        <ol class="rules__list">
+          <li><strong>Default, most workloads?</strong> Read Committed. The default in Postgres and most databases.</li>
+          <li><strong>Reading the same data multiple times within one transaction and it must not change?</strong> Repeatable Read.</li>
+          <li><strong>Financial transfers, correctness is non-negotiable, some throughput cost is fine?</strong> Serializable.</li>
+          <li><strong>High contention on a single row (limited inventory)?</strong> Pessimistic locking regardless of isolation level.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> When asked about a double-booking or overselling scenario, name the isolation issue directly. Say <em>"Two requests could both read stock=1 before either writes, and both succeed. That is a race condition from insufficient isolation. I would use SELECT FOR UPDATE to lock the row, or an atomic UPDATE ... WHERE stock &gt; 0 that fails cleanly if someone else already took the last unit."</em> This is one of the highest-signal answers in database interviews because it is a real, common bug.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: mention optimistic vs pessimistic locking.</strong> Say <em>"For low-contention resources I would use optimistic locking, a version column checked on write, retry on conflict, because it avoids holding locks. For high-contention resources like concert tickets, I would use pessimistic locking with SELECT FOR UPDATE, because retry storms under heavy contention are worse than just waiting for the lock."</em> Naming both, and when each applies, is a strong senior signal.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You can explain all four ACID letters in plain language, not just expand the acronym</li>
+        <li>You know the isolation levels and the specific anomaly each one fixes</li>
+        <li>You can spot a race condition in a described scenario (overselling, double-booking)</li>
+        <li>You know optimistic vs pessimistic locking and when each fits</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> Read Committed for most workloads, row-level locking (SELECT FOR UPDATE) for high-contention writes, Serializable only when correctness must be airtight.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 05: NOSQL DATA MODELS
+       ============================================================ -->
+  <article class="section" id="nosql">
+    <p class="section__eyebrow">Section 05</p>
+    <h2 class="section__title">NoSQL Data Models</h2>
+
+    <div class="section__body">
+      <p>"NoSQL" describes several unrelated data models that happen to share one trait: they relax the relational model's structure or guarantees in exchange for something else. Know each one by its actual tradeoff.</p>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Model</span>
+          <span>Shape</span>
+          <span>Example DBs</span>
+          <span>Real Tradeoff</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Document</strong></span>
+          <span>JSON-like nested objects, flexible schema</span>
+          <span>MongoDB, Firestore</span>
+          <span>Easy to evolve schema, but cross-document joins are awkward and often done in application code</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Key-Value</strong></span>
+          <span>Simple key to value, no query language beyond the key</span>
+          <span>Redis, DynamoDB</span>
+          <span>Extremely fast and simple, but you must know the key. No arbitrary querying.</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Wide-Column</strong></span>
+          <span>Rows with dynamic, sparse columns, optimized for writes</span>
+          <span>Cassandra, HBase, Bigtable</span>
+          <span>Massive write throughput and horizontal scale, but query flexibility is limited to how data was partitioned</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Graph</strong></span>
+          <span>Nodes and edges, relationships are first-class data</span>
+          <span>Neo4j, Amazon Neptune</span>
+          <span>Traversing relationships is fast regardless of depth, but simple tabular reporting is awkward</span>
+        </div>
+      </div>
+
+      <h3 class="section__h3">5.1 Schema Design in a Document Store</h3>
+      <p>The relational instinct is to normalize. Document stores often invert this: embed related data that is always read together, and reference data that is large, shared, or updated independently.</p>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Embed vs reference in a document store</span>
+        </div>
+<pre><code>// Embed: order items are always read with the order, rarely queried alone
+{
+  "order_id": "o_123",
+  "items": [{"sku": "A1", "qty": 2}, {"sku": "B2", "qty": 1}],
+  "customer": { "id": "c_45", "name": "J. Rivera" }   // small, embedded snapshot
+}
+
+// Reference: customer's full profile is large and updated independently of any one order
+{
+  "order_id": "o_123",
+  "customer_id": "c_45"   // reference only, fetch separately if full profile needed
+}</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Embed or Reference?</p>
+        <ol class="rules__list">
+          <li><strong>Read together 100% of the time, and small?</strong> Embed.</li>
+          <li><strong>Updated independently of the parent?</strong> Reference.</li>
+          <li><strong>Could grow unbounded (comments, line items)?</strong> Reference, to keep the parent document size bounded.</li>
+          <li><strong>Queried alone as often as with the parent?</strong> Reference. Avoid forcing a full parent load.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If pushed on "why not just use MongoDB for everything," say <em>"A document store shines when each entity is mostly self-contained and read as a whole, like a product page or a CMS article. Once I need strong consistency across entities, like inventory counts affecting order validity, I would reach for a relational database instead."</em> This shows the choice follows the access pattern, not a trend.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: modern relational databases blur this line.</strong> Say <em>"Postgres has a native JSONB column type with indexing support, so I can get document-style flexibility for one or two fields without giving up ACID transactions and joins for everything else. I do not always need to choose a separate database just for flexible schema on part of the data."</em> This is a genuinely underused option most candidates do not mention.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You treat NoSQL as several distinct models, not one alternative to SQL</li>
+        <li>You know when to embed vs reference in a document store</li>
+        <li>You know graph databases are for when relationships ARE the query</li>
+        <li>You know JSONB and hybrid columns can avoid needing a second database entirely</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> pick the NoSQL model that matches the access pattern specifically, and consider a hybrid JSONB column in Postgres before reaching for an entirely separate database.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 06: CAP THEOREM AND CONSISTENCY
+       ============================================================ -->
+  <article class="section" id="cap">
+    <p class="section__eyebrow">Section 06</p>
+    <h2 class="section__title">CAP Theorem and Consistency</h2>
+
+    <div class="section__body">
+      <p>The CAP theorem is frequently misquoted as "pick two of three." The more accurate and more interview-useful version: <strong>partition tolerance is not optional</strong> in any real distributed system, because networks fail. So the real choice is between consistency and availability, and only during an actual network partition.</p>
+
+      <div class="graph-figure">
+        <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="180" cy="90" r="70" fill="none" stroke="#d02e2e" stroke-width="2"/>
+          <circle cx="320" cy="90" r="70" fill="none" stroke="#a82525" stroke-width="2"/>
+          <text x="130" y="45" font-family="JetBrains Mono, monospace" font-size="13" fill="#d02e2e">Consistency</text>
+          <text x="330" y="45" font-family="JetBrains Mono, monospace" font-size="13" fill="#a82525">Availability</text>
+          <text x="215" y="95" font-family="JetBrains Mono, monospace" font-size="11" fill="#6e6c6a">pick one,</text>
+          <text x="205" y="112" font-family="JetBrains Mono, monospace" font-size="11" fill="#6e6c6a">during a partition</text>
+          <text x="180" y="185" font-family="JetBrains Mono, monospace" font-size="12" fill="#2f2d2d" text-anchor="middle">Partition tolerance: not optional. Assume it is always on.</text>
+        </svg>
+        <p class="graph-caption">CP or AP is the real choice, and only relevant while the network is actually partitioned.</p>
+      </div>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Choice</span>
+          <span>Behavior During a Partition</span>
+          <span>Example Systems</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>CP</strong> (Consistency + Partition Tolerance)</span>
+          <span>Rejects requests it cannot guarantee are consistent. Some nodes become unavailable.</span>
+          <span>Traditional RDBMS with synchronous replication, MongoDB (default config), Zookeeper</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>AP</strong> (Availability + Partition Tolerance)</span>
+          <span>Keeps serving requests from every node, may return stale or conflicting data</span>
+          <span>Cassandra, DynamoDB, CouchDB</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: CP or AP?</p>
+        <ol class="rules__list">
+          <li><strong>Money, inventory, anything where being wrong is worse than being unavailable?</strong> CP.</li>
+          <li><strong>Social feed, likes, view counts: staleness is barely noticeable?</strong> AP.</li>
+          <li><strong>Need both per use case?</strong> Use different databases for different data. It is normal to mix.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"CAP only matters during an actual network partition, which is rare but must be planned for. Outside a partition, you can have both consistency and availability. The real question is: when the network splits, does this system reject writes to stay correct, or does it keep accepting writes and reconcile later?"</em> This corrects the common oversimplified "pick two" framing, which is a strong differentiator.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: bring up eventual consistency and its practical mitigations.</strong> Say <em>"An AP system might briefly show a stale value, but most use techniques like read-your-writes consistency, so a user always sees their own recent write even if other users see it a moment later. That is usually enough. Most products do not actually need global strong consistency on every read."</em> This shows nuance beyond "eventual consistency is scary."
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know partition tolerance is not a real choice. Networks fail, period.</li>
+        <li>You frame CAP as a decision that only activates during an actual partition</li>
+        <li>You can name CP vs AP examples and justify which fits a given feature</li>
+        <li>You know eventual consistency has practical mitigations, not just "it is eventually right"</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> CP for money and inventory, AP for social and engagement features, and it is normal to use different databases for different parts of the same product.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 07: REPLICATION
+       ============================================================ -->
+  <article class="section" id="replication">
+    <p class="section__eyebrow">Section 07</p>
+    <h2 class="section__title">Replication</h2>
+
+    <div class="section__body">
+      <p>Replication copies data across multiple nodes for durability and read scale. The pattern almost every interview expects by default is leader-follower (also called primary-replica).</p>
+
+      <h3 class="section__h3">7.1 Leader-Follower Replication</h3>
+      <p>All writes go to one leader node. The leader propagates changes to one or more follower nodes, which serve read traffic. This scales reads horizontally without touching write capacity.</p>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Mode</span>
+          <span>How It Works</span>
+          <span>Tradeoff</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Synchronous</strong></span>
+          <span>Leader waits for follower(s) to confirm before acknowledging the write</span>
+          <span>Strong consistency, but write latency increases and a slow follower slows every write</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Asynchronous</strong></span>
+          <span>Leader acknowledges immediately, replicates in the background</span>
+          <span>Fast writes, but a crash right after commit can lose the most recent writes on followers</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Semi-Synchronous</strong></span>
+          <span>Waits for at least one follower to confirm, not all</span>
+          <span>A practical middle ground used by most production systems</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Replication Mode?</p>
+        <ol class="rules__list">
+          <li><strong>Durability is the top priority (financial data)?</strong> Synchronous, accept the latency cost.</li>
+          <li><strong>Low write latency matters more than zero data loss risk?</strong> Asynchronous, monitor replication lag.</li>
+          <li><strong>Most production systems?</strong> Semi-synchronous. One follower confirms, others catch up async.</li>
+          <li><strong>Multi-region with local writes?</strong> Multi-leader or leaderless, plan for conflict resolution.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"I would put reads on followers to scale horizontally, keep all writes on the leader, and specifically route a user back to the leader right after they write, so they do not see their own change disappear due to replication lag."</em> That last clause is the part that shows real production experience.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: mention multi-leader and leaderless replication as advanced alternatives.</strong> Say <em>"Multi-leader replication lets multiple regions accept writes locally for lower latency, at the cost of needing conflict resolution when the same record is written in two places at once. Leaderless replication, like Dynamo-style quorum writes, avoids a single point of failure entirely but pushes consistency tradeoffs into read/write quorum tuning."</em> Most candidates only know leader-follower exists. Naming the alternatives is a clear differentiator.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You default to leader-follower and know why writes stay on one node</li>
+        <li>You know sync vs async replication tradeoffs, and that most systems use a hybrid</li>
+        <li>You have named the read-your-writes problem without being prompted</li>
+        <li>You are aware multi-leader and leaderless replication exist as alternatives</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> leader-follower with semi-synchronous replication, reads scaled across followers, writes routed for read-your-writes consistency where it matters.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 08: SHARDING AND PARTITIONING
+       ============================================================ -->
+  <article class="section" id="sharding">
+    <p class="section__eyebrow">Section 08</p>
+    <h2 class="section__title">Sharding and Partitioning</h2>
+
+    <div class="section__body">
+      <p>Replication scales reads. Sharding scales writes and total storage, by splitting data across multiple independent database nodes, each holding a subset of the data. It is a bigger commitment than replication: it is harder to undo, so reach for it only once a single node is genuinely the bottleneck.</p>
+
+      <h3 class="section__h3">8.1 Sharding Strategies</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Strategy</span>
+          <span>How It Works</span>
+          <span>Weakness</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Range-Based</strong></span>
+          <span>Split by value ranges (e.g. user IDs 1 to 1M on shard A)</span>
+          <span>Hot-spotting: new users all land on the same shard if IDs are sequential</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Hash-Based</strong></span>
+          <span>Hash the shard key, distribute evenly across shards</span>
+          <span>Even distribution, but range queries ("all users created last week") now hit every shard</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Directory-Based</strong></span>
+          <span>A lookup service maps keys to shards explicitly</span>
+          <span>Flexible and rebalanceable, but the lookup service is a new critical dependency</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Geographic</strong></span>
+          <span>Shard by region, keeping data close to its users</span>
+          <span>Great for latency, complicated for users or data that cross regions</span>
+        </div>
+      </div>
+
+      <h3 class="section__h3">8.2 Choosing a Shard Key</h3>
+      <p>The shard key determines everything. Pick badly and you get hot shards or queries that must fan out to every shard. The classic mistake: sharding a multi-tenant SaaS product by <code>created_at</code>, which sends all of today's traffic to one shard.</p>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Do You Actually Need to Shard?</p>
+        <ol class="rules__list">
+          <li><strong>Read-bound bottleneck?</strong> Add replicas or caching first. Do not shard.</li>
+          <li><strong>Single table too large for comfortable operations, but writes are fine?</strong> Consider partitioning within one database (not full sharding) first.</li>
+          <li><strong>Write throughput on one node is the actual proven bottleneck?</strong> Now sharding is justified.</li>
+          <li><strong>Multi-tenant product?</strong> Shard by tenant_id to keep each customer's data together.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"I would shard by tenant_id rather than by row ID, so each customer's data stays on a single shard. That keeps their queries and transactions local instead of fanning out across the cluster."</em> Naming the shard key choice, and why, is worth more than describing sharding in the abstract.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: mention that sharding should be a last resort.</strong> Say <em>"Before sharding, I would exhaust simpler options: better indexing, read replicas, caching, and vertical scaling. Sharding adds real operational complexity (rebalancing, cross-shard queries, and no more simple foreign keys across shards), so I would only reach for it once a single primary node genuinely cannot keep up with writes."</em> This shows engineering maturity. Not reaching for the most complex tool first.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You treat sharding as a write-scaling and storage tool, distinct from replication</li>
+        <li>You know a bad shard key causes hot-spotting or cross-shard fan-out</li>
+        <li>You would exhaust simpler options (replicas, caching, indexing) before sharding</li>
+        <li>You know cross-shard joins and transactions are the real operational cost</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> shard only once write throughput genuinely bottlenecks a single node, pick a key that keeps related data together, and prefer hash-based distribution unless range queries are common.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 09: CACHING LAYERS
+       ============================================================ -->
+  <article class="section" id="caching">
+    <p class="section__eyebrow">Section 09</p>
+    <h2 class="section__title">Caching Layers</h2>
+
+    <div class="section__body">
+      <p>Caching is usually the highest-leverage, lowest-risk way to improve database performance. It should be considered before sharding, and often before adding replicas.</p>
+
+      <h3 class="section__h3">9.1 Caching Strategies</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Strategy</span>
+          <span>How It Works</span>
+          <span>Tradeoff</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Cache-Aside</strong></span>
+          <span>App checks cache first; on miss, reads DB and populates the cache</span>
+          <span>Simple, most common. First request after expiry is always slow.</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Write-Through</strong></span>
+          <span>Every write goes to the cache and the DB together</span>
+          <span>Cache always fresh, but every write pays the cache-write cost too</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Write-Behind</strong></span>
+          <span>Write hits the cache immediately, DB write happens asynchronously</span>
+          <span>Fastest writes, but risks data loss if the cache fails before flushing</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Read-Through</strong></span>
+          <span>Cache itself is responsible for loading from the DB on a miss</span>
+          <span>Simplifies app code, requires cache library or infra support</span>
+        </div>
+      </div>
+
+      <h3 class="section__h3">9.2 Cache Invalidation</h3>
+      <p>Famously one of the two hard problems in computer science. The core question: when the underlying data changes, how does the cache find out?</p>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">TTL vs explicit invalidation</span>
+        </div>
+<pre><code># TTL-based: simplest, accepts some staleness
+SET user:123 "{...}" EX 300     # expires automatically after 5 minutes
+
+# Explicit invalidation on write: fresher, more moving parts
+def update_user(id, data):
+    db.update(id, data)
+    cache.delete(f"user:{id}")   # next read repopulates from DB</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Caching Strategy?</p>
+        <ol class="rules__list">
+          <li><strong>Default, most read-heavy workloads?</strong> Cache-aside. Simple, predictable, easy to debug.</li>
+          <li><strong>Cache and DB must always be in sync?</strong> Write-through, at the cost of write latency.</li>
+          <li><strong>Write latency is critical and small loss is acceptable?</strong> Write-behind, with durability in mind.</li>
+          <li><strong>Want the cache library to handle the read path?</strong> Read-through, if your cache supports it.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Say <em>"I would use cache-aside with Redis in front of Postgres. Check cache, fall back to DB on miss, populate cache with a TTL. For anything that must be perfectly fresh, like a user's own balance right after they update it, I would invalidate explicitly on write instead of relying on TTL alone."</em> Naming both TTL and explicit invalidation, and when each applies, shows real judgment.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: name the thundering herd.</strong> If the interviewer says "what could go wrong with your cache," say <em>"If a very hot key expires, I could get a thundering herd. Hundreds of requests all missing at once and slamming the database simultaneously. I would mitigate with a short-lived lock so only one request repopulates the cache while others wait briefly, or stagger TTLs with jitter to avoid synchronized expiry."</em> This is the exact kind of "I have seen this break in production" answer that stands out.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You reach for caching before sharding. It is cheaper and reversible.</li>
+        <li>You know cache-aside as the default, and when write-through or write-behind fit instead</li>
+        <li>You name the thundering herd problem and a real mitigation</li>
+        <li>You choose TTL vs explicit invalidation based on how fresh the data must be</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> cache-aside with Redis, short TTLs plus explicit invalidation on write for anything user-visible immediately, and jittered expiry to avoid thundering herds.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 10: COMMON MISTAKES AND PERF PITFALLS
+       ============================================================ -->
+  <article class="section" id="mistakes">
+    <p class="section__eyebrow">Section 10</p>
+    <h2 class="section__title">Common Mistakes and Performance Pitfalls</h2>
+
+    <div class="section__body">
+      <p>The database section of a system design interview is where candidates most often lose points on details they would normally catch in real code review, because they are talking instead of typing. This section is the direct list of what trips people up.</p>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Symptom</span>
+          <span>Likely Cause</span>
+          <span>Fix</span>
+        </div>
+        <div class="tgrid__row">
+          <span>List endpoint gets slower as the table grows</span>
+          <span>Offset pagination on a large table. The DB still scans and discards all skipped rows.</span>
+          <span>Switch to cursor or keyset pagination on an indexed column</span>
+        </div>
+        <div class="tgrid__row">
+          <span>Simple query is unexpectedly slow</span>
+          <span>Missing index, or a composite index with the wrong column order</span>
+          <span>Run <code>EXPLAIN ANALYZE</code>, index the actual filter and sort columns</span>
+        </div>
+        <div class="tgrid__row">
+          <span>App makes hundreds of queries for one page load</span>
+          <span>N+1 query problem: one query per row in a loop instead of a single batched query</span>
+          <span>Use a JOIN, an <code>IN (...)</code> batch query, or a DataLoader-style batching layer</span>
+        </div>
+        <div class="tgrid__row">
+          <span>Two users' writes silently overwrite each other</span>
+          <span>No optimistic locking. Last write wins with no conflict detection.</span>
+          <span>Add a version column, reject writes with a stale version</span>
+        </div>
+        <div class="tgrid__row">
+          <span>Reports are slow and compete with production traffic</span>
+          <span>Analytics queries running directly against the primary transactional database</span>
+          <span>Route reporting to a read replica or a separate data warehouse</span>
+        </div>
+        <div class="tgrid__row">
+          <span>Storage keeps growing even after deleting old data</span>
+          <span>Soft deletes, orphaned rows, or unpruned indexes and logs</span>
+          <span>Scheduled cleanup jobs, table partitioning by date with old partitions dropped</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: The Performance Diagnosis Order</p>
+        <ol class="rules__list">
+          <li><strong>Query slow?</strong> Run <code>EXPLAIN ANALYZE</code> first, before touching schema or code.</li>
+          <li><strong>Loop of queries in your app code?</strong> Batch them with a JOIN or an <code>IN (...)</code>.</li>
+          <li><strong>List endpoint on a growing table?</strong> Cursor pagination on an indexed column.</li>
+          <li><strong>Reports competing with live traffic?</strong> Move them to a replica or a warehouse, not the primary.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Build the habit of narrating scale as you design, not after being asked. Say <em>"This endpoint will need an index on event_id and start_time together, and I will use cursor pagination since this table grows unbounded."</em> Stating it proactively, even briefly, signals the habit interviewers are actually screening for.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: the mistake that actually costs interview points.</strong> It is rarely picking the "wrong" database. It is forgetting to mention indexing, pagination, or the N+1 problem at all when designing a list endpoint. These are assumed baseline knowledge, and their absence reads as inexperience even if everything else in the answer is strong. Treat "how will this query perform at scale" as a question to answer for every endpoint you propose, not just the ones the interviewer explicitly asks about.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You proactively mention indexing and pagination without being prompted</li>
+        <li>You know the N+1 problem is not GraphQL-specific. It happens in any ORM.</li>
+        <li>You separate transactional and analytical workloads instead of running both on one database</li>
+        <li>You think about data growth and cleanup, not just the initial write path</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> narrate scale considerations as you design, not retroactively. Indexing, pagination, and query patterns are baseline, not bonus points.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 11: INTERVIEW QUICK REFERENCE
+       ============================================================ -->
+  <article class="section" id="interview">
+    <p class="section__eyebrow">Section 11</p>
+    <h2 class="section__title">Interview Quick Reference</h2>
+
+    <div class="section__body">
+      <h3 class="section__h3">Time Allocation</h3>
+      <p>Spend 5 to 8 minutes on the data model in a system design interview. It is usually the second major topic after the API surface. Cover schema, indexing, and one scaling decision, then move to the harder architectural tradeoffs.</p>
+
+      <h3 class="section__h3">What to Cover (in order)</h3>
+      <ul class="block__list">
+        <li>State your database choice and why: <em>"PostgreSQL, because the data is relational and needs transactions"</em></li>
+        <li>Sketch the core entities and relationships. 3 to 6 tables is enough.</li>
+        <li>Mention your primary indexes on the columns you will actually query</li>
+        <li>Name your consistency requirement: <em>"Strong consistency on inventory, eventual is fine for the activity feed"</em></li>
+        <li>State your scaling plan in one sentence: replicas first, caching next, sharding only if truly needed</li>
+      </ul>
+
+      <h3 class="section__h3">Signal Words and Your Response</h3>
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>If the interviewer says</span>
+          <span>Your response</span>
+        </div>
+        <div class="tgrid__row"><span>"Millions of users" or "at scale"</span><span>Mention indexing, read replicas, and caching before jumping to sharding</span></div>
+        <div class="tgrid__row"><span>"Strong consistency" or "must never be wrong"</span><span>CP system, ACID transactions, pessimistic locking on hot rows</span></div>
+        <div class="tgrid__row"><span>"Eventually consistent is fine"</span><span>AP system, async replication, mention read-your-writes as the one exception users will notice</span></div>
+        <div class="tgrid__row"><span>"Flexible schema" or "changes often"</span><span>Document store, or JSONB column in Postgres for a hybrid approach</span></div>
+        <div class="tgrid__row"><span>"Write-heavy" or "huge write volume"</span><span>Wide-column store, or sharding by a key that distributes writes evenly</span></div>
+        <div class="tgrid__row"><span>"Relationships are the core feature" (social, recommendations)</span><span>Graph database, name a concrete traversal query as the reason</span></div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: The 5-Minute Database Answer</p>
+        <ol class="rules__list">
+          <li><strong>Database choice (30s):</strong> <em>"Relational, PostgreSQL, because of transactional needs."</em></li>
+          <li><strong>Core schema (90s):</strong> Name 3 to 6 tables and their relationships out loud.</li>
+          <li><strong>Indexing (30s):</strong> <em>"Composite index on (user_id, created_at) for the main list query."</em></li>
+          <li><strong>Consistency (30s):</strong> <em>"Strong consistency on payments, eventual on the feed."</em></li>
+          <li><strong>Scale plan (30s):</strong> <em>"Read replicas and caching first, sharding only if writes bottleneck a single node."</em></li>
+          <li><strong>Hand off (15s):</strong> <em>"That covers the data layer. Want me to go deeper anywhere, or should I move to the API design?"</em></li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Have one prepared sentence for every signal word above, the same way you would for API design. In the moment, you will not have time to derive the right answer from first principles. You will have time to remember a sentence you already trust. Practice saying each one out loud once before the interview, not just reading it.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: hand off cleanly.</strong> End every database answer by explicitly inviting the next topic. Say <em>"That covers the data layer. Want me to go deeper anywhere, or should I move to the API design?"</em> Interviewers notice when candidates hand off cleanly. It shows you understand system design is a sequence of bounded discussions, not a single unstructured monologue.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You made a database decision without over-engineering</li>
+        <li>You named the tradeoff behind each choice, not just the choice itself</li>
+        <li>You proactively covered indexing and scale, not just the happy path</li>
+        <li>You moved on after 5 to 8 minutes instead of exhausting the topic</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> relational by default, index what you actually query, name your consistency requirement explicitly, scale with replicas and caching before sharding, then move on.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       CLOSING
+       ============================================================ -->
+  <section class="closing">
+    <h2 class="closing__h">That's it.</h2>
+    <p class="closing__sub">11 sections, one cheat sheet. Bookmark it before your next system design round.</p>
+    <a href="#contents" class="cta cta--lg">BACK TO CONTENTS</a>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <a class="footer__ig" href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">Instagram: @vlada.asana</a>
+  <p class="footer__small">Companion piece to "Everything you need to know about API" and "...about Git" · Built by @vlada.asana</p>
+</footer>
+
+<!-- Toast for copy buttons -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="./script.js"></script>
+</body>
+</html>
