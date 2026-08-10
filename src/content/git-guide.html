@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Everything you need to know about Git, by @vlada.asana</title>
+<meta name="description" content="A system design cheat sheet for Git. Branching, merge vs rebase, conflicts, undoing mistakes, internals, GitHub workflows, debugging. Interview-ready." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="#">@vlada.asana <span class="topbar__sep">·</span> Git Cheat Sheet</a>
+    <a class="topbar__cta" href="#contents">CONTENTS</a>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+    <p class="hero__byline">A system design cheat sheet by <a href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">@vlada.asana</a></p>
+    <p class="eyebrow">System design interviews</p>
+    <h1 class="hero__title">Everything you need to know about <span class="hero__title-accent">GIT</span></h1>
+    <p class="hero__lede">Branching, merge vs rebase, resolving conflicts, undoing mistakes, internals, GitHub workflows, and debugging with git bisect. Built for interview prep and everyday engineering.</p>
+  </section>
+
+  <!-- ============================================================
+       TABLE OF CONTENTS
+       ============================================================ -->
+  <section class="toc" id="contents">
+    <p class="eyebrow">Contents</p>
+    <h2 class="toc__title">11 sections. Click to jump.</h2>
+
+    <ol class="toc__list">
+      <li><a href="#mental-model"><span class="toc__num">01</span> The Mental Model</a></li>
+      <li><a href="#branching"><span class="toc__num">02</span> Branching</a></li>
+      <li><a href="#merge-rebase"><span class="toc__num">03</span> Merge vs Rebase</a></li>
+      <li><a href="#conflicts"><span class="toc__num">04</span> Resolving Conflicts</a></li>
+      <li><a href="#undoing"><span class="toc__num">05</span> Undoing Things</a></li>
+      <li><a href="#internals"><span class="toc__num">06</span> Git Internals</a></li>
+      <li><a href="#remotes"><span class="toc__num">07</span> Remotes and GitHub</a></li>
+      <li><a href="#review"><span class="toc__num">08</span> Code Review and PR Etiquette</a></li>
+      <li><a href="#debugging"><span class="toc__num">09</span> Debugging with Git</a></li>
+      <li><a href="#mistakes"><span class="toc__num">10</span> Common Mistakes and Recovery</a></li>
+      <li><a href="#interview"><span class="toc__num">11</span> Interview Quick Reference</a></li>
+    </ol>
+  </section>
+
+  <!-- ============================================================
+       SECTION 01: THE MENTAL MODEL
+       ============================================================ -->
+  <article class="section" id="mental-model">
+    <p class="section__eyebrow">Section 01</p>
+    <h2 class="section__title">The Mental Model</h2>
+
+    <div class="section__body">
+      <p>Most people learn git commands before they learn what git actually <em>is</em>. That is why the commands feel arbitrary. Fix the mental model first, and the commands become obvious.</p>
+
+      <h3 class="section__h3">1.1 Three Trees, Not Two</h3>
+      <p>Git tracks your project across three areas. Almost every command just moves data between them.</p>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Area</span>
+          <span>What It Holds</span>
+          <span>Command That Moves Into It</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Working Directory</strong></span>
+          <span>The actual files on disk, as you edit them</span>
+          <span>you edit files directly</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Staging Area (Index)</strong></span>
+          <span>A draft of the next commit</span>
+          <span><code>git add</code></span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Repository (.git)</strong></span>
+          <span>Permanent, committed snapshots</span>
+          <span><code>git commit</code></span>
+        </div>
+      </div>
+
+      <p>Once you see it this way, <code>git add</code> stops being "save my work" and becomes "stage this specific change for the next snapshot." That is why <code>git add -p</code> exists: you can stage half a file and leave the rest for later.</p>
+
+      <h3 class="section__h3">1.2 A Commit Is a Snapshot, Not a Diff</h3>
+      <p>This is the single most-missed concept in interviews. Git does not store changes as a chain of diffs like older version control systems (SVN, CVS). Every commit is a full snapshot of the entire project at that point. Git only <em>shows</em> you diffs by comparing two snapshots. It does not store them that way.</p>
+      <p>Why it matters: this is why checking out an old commit is instant regardless of history length, why <code>git bisect</code> works, and why branches are so cheap.</p>
+
+      <h3 class="section__h3">1.3 A Branch Is Just a Pointer</h3>
+      <p>A branch is a 41-byte text file containing a commit hash. That is it. It is not a copy of the codebase. <code>HEAD</code> is a pointer to whichever branch (or commit) you currently have checked out. This is why creating a branch is instant and why git can have thousands of branches in a large repo with no performance cost.</p>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: When to Commit, When to Stash</p>
+        <ol class="rules__list">
+          <li><strong>Are the changes complete and meaningful?</strong> Stage and commit.</li>
+          <li><strong>Are you mid-experiment and might throw them away?</strong> Leave them in the working directory.</li>
+          <li><strong>Do you need to switch tasks right now?</strong> <code>git stash</code>, then pop later.</li>
+          <li><strong>Is the change to one file but only half the file is ready?</strong> Use <code>git add -p</code> to stage hunks.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If asked "what is git," do not describe commands. Say <em>"Git is a content-addressable snapshot system. Every commit is the full state of the project, branches are lightweight pointers to commits, and almost every operation is really just moving those pointers around."</em> That answer signals you understand git, not just the CLI.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: mention deduplication.</strong> Git deduplicates at the file level. If you commit 100 files and only one changes, the new commit's snapshot reuses the other 99 unchanged file objects rather than copying them. This is why repos do not balloon in size with every commit despite storing "full snapshots."
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know a commit is a snapshot, not a diff</li>
+        <li>You know a branch is a pointer, not a copy</li>
+        <li>You can name the three trees and what moves data between them</li>
+        <li>You understand why these design choices make git fast</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> think in snapshots and pointers, not files and folders. Every git command is manipulating one of the two.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 02: BRANCHING
+       ============================================================ -->
+  <article class="section" id="branching">
+    <p class="section__eyebrow">Section 02</p>
+    <h2 class="section__title">Branching</h2>
+
+    <div class="section__body">
+      <p>Branching is git's headline feature because it is nearly free. Use it liberally. A branch you never open a PR from costs nothing.</p>
+
+      <h3 class="section__h3">2.1 Core Commands</h3>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Branch management</span>
+        </div>
+<pre><code>git branch feature/checkout-flow        # create a branch (does not switch to it)
+git switch feature/checkout-flow        # switch to it (modern, git 2.23+)
+git switch -c feature/checkout-flow     # create AND switch in one step
+git checkout feature/checkout-flow      # older equivalent, still everywhere
+
+git branch -d feature/checkout-flow     # delete, safe (refuses if unmerged)
+git branch -D feature/checkout-flow     # delete, force (discards unmerged work)
+
+git branch -a                            # list all branches, local + remote
+git branch --merged                      # branches already merged into current</code></pre>
+      </div>
+
+      <h3 class="section__h3">2.2 Branching Strategies</h3>
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Strategy</span>
+          <span>How It Works</span>
+          <span>Best For</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Trunk-Based</strong></span>
+          <span>Everyone commits small, frequent changes to <code>main</code> behind feature flags</span>
+          <span>High-velocity teams, strong CI, continuous deployment</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Feature Branching</strong></span>
+          <span>One branch per feature, merged via PR when done</span>
+          <span>Most teams, default choice</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Git Flow</strong></span>
+          <span><code>main</code>, <code>develop</code>, <code>release/*</code>, <code>hotfix/*</code> with strict rules</span>
+          <span>Scheduled releases, versioned software, multiple production versions live at once</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Fork and PR</strong></span>
+          <span>Contributors fork the repo, no write access to origin</span>
+          <span>Open source, external contributors</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Branching Strategy?</p>
+        <ol class="rules__list">
+          <li><strong>Small team, deploy multiple times a day?</strong> Trunk-based with feature flags.</li>
+          <li><strong>Normal team, PR review is the safety net?</strong> Feature branching, default choice.</li>
+          <li><strong>You ship versioned software with multiple supported releases?</strong> Git Flow.</li>
+          <li><strong>Open source project with external contributors?</strong> Fork and PR.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Prefer <code>switch</code> and <code>restore</code> over <code>checkout</code> when explaining your workflow out loud. Say <em>"I would use switch to move between branches and restore to discard file changes. Checkout does both, which is exactly the ambiguity that causes mistakes."</em> This shows you know git evolved its own UX because the old commands were confusing even to experienced users.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: name the trend, not just the choice.</strong> If an interviewer asks about branching strategy, mention that Git Flow is increasingly out of favor. Say <em>"Git Flow made sense when releases were scheduled and infrequent. Most teams doing continuous deployment now use trunk-based development with feature flags instead, because long-lived branches are exactly what causes painful merges."</em> That shows awareness of how team practices evolved, not textbook memorization.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know branches are cheap and encourage using them often</li>
+        <li>You can name a branching strategy and its tradeoff, not just its name</li>
+        <li>You know the difference between local and remote branches</li>
+        <li>You clean up merged branches instead of letting them pile up</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> short-lived feature branches, one per unit of work, merged via PR, deleted immediately after merge.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 03: MERGE VS REBASE
+       ============================================================ -->
+  <article class="section" id="merge-rebase">
+    <p class="section__eyebrow">Section 03</p>
+    <h2 class="section__title">Merge vs Rebase</h2>
+
+    <div class="section__body">
+      <p>This is the single most common git interview question, and the one people most often answer with vibes instead of understanding. Both integrate changes from one branch into another. They produce different history shapes.</p>
+
+      <div class="graph-figure">
+        <svg viewBox="0 0 620 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <text x="20" y="24" font-family="JetBrains Mono, monospace" font-size="12" fill="#6e6c6a">MERGE preserves both histories, adds a merge commit</text>
+          <path d="M40 60 L280 60" stroke="#2f2d2d" stroke-width="2"/>
+          <path d="M40 60 L100 110 L280 110" stroke="#a09e9a" stroke-width="2" fill="none"/>
+          <path d="M280 60 L280 110" stroke="#d02e2e" stroke-width="2" stroke-dasharray="4 3"/>
+          <circle cx="40" cy="60" r="6" fill="#2f2d2d"/><circle cx="160" cy="60" r="6" fill="#2f2d2d"/><circle cx="280" cy="60" r="6" fill="#d02e2e"/>
+          <circle cx="100" cy="110" r="6" fill="#fffae7" stroke="#2f2d2d"/><circle cx="200" cy="110" r="6" fill="#fffae7" stroke="#2f2d2d"/>
+          <text x="290" y="88" font-family="JetBrains Mono, monospace" font-size="11" fill="#d02e2e">merge commit</text>
+
+          <text x="20" y="160" font-family="JetBrains Mono, monospace" font-size="12" fill="#6e6c6a">REBASE replays commits on top, straight line, no merge commit</text>
+          <path d="M40 190 L400 190" stroke="#2f2d2d" stroke-width="2"/>
+          <circle cx="40" cy="190" r="6" fill="#2f2d2d"/><circle cx="160" cy="190" r="6" fill="#2f2d2d"/>
+          <circle cx="280" cy="190" r="6" fill="#d02e2e"/><circle cx="340" cy="190" r="6" fill="#fffae7" stroke="#2f2d2d"/><circle cx="400" cy="190" r="6" fill="#fffae7" stroke="#2f2d2d"/>
+        </svg>
+        <p class="graph-caption">Same two commits, two different resulting histories.</p>
+      </div>
+
+      <h3 class="section__h3">3.1 The Core Tradeoff</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Aspect</span>
+          <span>Merge</span>
+          <span>Rebase</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>History shape</strong></span>
+          <span>Preserves exact history, branch points visible</span>
+          <span>Linear, rewritten history, looks like it happened in order</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Safety</strong></span>
+          <span>Never rewrites existing commits</span>
+          <span>Rewrites commit hashes, dangerous on shared branches</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Traceability</strong></span>
+          <span>You can see exactly when and how branches integrated</span>
+          <span>You lose the record that a branch ever diverged</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Conflict resolution</strong></span>
+          <span>Resolve once, in a single merge commit</span>
+          <span>May need to resolve the same conflict repeatedly, once per replayed commit</span>
+        </div>
+      </div>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Merge and rebase</span>
+        </div>
+<pre><code>git merge feature/checkout-flow      # merge feature into current branch
+
+git checkout feature/checkout-flow
+git rebase main                       # replay feature's commits on top of main
+
+git rebase -i HEAD~4                  # interactive rebase: squash, reword, reorder</code></pre>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Do not declare a universal winner. Say <em>"I use rebase to clean up my own commits before they are shared, and merge to integrate finished work into main. The rule that matters is: never rebase history other people already have."</em> That single sentence answers the question interviewers are actually asking: do you understand the danger, not just the syntax.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: mention <code>git pull --rebase</code>.</strong> A plain <code>git pull</code> creates a merge commit every time your local branch has diverged from origin, which clutters history on active branches. Configuring <code>pull.rebase=true</code> replays your local commits on top instead, keeping history linear without changing team workflow. This is a real setting senior engineers configure and juniors usually do not know exists.
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Merge or Rebase?</p>
+        <ol class="rules__list">
+          <li><strong>Integrating a finished feature branch into main?</strong> Merge. Keep the record.</li>
+          <li><strong>Cleaning up your own local commits before opening a PR?</strong> Interactive rebase.</li>
+          <li><strong>Updating your feature branch with the latest main, before others have pulled it?</strong> Rebase, for a clean linear history.</li>
+          <li><strong>Has anyone else already pulled this branch?</strong> If yes, never rebase it. Merge instead.</li>
+        </ol>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know rebase rewrites history and merge does not</li>
+        <li>You know the exact rule for when rebase becomes dangerous</li>
+        <li>You can justify a choice instead of stating a preference</li>
+        <li>You know interactive rebase is a cleanup tool, not just an integration tool</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> rebase locally to keep your own commits clean, merge to integrate into shared branches, never rebase what others have already pulled.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 04: RESOLVING CONFLICTS
+       ============================================================ -->
+  <article class="section" id="conflicts">
+    <p class="section__eyebrow">Section 04</p>
+    <h2 class="section__title">Resolving Conflicts</h2>
+
+    <div class="section__body">
+      <p>A conflict means git found two changes to the same lines and cannot guess which one you want. It is not a failure state. It is git correctly asking a question it cannot answer on its own.</p>
+
+      <h3 class="section__h3">4.1 Reading Conflict Markers</h3>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Conflict marker anatomy</span>
+        </div>
+<pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+const TAX_RATE = 0.08;              // your current branch's version
+=======
+const TAX_RATE = getRegionalTax();  // the incoming branch's version
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/dynamic-tax</code></pre>
+      </div>
+      <p>Everything between <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> and <code>=======</code> is your current branch. Everything between <code>=======</code> and <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> is the branch being merged in. Delete the markers, keep whichever code (or a combination) is correct, then stage and continue.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">After resolving</span>
+        </div>
+<pre><code># after manually resolving the file:
+git add checkout.js
+git commit                    # if you were merging
+git rebase --continue         # if you were rebasing
+
+# bail out entirely and go back to before the conflict:
+git merge --abort
+git rebase --abort</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: How to Resolve</p>
+        <ol class="rules__list">
+          <li><strong>Both changes are needed and do not overlap logically?</strong> Keep both, remove markers.</li>
+          <li><strong>Unsure which side is correct?</strong> Check <code>git log</code> on both commits, or ask the author. Do not guess.</li>
+          <li><strong>Conflict is in a lockfile (package-lock.json, yarn.lock)?</strong> Delete and regenerate, do not hand-merge.</li>
+          <li><strong>In over your head mid-rebase?</strong> <code>git rebase --abort</code> and try merge instead. No shame in it.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If asked to resolve a conflict live, narrate your process: <em>"I am reading both sides of the marker to understand intent, not just picking one blindly. I want to know why each side changed this line before deciding whether to keep one, the other, or merge both."</em> Interviewers are watching whether you understand the conflicting code, not whether you can delete <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> symbols fast.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: mention <code>git rerere</code>.</strong> "Reuse recorded resolution" lets you record how you resolved a conflict so the same fix is auto-applied next time. If you are rebasing a long-lived branch and hitting the same conflict on every replayed commit, enable rerere and git remembers how you resolved it the first time. Almost nobody outside senior engineers who have suffered through painful rebases knows this exists.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You can read conflict markers correctly without confusing which side is which</li>
+        <li>You resolve based on understanding intent, not by picking randomly</li>
+        <li>You know how to safely bail out with <code>--abort</code></li>
+        <li>You know lockfile conflicts should be regenerated, not hand-edited</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> read both sides before touching anything, resolve for correctness not speed, and know that <code>--abort</code> is always a safe escape hatch.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 05: UNDOING THINGS
+       ============================================================ -->
+  <article class="section" id="undoing">
+    <p class="section__eyebrow">Section 05</p>
+    <h2 class="section__title">Undoing Things</h2>
+
+    <div class="section__body">
+      <p>This is where interview anxiety spikes hardest, because the commands sound similar and the wrong one can genuinely lose work. Learn them by what tree they touch, not by memorizing flags.</p>
+
+      <h3 class="section__h3">5.1 The Undo Ladder</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Command</span>
+          <span>What It Undoes</span>
+          <span>Rewrites Shared History?</span>
+        </div>
+        <div class="tgrid__row">
+          <span><code>git restore &lt;file&gt;</code></span>
+          <span>Uncommitted changes in working directory</span>
+          <span>No</span>
+        </div>
+        <div class="tgrid__row">
+          <span><code>git restore --staged &lt;file&gt;</code></span>
+          <span>Unstages a file, keeps the edits</span>
+          <span>No</span>
+        </div>
+        <div class="tgrid__row">
+          <span><code>git reset --soft HEAD~1</code></span>
+          <span>Undoes last commit, keeps changes staged</span>
+          <span>Yes, local only</span>
+        </div>
+        <div class="tgrid__row">
+          <span><code>git reset --mixed HEAD~1</code></span>
+          <span>Undoes last commit, unstages changes (default mode)</span>
+          <span>Yes, local only</span>
+        </div>
+        <div class="tgrid__row">
+          <span><code>git reset --hard HEAD~1</code></span>
+          <span>Undoes last commit AND discards all changes</span>
+          <span>Yes, destructive</span>
+        </div>
+        <div class="tgrid__row">
+          <span><code>git revert &lt;commit&gt;</code></span>
+          <span>Creates a new commit that undoes an old one</span>
+          <span>No, safe on shared branches</span>
+        </div>
+      </div>
+
+      <h3 class="section__h3">5.2 The Safety Net: Reflog</h3>
+      <p>Most people do not know this exists, which is exactly why panicking over a "lost" commit is usually unnecessary. Git keeps a log of every place <code>HEAD</code> has pointed, even after resets, rebases, and branch deletions.</p>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Reflog rescue</span>
+        </div>
+<pre><code>git reflog                     # shows every HEAD movement, newest first
+# a1b2c3d HEAD@{0}: reset: moving to HEAD~1
+# f9e8d7c HEAD@{1}: commit: add checkout validation   &lt;- the "lost" commit
+
+git checkout f9e8d7c            # recover it directly
+git branch recovered-work f9e8d7c   # or save it to a new branch</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Undo?</p>
+        <ol class="rules__list">
+          <li><strong>Haven't committed yet, just want to discard edits?</strong> <code>git restore</code>.</li>
+          <li><strong>Committed locally, nobody has pulled it, want it gone?</strong> <code>git reset</code>.</li>
+          <li><strong>Already pushed, others may have pulled it?</strong> <code>git revert</code>, never reset.</li>
+          <li><strong>Think you lost a commit entirely?</strong> <code>git reflog</code> before you panic.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If asked "how would you recover a commit you accidentally deleted," do not say "you can't." Say <em>"Almost nothing in git is truly gone immediately. The reflog tracks every place HEAD has pointed for about 90 days by default, so I would find the commit hash there and check it back out."</em> This is one of the highest-signal answers in the whole topic because it shows you have actually recovered from a real mistake before.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: distinguish <code>git rm</code>, <code>.gitignore</code>, and <code>git rm --cached</code>.</strong> If a file was committed by accident and you want it out of git but still on disk, say a <code>.env</code> file, you would use <code>git rm --cached</code>, then add it to <code>.gitignore</code>. Plain <code>git rm</code> deletes it from disk too, which usually is not what people actually want. This exact scenario, accidentally committing secrets, comes up constantly in real teams.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know reset is for local/unshared history, revert is for shared history</li>
+        <li>You know the reflog exists and treat it as a real safety net, not trivia</li>
+        <li>You can explain the difference between soft, mixed, and hard reset</li>
+        <li>You know how to remove a committed secret from tracking without deleting it locally</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> revert on shared history, reset only on your own unpushed commits, and reflog before assuming anything is unrecoverable.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 06: GIT INTERNALS
+       ============================================================ -->
+  <article class="section" id="internals">
+    <p class="section__eyebrow">Section 06</p>
+    <h2 class="section__title">Git Internals</h2>
+
+    <div class="section__body">
+      <p>You do not need this for day-to-day work, but a little internals knowledge is the fastest way to sound senior in an interview. It shows you did not just memorize commands.</p>
+
+      <h3 class="section__h3">6.1 The Object Model</h3>
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Object</span>
+          <span>What It Stores</span>
+        </div>
+        <div class="tgrid__row"><span><strong>Blob</strong></span><span>The raw content of a single file, nothing else: no filename, no metadata</span></div>
+        <div class="tgrid__row"><span><strong>Tree</strong></span><span>A directory listing: filenames mapped to blob or tree hashes</span></div>
+        <div class="tgrid__row"><span><strong>Commit</strong></span><span>A pointer to one tree (the snapshot), plus parent commit(s), author, message, timestamp</span></div>
+        <div class="tgrid__row"><span><strong>Tag</strong></span><span>A named, permanent pointer to a specific commit, usually for releases</span></div>
+      </div>
+      <p>Every object is identified by the SHA-1 (or SHA-256 in newer repos) hash of its own content. This is why git is called "content-addressable." The ID <em>is</em> a hash of what is inside.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Inspecting the object model</span>
+        </div>
+<pre><code>git cat-file -p HEAD              # inspect the commit object: tree, parent, author, message
+git cat-file -p HEAD^{tree}       # inspect the tree: filenames and blob hashes
+git hash-object -w somefile.txt   # manually create a blob, prints its SHA</code></pre>
+      </div>
+
+      <h3 class="section__h3">6.2 HEAD, Detached HEAD, and Why It Trips People Up</h3>
+      <p><code>HEAD</code> normally points to a branch, which points to a commit. If you check out a commit hash directly instead of a branch name, <code>HEAD</code> points straight at that commit. This is "detached HEAD." Any new commits you make there are not attached to a branch, so they can become unreachable (and eventually garbage collected) the moment you switch away, unless you create a branch to hold them first.</p>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Detached HEAD rescue</span>
+        </div>
+<pre><code>git checkout a1b2c3d          # detached HEAD, you are floating, not on a branch
+git switch -c rescue-branch    # attach your new work to a real branch immediately</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: How to Escape Each Git State</p>
+        <ol class="rules__list">
+          <li><strong>On a branch, want a quick look at an old commit?</strong> Check it out, then <code>git switch -</code> to return.</li>
+          <li><strong>On detached HEAD with new commits you want to keep?</strong> <code>git switch -c rescue-branch</code> immediately.</li>
+          <li><strong>On a branch with uncommitted changes you want to set aside?</strong> <code>git stash</code>.</li>
+          <li><strong>On a branch with uncommitted changes blocking checkout?</strong> <code>git stash</code> first, switch, then <code>git stash pop</code>.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If asked why git hashes objects by content, say <em>"It means git can detect corruption instantly. If a byte changes, the hash no longer matches. It also means identical content is stored once, even across different files or commits, which is why git repos compress so well despite storing full snapshots."</em> That is the actual engineering reason, not just a fun fact.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: detached HEAD is a feature, not a bug.</strong> Say <em>"Detached HEAD is how you explore history safely. If you decide your exploration is worth keeping, switch -c to attach it to a real branch. If you do not, just switch back and the commits get garbage collected."</em> That framing shows you understand git is not fragile, it just requires intentional state management.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You can name the four object types and what each one holds</li>
+        <li>You understand content-addressing and why it is useful, not just what it is called</li>
+        <li>You know what detached HEAD means and how to escape it safely</li>
+        <li>You treat internals as something you understand, not memorized trivia</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> commits point to trees, trees point to blobs and other trees, everything is addressed by the hash of its content.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 07: REMOTES AND GITHUB
+       ============================================================ -->
+  <article class="section" id="remotes">
+    <p class="section__eyebrow">Section 07</p>
+    <h2 class="section__title">Remotes and GitHub</h2>
+
+    <div class="section__body">
+      <p>Git is distributed version control. GitHub is a hosted remote plus a collaboration layer on top (PRs, issues, actions). Keep the two mentally separate. Everything in this section except the PR workflow is plain git, not GitHub-specific.</p>
+
+      <h3 class="section__h3">7.1 Fetch vs Pull vs Push</h3>
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Command</span>
+          <span>What It Does</span>
+        </div>
+        <div class="tgrid__row"><span><code>git fetch</code></span><span>Downloads new commits from the remote, does NOT touch your working files or branches</span></div>
+        <div class="tgrid__row"><span><code>git pull</code></span><span><code>fetch</code> + <code>merge</code> (or <code>rebase</code> if configured) into your current branch, in one step</span></div>
+        <div class="tgrid__row"><span><code>git push</code></span><span>Uploads your local commits to the remote branch</span></div>
+        <div class="tgrid__row"><span><code>git push --force-with-lease</code></span><span>Force-push that fails safely if someone else pushed in the meantime, see below</span></div>
+      </div>
+
+      <h3 class="section__h3">7.2 Fork vs Branch</h3>
+      <p>A branch lives inside one repository. A fork is an entirely separate copy of the whole repository, under your own account, used when you do not have write access to the original. Open source contributors fork, then branch inside their fork, then open a PR from their fork's branch back to the original repo.</p>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Fetch or Pull?</p>
+        <ol class="rules__list">
+          <li><strong>Just want to see what is on the remote?</strong> <code>git fetch</code>, inspect, then decide.</li>
+          <li><strong>Confident the remote will merge cleanly into your branch?</strong> <code>git pull</code> (configured to rebase if you prefer linear).</li>
+          <li><strong>About to start work and want a clean base?</strong> Fetch first, then rebase or merge as needed.</li>
+          <li><strong>On a long-running shared branch, want minimal surprise?</strong> Fetch and review before pulling.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If asked to describe a typical GitHub workflow end to end, keep it tight: <em>"Branch off main, commit locally, push to origin, open a PR, address review comments, squash or merge once approved, delete the branch, and let CI gate the merge."</em> A clean six-step answer signals real experience more than a long explanation of any single step.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: name the force-with-lease flag.</strong> After any rebase on a shared branch, use <code>--force-with-lease</code>, never plain <code>--force</code>. Plain force overwrites the remote branch no matter what, even if a teammate pushed commits you do not have. <code>--force-with-lease</code> checks first that the remote has not changed since you last fetched, and refuses if it has. This single flag prevents one of the most common ways teams lose each other's work.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know fetch downloads without merging, and pull does both</li>
+        <li>You use <code>--force-with-lease</code> instead of <code>--force</code> on shared branches</li>
+        <li>You can distinguish a fork (separate repo) from a branch (inside one repo)</li>
+        <li>You can describe a full PR lifecycle without rambling</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> fetch before you assume, pull with rebase configured, and never force-push without <code>--force-with-lease</code>.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 08: CODE REVIEW AND PR ETIQUETTE
+       ============================================================ -->
+  <article class="section" id="review">
+    <p class="section__eyebrow">Section 08</p>
+    <h2 class="section__title">Code Review and PR Etiquette</h2>
+
+    <div class="section__body">
+      <p>This is the part most git guides skip, but it is frequently what behavioral-style git questions are actually probing. "Tell me how you handle a disagreement in code review" is a git-adjacent question in disguise.</p>
+
+      <h3 class="section__h3">8.1 Writing a PR People Actually Want to Review</h3>
+      <ul class="block__list">
+        <li>Keep it small. A 2000-line PR gets a rubber-stamp approval, not a real review.</li>
+        <li>Write a description that explains <em>why</em>, not just what changed (the diff already shows what).</li>
+        <li>Self-review your own diff before requesting review. You will catch half your own mistakes.</li>
+        <li>Link the ticket or issue so reviewers have context without asking.</li>
+      </ul>
+
+      <h3 class="section__h3">8.2 Commit Message Discipline</h3>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Commit message discipline</span>
+        </div>
+<pre><code># weak:
+git commit -m "fix bug"
+git commit -m "wip"
+git commit -m "more changes"
+
+# strong. Imperative mood, explains why:
+git commit -m "Fix race condition in checkout by locking inventory row on read
+
+Without the lock, two concurrent checkouts could both read stock=1
+and both succeed, overselling the last unit."</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Squash Merge or Merge Commit?</p>
+        <ol class="rules__list">
+          <li><strong>Default for a feature branch into main?</strong> Squash merge. One clean commit per feature.</li>
+          <li><strong>Want to preserve individual commit history from the branch?</strong> Merge commit, not squash.</li>
+          <li><strong>Hotfix or trivial one-liner?</strong> Squash for a clean main history.</li>
+          <li><strong>Open source contribution where the project keeps author attribution?</strong> Merge commit, retain the original commits.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Mention squash merging. Say <em>"I usually squash-merge feature branches into main so the history reads as one clean commit per feature, and I keep my messy WIP commits during development. They are useful to me, not to the permanent record."</em> This shows you separate "history for me while working" from "history for the team forever," which is a distinction juniors rarely make.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: review disagreement is a behavioral question in disguise.</strong> If asked how you would respond to disagreement in review, say <em>"I would ask the reviewer to explain the concern with a concrete example rather than debating in the abstract, and I default to trusting their read on code they maintain more than mine, unless I have data that says otherwise."</em> This answers the actual question, collaboration maturity, using git and PR language.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You keep PRs small and reviewable, not "everything I did this sprint"</li>
+        <li>You write commit messages that explain why, not just what</li>
+        <li>You self-review before asking others to review</li>
+        <li>You handle review disagreement with curiosity, not defensiveness</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> small PRs, imperative commit messages that explain intent, self-review first, squash-merge into a clean main history.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 09: DEBUGGING WITH GIT
+       ============================================================ -->
+  <article class="section" id="debugging">
+    <p class="section__eyebrow">Section 09</p>
+    <h2 class="section__title">Debugging with Git</h2>
+
+    <div class="section__body">
+      <p>Git is also a debugging tool, not just a history tool. This section is where you separate yourself from candidates who only know it as "the thing that stores my code."</p>
+
+      <h3 class="section__h3">9.1 git bisect: Binary Search for the Bad Commit</h3>
+      <p>When a bug appeared somewhere in the last 200 commits and you do not know which one, do not check them one by one. Bisect does a binary search: you mark one commit good, one bad, and git checks out the midpoint for you to test, repeating until it isolates the exact commit.</p>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">git bisect workflow</span>
+        </div>
+<pre><code>git bisect start
+git bisect bad                      # current commit has the bug
+git bisect good v1.4.0              # this old tag was fine
+# git checks out the midpoint automatically. You test it, then:
+git bisect good                     # or: git bisect bad
+# ...repeats, narrowing the range each time, ~log2(n) steps total
+git bisect reset                    # done, return to where you started</code></pre>
+      </div>
+      <p>For 500 commits, that is about 9 tests to find the exact culprit, instead of up to 500.</p>
+
+      <h3 class="section__h3">9.2 git blame and git log: Who, When, Why</h3>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">History forensics</span>
+        </div>
+<pre><code>git blame checkout.js -L 40,60      # who last touched each of these lines, and when
+git log -p --follow checkout.js     # full history of a file, including across renames
+git log -S "TAX_RATE"               # find commits that added/removed this exact string
+git log --oneline --graph --all     # visualize branch structure in the terminal</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Debugging Tool?</p>
+        <ol class="rules__list">
+          <li><strong>Know the bad commit is somewhere in the last N commits?</strong> <code>git bisect</code>.</li>
+          <li><strong>Need to know who wrote a specific line and why?</strong> <code>git blame</code>, then read the linked PR or ticket.</li>
+          <li><strong>Need to find when a specific string was added or removed?</strong> <code>git log -S "string"</code> (the pickaxe).</li>
+          <li><strong>Need a visual map of branch structure?</strong> <code>git log --oneline --graph --all</code>.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Mention automating bisect: <code>git bisect run ./test.sh</code> lets git run a script at each step and read the exit code, fully automating the search with zero manual testing. Say <em>"If I have a reliable failing test, I would script it and let bisect run unattended rather than testing each commit by hand."</em> That single line separates "I have heard of bisect" from "I have actually used it under pressure."
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: do not describe <code>blame</code> as "who to yell at."</strong> Say <em>"I use blame to find the commit and PR that introduced a line, so I can read the original context, the linked ticket, and the reasoning. Not to assign fault."</em> Interviewers notice when candidates frame git tools around understanding versus around blame culture.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know bisect does binary search, and roughly why that is fast</li>
+        <li>You know bisect can be automated with a test script</li>
+        <li>You use blame and log to recover context, not to assign fault</li>
+        <li>You know <code>-S</code> (pickaxe) can search history by code content, not just messages</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> reach for bisect before manually checking out commits, and treat git history as a debugging tool with context, not just a backup.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 10: COMMON MISTAKES AND RECOVERY
+       ============================================================ -->
+  <article class="section" id="mistakes">
+    <p class="section__eyebrow">Section 10</p>
+    <h2 class="section__title">Common Mistakes and Recovery</h2>
+
+    <div class="section__body">
+      <p>The fastest way to look senior in a git interview is not reciting commands. It is staying calm when the scenario is "I broke something." This section is a direct answer to the anxiety this whole topic causes: here is exactly what to do for the mistakes everyone makes.</p>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>"I just..."</span>
+          <span>Fix</span>
+        </div>
+        <div class="tgrid__row"><span>Committed to the wrong branch</span><span><code>git reset --soft HEAD~1</code>, switch to the right branch, <code>git stash pop</code> or re-commit</span></div>
+        <div class="tgrid__row"><span>Need to edit my last commit message</span><span><code>git commit --amend</code> (only if not yet pushed, or you are prepared to force-push)</span></div>
+        <div class="tgrid__row"><span>Committed a secret or <code>.env</code> file</span><span>Rotate the secret immediately, then <code>git rm --cached</code> + <code>.gitignore</code>. If already pushed, the secret is compromised; rotating it matters more than scrubbing history</span></div>
+        <div class="tgrid__row"><span>Want to save half-finished work to switch tasks</span><span><code>git stash</code>, later <code>git stash pop</code></span></div>
+        <div class="tgrid__row"><span>Deleted a branch by mistake</span><span><code>git reflog</code>, find the last commit on that branch, <code>git branch &lt;name&gt; &lt;hash&gt;</code></span></div>
+        <div class="tgrid__row"><span>Have merge conflicts I do not understand</span><span><code>git merge --abort</code>, take a breath, re-read both sides slower, or ask the other author</span></div>
+        <div class="tgrid__row"><span>Force-pushed and broke a teammate's branch</span><span>They run <code>git fetch</code> then <code>git reset --hard origin/branch</code> to resync. Communicate first.</span></div>
+        <div class="tgrid__row"><span>Am on detached HEAD with new commits</span><span><code>git switch -c rescue-branch</code> immediately, before doing anything else</span></div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: The 30-Second Recovery</p>
+        <ol class="rules__list">
+          <li><strong>First move on any git disaster?</strong> Run <code>git status</code> and <code>git reflog</code>. Do not touch anything yet.</li>
+          <li><strong>Want to back out of a merge or rebase cleanly?</strong> <code>git merge --abort</code> or <code>git rebase --abort</code>.</li>
+          <li><strong>Lost a commit, branch, or ref?</strong> Look in reflog before assuming it is gone.</li>
+          <li><strong>Committed a secret?</strong> Rotate the credential. Then scrub tracking. Rotation first, history second.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If given a live "fix this repo" scenario, narrate as you go: <em>"Let me check git status and git log first to understand the current state before I run anything that changes it."</em> Interviewers are often more interested in your diagnostic order than your typing speed.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: name the mistake that actually fails interviews.</strong> It is rarely the git error itself. It is candidates who freeze or say "I would just delete the repo and re-clone." That answer signals panic, not skill, and it destroys uncommitted work. The strongest answer to almost any "I broke git" scenario starts with <em>"First, I would check git reflog and git status before touching anything, because in git almost nothing is actually gone."</em> Say that sentence out loud before diagnosing the specific problem. It buys you thinking time and it is true.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You diagnose with <code>status</code>, <code>log</code>, <code>reflog</code> before running destructive commands</li>
+        <li>You know rotating a leaked secret matters more than scrubbing git history</li>
+        <li>You stay calm and methodical instead of proposing to nuke and re-clone</li>
+        <li>You communicate with teammates before force-pushing to a shared branch</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> diagnose before you act, assume recovery is possible until proven otherwise, and treat "I do not know, let me check" as a legitimate first move.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 11: INTERVIEW QUICK REFERENCE
+       ============================================================ -->
+  <article class="section" id="interview">
+    <p class="section__eyebrow">Section 11</p>
+    <h2 class="section__title">Interview Quick Reference</h2>
+
+    <div class="section__body">
+      <h3 class="section__h3">Time Allocation</h3>
+      <p>Git questions are rarely the main event. They show up as warm-ups, live-coding hiccups, or one behavioral question about collaboration. Answer cleanly in under a minute and let the interviewer move on. Over-explaining git signals nerves more than depth.</p>
+
+      <h3 class="section__h3">Signal Words and Your Response</h3>
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>If the interviewer says</span>
+          <span>Your response</span>
+        </div>
+        <div class="tgrid__row"><span>"Walk me through your git workflow"</span><span>Branch, commit, push, PR, review, squash-merge, delete branch. Six steps, said fast.</span></div>
+        <div class="tgrid__row"><span>"Merge or rebase, and why"</span><span>Rebase locally before sharing, merge to integrate. Never rebase what others have pulled.</span></div>
+        <div class="tgrid__row"><span>"How would you find which commit broke this"</span><span>git bisect, automate with bisect run if there is a reliable test</span></div>
+        <div class="tgrid__row"><span>"You accidentally committed something sensitive"</span><span>Rotate the credential first, scrub tracking second</span></div>
+        <div class="tgrid__row"><span>"How do you handle a disagreement in review"</span><span>Ask for a concrete example, default to trusting the maintainer, use data to push back</span></div>
+        <div class="tgrid__row"><span>"Tell me about a time you broke something"</span><span>Have one real story ready: what broke, how you found it (bisect, reflog, blame), how you fixed it</span></div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: The 60-Second Git Answer</p>
+        <ol class="rules__list">
+          <li><strong>State the mental model if relevant (10s):</strong> <em>"Commits are snapshots, branches are pointers."</em></li>
+          <li><strong>Name your default workflow (15s):</strong> <em>"Short feature branches, PRs, squash-merge."</em></li>
+          <li><strong>Name the one safety rule that applies (15s):</strong> <em>"Never rebase shared history."</em> or <em>"Revert, do not reset, once it is pushed."</em></li>
+          <li><strong>If it is a "something broke" question, lead with diagnosis (10s):</strong> <em>"I would check reflog before assuming anything is lost."</em></li>
+          <li><strong>Stop talking (10s):</strong> Let the interviewer ask a follow-up rather than filling the silence.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> You answer git questions fast and move on, not a five-minute git lecture. Have one real "I broke git and fixed it" story memorized before the interview. It does not need to be dramatic: an accidental force-push, a bad rebase, a committed secret. What matters is that you can narrate the diagnosis (what you checked first) and the fix (what command, why that one) in under 90 seconds. This single prepared story covers most behavioral-flavored git questions at once.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: have the recovery story arc ready.</strong> The story does not need to be dramatic. It just needs three beats: what broke, what you checked first (the diagnosis), and what command fixed it plus why that one. Candidates who can name the order of operations under pressure sound senior. Candidates who say "I would just re-clone" do not.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You answer git questions fast and move on, not a five-minute git lecture</li>
+        <li>You have one real recovery story ready, not just command syntax</li>
+        <li>You default to the safe option (revert, --force-with-lease) without being asked</li>
+        <li>You frame git as a tool for understanding history, not assigning blame</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> snapshots and pointers, short branches, rebase-then-merge on your own work, revert on shared work, reflog before panic, one real story ready to tell.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       CLOSING
+       ============================================================ -->
+  <section class="closing">
+    <h2 class="closing__h">That's it.</h2>
+    <p class="closing__sub">11 sections, one cheat sheet. Bookmark it before your next interview.</p>
+    <a href="#contents" class="cta cta--lg">BACK TO CONTENTS</a>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <a class="footer__ig" href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">Instagram: @vlada.asana</a>
+  <p class="footer__small">Companion piece to "Everything you need to know about API" · Built by @vlada.asana</p>
+</footer>
+
+<!-- Toast for copy buttons -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="./script.js"></script>
+</body>
+</html>

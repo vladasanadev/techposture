@@ -4,6 +4,9 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import baseImage from '../../imports/ChatGPT_Image_Jun_18__2026__12_33_46_PM.png';
 import helmetImage from '../../imports/ChatGPT_Image_Jun_18__2026__12_41_58_PM.png';
 import contactPuzzlesImage from '../../imports/contact-puzzles.png';
+import gitGuideHtml from '../../content/git-guide.html?raw';
+import gitGuideStyles from '../../../public/blog-assets/git-guide/styles.css?raw';
+import gitGuideScript from '../../../public/blog-assets/git-guide/script.js?raw';
 
 interface TrailPoint {
   x: number;
@@ -248,6 +251,191 @@ const eventsWorks: ShowcaseWork[] = [
 const claudeMdUpdatedAt = 'August 3, 2026';
 const lazymaxxingUpdatedAt = 'August 7, 2026';
 const gitGuideUpdatedAt = 'August 10, 2026';
+const gitGuidePaletteStyles = `
+  :root {
+    --bg: #3D3982;
+    --bg-card: #d02e2e;
+    --bg-code: rgba(0,0,0,0.18);
+    --bg-tint: rgba(255,255,255,0.08);
+    --bg-soft: rgba(255,255,255,0.1);
+    --text: rgba(255,255,255,0.96);
+    --text-muted: rgba(255,255,255,0.78);
+    --text-soft: rgba(255,255,255,0.58);
+    --rule: rgba(255,255,255,0.2);
+    --rule-soft: rgba(255,255,255,0.14);
+    --highlight: rgba(255,255,255,0.16);
+    --accent: #ffffff;
+    --accent-dark: #ffffff;
+    --accent-soft: rgba(255,255,255,0.34);
+    --link: #ffffff;
+    --shadow: 0 24px 70px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+
+  html,
+  body {
+    background: #3D3982;
+    color: var(--text);
+    font-family: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .topbar {
+    background: rgba(61,57,130,0.92);
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+  }
+
+  .topbar__inner,
+  .page,
+  .footer {
+    max-width: 1040px;
+  }
+
+  .topbar__brand,
+  .topbar__cta,
+  .hero__byline a,
+  strong,
+  .toc__list a,
+  .footer a {
+    color: #ffffff;
+  }
+
+  .topbar__cta,
+  .cta,
+  .copybtn {
+    background: #d02e2e;
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 999px;
+    color: #ffffff;
+  }
+
+  .topbar__cta:hover,
+  .cta:hover,
+  .copybtn:hover {
+    background: #bc2929;
+  }
+
+  .hero {
+    padding-top: 64px;
+  }
+
+  .hero__title,
+  .toc__title,
+  .need__title,
+  .step__title,
+  .closing__h {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    letter-spacing: 0.035em;
+    color: #ffffff;
+  }
+
+  .hero__title {
+    max-width: 11ch;
+    font-size: clamp(3rem, 11vw, 8.8rem);
+    line-height: 0.88;
+  }
+
+  .hero__title-accent,
+  .eyebrow,
+  .step__eyebrow,
+  .need__num,
+  .toc__num {
+    color: rgba(255,255,255,0.74);
+  }
+
+  .hero__lede,
+  .need__lede,
+  .step__sub,
+  p,
+  li,
+  .footer__consult,
+  .footer__small {
+    color: rgba(255,255,255,0.84);
+  }
+
+  .toc,
+  .need,
+  .step,
+  .closing,
+  .footer,
+  .callout,
+  .need__card,
+  .codeblock,
+  .quickref,
+  table {
+    background: #d02e2e;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+  }
+
+  .toc,
+  .need,
+  .step,
+  .closing {
+    padding: clamp(22px, 4vw, 42px);
+    margin: 20px 0;
+  }
+
+  .need,
+  .step {
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .need__card,
+  .callout,
+  .callout--yellow,
+  .callout--tip,
+  .callout--blue,
+  .codeblock,
+  pre,
+  table {
+    background: rgba(0,0,0,0.16);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  pre,
+  code {
+    color: rgba(255,255,255,0.94);
+  }
+
+  .codeblock__bar {
+    background: rgba(0,0,0,0.18);
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+  }
+
+  .git-article-tag {
+    display: inline-flex;
+    width: fit-content;
+    margin: 0 0 16px;
+    padding: 0.38rem 0.66rem;
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.78);
+    font-size: 0.62rem;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 767px) {
+    .topbar__inner,
+    .page,
+    .footer {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    .hero__title {
+      max-width: 9ch;
+      font-size: clamp(3rem, 17vw, 5rem);
+    }
+  }
+`;
+const gitGuideDocument = gitGuideHtml
+  .replace('<link rel="stylesheet" href="./styles.css" />', `<style>${gitGuideStyles}</style><style>${gitGuidePaletteStyles}</style>`)
+  .replace('<p class="eyebrow">System design interviews</p>', '<span class="git-article-tag">#techinterview</span><p class="eyebrow">System design interviews</p>')
+  .replace('<script src="./script.js"></script>', `<script>${gitGuideScript}</script>`);
 
 const claudeMdContent = `## CRITICAL CONSTRAINTS
 
@@ -2107,36 +2295,17 @@ Here is my script:
 
 function GitGuidePostPage() {
   return (
-    <main
-      className="tech-blog-page min-h-screen bg-black text-white"
-      style={{ fontFamily: '"Space Grotesk", "Inter", sans-serif' }}
-    >
-      <BlogStyles />
-      <div
-        className="relative min-h-screen overflow-hidden px-8 py-10"
-        style={{ background: '#3D3982' }}
-      >
-        <div className="relative z-10 grid min-h-[calc(100vh-80px)] grid-rows-[auto_1fr] gap-10">
-          <div className="flex items-start justify-between gap-6">
-            <a className="blog-secondary-text" href="/techblog" style={{ color: 'rgba(255,255,255,0.58)', textDecoration: 'none' }}>
-              back to blog
-            </a>
-            <div className="article-tag-list" aria-label="Article tags" style={{ justifyContent: 'flex-end', marginTop: 0 }}>
-              <span className="article-tag">#techinterview</span>
-            </div>
-          </div>
-
-          <section className="embedded-guide-shell">
-            <iframe
-              className="embedded-guide-frame"
-              src="/blog-assets/git-guide/index.html"
-              title="Everything you need to know about Git"
-              loading="lazy"
-            />
-          </section>
-        </div>
-      </div>
-    </main>
+    <iframe
+      srcDoc={gitGuideDocument}
+      title="Everything you need to know about Git"
+      style={{
+        width: '100vw',
+        height: '100vh',
+        display: 'block',
+        border: 0,
+        background: '#ffffff',
+      }}
+    />
   );
 }
 
@@ -3018,6 +3187,10 @@ image in broken on my main side          }
           }
 
           @media (max-width: 767px) {
+            .hero-mobile-hide {
+              display: none !important;
+            }
+
             .portfolio-nav-tabs {
               gap: 4px;
               max-width: calc(100vw - 24px);
@@ -3156,7 +3329,7 @@ image in broken on my main side          }
 
       {/* TOP LEFT — small label */}
       <div
-        className="absolute pointer-events-none"
+        className="hero-mobile-hide absolute pointer-events-none"
         style={{ top: 28, left: 32, zIndex: 40 }}
       >
         <p style={{ ...labelStyle, color: 'rgba(255,255,255,0.38)', fontSize: '0.58rem' }}>
@@ -3198,7 +3371,7 @@ image in broken on my main side          }
 
       {/* LEFT MIDDLE — vertical ASCII rule + label */}
       <div
-        className="absolute pointer-events-none"
+        className="hero-mobile-hide absolute pointer-events-none"
         style={{ top: '50%', left: 28, transform: 'translateY(-50%)', zIndex: 40 }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -3328,7 +3501,7 @@ image in broken on my main side          }
 
       {/* Bottom center — ASCII decorative rule */}
       <div
-        className="absolute pointer-events-none"
+        className="hero-mobile-hide absolute pointer-events-none"
         style={{
           bottom: 20,
           left: '50%',
@@ -3351,7 +3524,7 @@ image in broken on my main side          }
 
       {/* Top center — ASCII decorative line */}
       <div
-        className="absolute pointer-events-none"
+        className="hero-mobile-hide absolute pointer-events-none"
         style={{
           top: 20,
           left: '50%',
