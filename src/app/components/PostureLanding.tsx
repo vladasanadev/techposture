@@ -10,6 +10,12 @@ import gitGuideScript from '../../../public/blog-assets/git-guide/script.js?raw'
 import apiGuideHtml from '../../content/api-guide.html?raw';
 import apiGuideStyles from '../../../public/blog-assets/api-guide/styles.css?raw';
 import apiGuideScript from '../../../public/blog-assets/api-guide/script.js?raw';
+import databaseGuideHtml from '../../content/database-guide.html?raw';
+import databaseGuideStyles from '../../../public/blog-assets/database-guide/styles.css?raw';
+import databaseGuideScript from '../../../public/blog-assets/database-guide/script.js?raw';
+import dockerGuideHtml from '../../content/docker-guide.html?raw';
+import dockerGuideStyles from '../../../public/blog-assets/docker-guide/styles.css?raw';
+import dockerGuideScript from '../../../public/blog-assets/docker-guide/script.js?raw';
 
 interface TrailPoint {
   x: number;
@@ -255,6 +261,8 @@ const claudeMdUpdatedAt = 'August 3, 2026';
 const lazymaxxingUpdatedAt = 'August 7, 2026';
 const gitGuideUpdatedAt = 'August 10, 2026';
 const apiGuideUpdatedAt = 'August 10, 2026';
+const databaseGuideUpdatedAt = 'August 10, 2026';
+const dockerGuideUpdatedAt = 'August 10, 2026';
 const embeddedGuidePaletteStyles = `
   :root {
     --bg: #3D3982;
@@ -480,6 +488,8 @@ function buildEmbeddedGuideDocument(html: string, styles: string, script: string
 
 const gitGuideDocument = buildEmbeddedGuideDocument(gitGuideHtml, gitGuideStyles, gitGuideScript, 'techinterview');
 const apiGuideDocument = buildEmbeddedGuideDocument(apiGuideHtml, apiGuideStyles, apiGuideScript, 'techinterview');
+const databaseGuideDocument = buildEmbeddedGuideDocument(databaseGuideHtml, databaseGuideStyles, databaseGuideScript, 'techinterview');
+const dockerGuideDocument = buildEmbeddedGuideDocument(dockerGuideHtml, dockerGuideStyles, dockerGuideScript, 'techinterview');
 
 const blogPosts = [
   {
@@ -515,6 +525,20 @@ const blogPosts = [
     title: 'Everything You Need To Know About API',
     description: 'REST, GraphQL, gRPC, auth, pagination, versioning, rate limiting, security, and real-time patterns.',
     date: apiGuideUpdatedAt,
+    tag: 'techinterview',
+  },
+  {
+    href: '/techblog/everything-you-need-to-know-about-database-design',
+    title: 'Everything You Need To Know About Database Design',
+    description: 'SQL vs NoSQL, normalization, indexing, ACID transactions, CAP theorem, replication, sharding, and caching.',
+    date: databaseGuideUpdatedAt,
+    tag: 'techinterview',
+  },
+  {
+    href: '/techblog/everything-you-need-to-know-about-docker',
+    title: 'Everything You Need To Know About Docker',
+    description: 'Docker images, layers, Dockerfiles, Kubernetes pods, deployments, services, health probes, scaling, config, and secrets.',
+    date: dockerGuideUpdatedAt,
     tag: 'techinterview',
   },
 ];
@@ -2441,11 +2465,11 @@ Here is my script:
   );
 }
 
-function GitGuidePostPage() {
+function EmbeddedGuidePostPage({ document, title }: { document: string; title: string }) {
   return (
     <iframe
-      srcDoc={gitGuideDocument}
-      title="Everything you need to know about Git"
+      srcDoc={document}
+      title={title}
       style={{
         width: '100%',
         maxWidth: '100%',
@@ -2459,20 +2483,38 @@ function GitGuidePostPage() {
   );
 }
 
+function GitGuidePostPage() {
+  return (
+    <EmbeddedGuidePostPage
+      document={gitGuideDocument}
+      title="Everything you need to know about Git"
+    />
+  );
+}
+
 function ApiGuidePostPage() {
   return (
-    <iframe
-      srcDoc={apiGuideDocument}
+    <EmbeddedGuidePostPage
+      document={apiGuideDocument}
       title="Everything you need to know about API"
-      style={{
-        width: '100%',
-        maxWidth: '100%',
-        height: '100dvh',
-        display: 'block',
-        border: 0,
-        background: '#3D3982',
-        overflow: 'hidden',
-      }}
+    />
+  );
+}
+
+function DatabaseGuidePostPage() {
+  return (
+    <EmbeddedGuidePostPage
+      document={databaseGuideDocument}
+      title="Everything you need to know about Database Design"
+    />
+  );
+}
+
+function DockerGuidePostPage() {
+  return (
+    <EmbeddedGuidePostPage
+      document={dockerGuideDocument}
+      title="Everything you need to know about Docker"
     />
   );
 }
@@ -2629,6 +2671,14 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/everything-you-need-to-know-about-api') {
     return <ApiGuidePostPage />;
+  }
+
+  if (currentPath === '/techblog/everything-you-need-to-know-about-database-design') {
+    return <DatabaseGuidePostPage />;
+  }
+
+  if (currentPath === '/techblog/everything-you-need-to-know-about-docker') {
+    return <DockerGuidePostPage />;
   }
 
   if (currentPath === '/techblog') {
