@@ -7,6 +7,9 @@ import contactPuzzlesImage from '../../imports/contact-puzzles.png';
 import gitGuideHtml from '../../content/git-guide.html?raw';
 import gitGuideStyles from '../../../public/blog-assets/git-guide/styles.css?raw';
 import gitGuideScript from '../../../public/blog-assets/git-guide/script.js?raw';
+import apiGuideHtml from '../../content/api-guide.html?raw';
+import apiGuideStyles from '../../../public/blog-assets/api-guide/styles.css?raw';
+import apiGuideScript from '../../../public/blog-assets/api-guide/script.js?raw';
 
 interface TrailPoint {
   x: number;
@@ -251,7 +254,8 @@ const eventsWorks: ShowcaseWork[] = [
 const claudeMdUpdatedAt = 'August 3, 2026';
 const lazymaxxingUpdatedAt = 'August 7, 2026';
 const gitGuideUpdatedAt = 'August 10, 2026';
-const gitGuidePaletteStyles = `
+const apiGuideUpdatedAt = 'August 10, 2026';
+const embeddedGuidePaletteStyles = `
   :root {
     --bg: #3D3982;
     --bg-card: #d02e2e;
@@ -402,7 +406,7 @@ const gitGuidePaletteStyles = `
     border-bottom: 1px solid rgba(255,255,255,0.16);
   }
 
-  .git-article-tag {
+  .embedded-article-tag {
     display: inline-flex;
     width: fit-content;
     margin: 0 0 16px;
@@ -432,10 +436,53 @@ const gitGuidePaletteStyles = `
     }
   }
 `;
-const gitGuideDocument = gitGuideHtml
-  .replace('<link rel="stylesheet" href="./styles.css" />', `<style>${gitGuideStyles}</style><style>${gitGuidePaletteStyles}</style>`)
-  .replace('<p class="eyebrow">System design interviews</p>', '<span class="git-article-tag">#techinterview</span><p class="eyebrow">System design interviews</p>')
-  .replace('<script src="./script.js"></script>', `<script>${gitGuideScript}</script>`);
+function buildEmbeddedGuideDocument(html: string, styles: string, script: string, tag: string) {
+  return html
+    .replace('<link rel="stylesheet" href="./styles.css" />', `<style>${styles}</style><style>${embeddedGuidePaletteStyles}</style>`)
+    .replace('<p class="eyebrow">System design interviews</p>', `<span class="embedded-article-tag">#${tag}</span><p class="eyebrow">System design interviews</p>`)
+    .replace('<script src="./script.js"></script>', `<script>${script}</script>`);
+}
+
+const gitGuideDocument = buildEmbeddedGuideDocument(gitGuideHtml, gitGuideStyles, gitGuideScript, 'techinterview');
+const apiGuideDocument = buildEmbeddedGuideDocument(apiGuideHtml, apiGuideStyles, apiGuideScript, 'techinterview');
+
+const blogPosts = [
+  {
+    href: '/techblog/claude-dot-md',
+    title: 'Claude.md',
+    description: 'My operating file for cleaner AI-assisted writing, technical taste, and creator workflow defaults.',
+    date: claudeMdUpdatedAt,
+    tag: 'content',
+  },
+  {
+    href: '/techblog/3-simple-ai-agents-that-run-my-content',
+    title: '3 Simple AI Agents That Run My Content',
+    description: 'A tiny Claude content team: morning brief, email replies, and a 24H viral-content analyst.',
+    date: 'August 3, 2026',
+    tag: 'content',
+  },
+  {
+    href: '/techblog/lazymaxxing-video-edit',
+    title: 'Lazymaxxing Video Edit',
+    description: 'A simple guide for lazy editing: reference video, Claude scene prompts, Higgsfield clips, and CapCut polish.',
+    date: lazymaxxingUpdatedAt,
+    tag: 'content',
+  },
+  {
+    href: '/techblog/everything-you-need-to-know-about-git',
+    title: 'Everything You Need To Know About Git',
+    description: 'Branching, merge vs rebase, conflicts, undoing mistakes, internals, GitHub workflows, and debugging.',
+    date: gitGuideUpdatedAt,
+    tag: 'techinterview',
+  },
+  {
+    href: '/techblog/everything-you-need-to-know-about-api',
+    title: 'Everything You Need To Know About API',
+    description: 'REST, GraphQL, gRPC, auth, pagination, versioning, rate limiting, security, and real-time patterns.',
+    date: apiGuideUpdatedAt,
+    tag: 'techinterview',
+  },
+];
 
 const claudeMdContent = `## CRITICAL CONSTRAINTS
 
@@ -889,6 +936,38 @@ function BlogStyles() {
           display: grid;
           grid-template-columns: 1fr;
           gap: 14px;
+        }
+
+        .tech-tag-filter {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px;
+          margin-top: -22px;
+        }
+
+        .tech-tag-filter button {
+          min-height: 34px;
+          padding: 0 14px;
+          border: 1px solid rgba(255,255,255,0.24);
+          border-radius: 999px;
+          background: rgba(255,255,255,0.08);
+          color: rgba(255,255,255,0.72);
+          cursor: pointer;
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          font-size: 0.58rem;
+          font-weight: 400;
+          letter-spacing: 0.14em;
+          line-height: 1;
+          text-transform: uppercase;
+          transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+        }
+
+        .tech-tag-filter button:hover,
+        .tech-tag-filter button[aria-pressed="true"] {
+          border-color: rgba(255,255,255,0.54);
+          background: #d02e2e;
+          color: #fff;
         }
 
         .tech-post-card {
@@ -1347,6 +1426,11 @@ function BlogStyles() {
             gap: 12px;
           }
 
+          .tech-tag-filter {
+            justify-content: flex-start;
+            margin-top: -12px;
+          }
+
           .tech-post-card {
             min-height: 156px;
             grid-template-columns: 1fr;
@@ -1732,6 +1816,9 @@ function CopyablePrompt({ text, label }: { text: string; label: string }) {
 }
 
 function TechBlogIndexPage() {
+  const [activeTag, setActiveTag] = useState<'all' | 'content' | 'techinterview'>('all');
+  const visiblePosts = activeTag === 'all' ? blogPosts : blogPosts.filter(post => post.tag === activeTag);
+
   return (
     <main
       className="tech-blog-page min-h-screen bg-black text-white"
@@ -1764,59 +1851,38 @@ function TechBlogIndexPage() {
 
           <div className="tech-blog-index-layout">
             <h1 className="blog-display-title">BLOG</h1>
+            <div className="tech-tag-filter" aria-label="Filter blog articles by tag">
+              {[
+                { label: 'all', value: 'all' },
+                { label: '#content', value: 'content' },
+                { label: '#techinterview', value: 'techinterview' },
+              ].map(filter => (
+                <button
+                  key={filter.value}
+                  type="button"
+                  aria-pressed={activeTag === filter.value}
+                  onClick={() => setActiveTag(filter.value as 'all' | 'content' | 'techinterview')}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
             <div className="tech-post-grid">
-              <a className="tech-post-card" href="/techblog/claude-dot-md" data-tags="aiwriting">
-                <div>
-                  <h3>Claude.md</h3>
-                  <p>My operating file for cleaner AI-assisted writing, technical taste, and creator workflow defaults.</p>
-                  <div className="tech-post-tags" aria-label="Article tags">
-                    <span className="tech-post-tag">#aiwriting</span>
+              {visiblePosts.map(post => (
+                <a className="tech-post-card" href={post.href} data-tags={post.tag} key={post.href}>
+                  <div>
+                    <h3>{post.title}</h3>
+                    <p>{post.description}</p>
+                    <div className="tech-post-tags" aria-label="Article tags">
+                      <span className="tech-post-tag">#{post.tag}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="tech-post-meta">
-                  <small>{claudeMdUpdatedAt}</small>
-                  <small>Read article</small>
-                </div>
-              </a>
-              <a className="tech-post-card" href="/techblog/3-simple-ai-agents-that-run-my-content" data-tags="aiautomation">
-                <div>
-                  <h3>3 Simple AI Agents That Run My Content</h3>
-                  <p>A tiny Claude content team: morning brief, email replies, and a 24H viral-content analyst.</p>
-                  <div className="tech-post-tags" aria-label="Article tags">
-                    <span className="tech-post-tag">#aiautomation</span>
+                  <div className="tech-post-meta">
+                    <small>{post.date}</small>
+                    <small>Read article</small>
                   </div>
-                </div>
-                <div className="tech-post-meta">
-                  <small>August 3, 2026</small>
-                  <small>Read article</small>
-                </div>
-              </a>
-              <a className="tech-post-card" href="/techblog/lazymaxxing-video-edit" data-tags="aivideo">
-                <div>
-                  <h3>Lazymaxxing Video Edit</h3>
-                  <p>A simple guide for lazy editing: reference video, Claude scene prompts, Higgsfield clips, and CapCut polish.</p>
-                  <div className="tech-post-tags" aria-label="Article tags">
-                    <span className="tech-post-tag">#aivideo</span>
-                  </div>
-                </div>
-                <div className="tech-post-meta">
-                  <small>{lazymaxxingUpdatedAt}</small>
-                  <small>Read article</small>
-                </div>
-              </a>
-              <a className="tech-post-card" href="/techblog/everything-you-need-to-know-about-git" data-tags="techinterview">
-                <div>
-                  <h3>Everything You Need To Know About Git</h3>
-                  <p>Branching, merge vs rebase, conflicts, undoing mistakes, internals, GitHub workflows, and debugging.</p>
-                  <div className="tech-post-tags" aria-label="Article tags">
-                    <span className="tech-post-tag">#techinterview</span>
-                  </div>
-                </div>
-                <div className="tech-post-meta">
-                  <small>{gitGuideUpdatedAt}</small>
-                  <small>Read article</small>
-                </div>
-              </a>
+                </a>
+              ))}
             </div>
           </div>
         </div>
@@ -2309,6 +2375,22 @@ function GitGuidePostPage() {
   );
 }
 
+function ApiGuidePostPage() {
+  return (
+    <iframe
+      srcDoc={apiGuideDocument}
+      title="Everything you need to know about API"
+      style={{
+        width: '100vw',
+        height: '100vh',
+        display: 'block',
+        border: 0,
+        background: '#3D3982',
+      }}
+    />
+  );
+}
+
 function ClaudeMdPostPage({
   copied,
   onCopy,
@@ -2457,6 +2539,10 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/everything-you-need-to-know-about-git') {
     return <GitGuidePostPage />;
+  }
+
+  if (currentPath === '/techblog/everything-you-need-to-know-about-api') {
+    return <ApiGuidePostPage />;
   }
 
   if (currentPath === '/techblog') {
