@@ -247,6 +247,7 @@ const eventsWorks: ShowcaseWork[] = [
 
 const claudeMdUpdatedAt = 'August 3, 2026';
 const lazymaxxingUpdatedAt = 'August 7, 2026';
+const gitGuideUpdatedAt = 'August 10, 2026';
 
 const claudeMdContent = `## CRITICAL CONSTRAINTS
 
@@ -754,6 +755,29 @@ function BlogStyles() {
           line-height: 1.7;
         }
 
+        .tech-post-tags,
+        .article-tag-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 14px;
+        }
+
+        .tech-post-tag,
+        .article-tag {
+          width: fit-content;
+          padding: 0.32rem 0.58rem;
+          border: 1px solid rgba(255,255,255,0.22);
+          border-radius: 999px;
+          background: rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.74);
+          font-size: 0.58rem;
+          font-weight: 400;
+          line-height: 1;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
         .tech-post-meta {
           display: grid;
           gap: 12px;
@@ -767,6 +791,22 @@ function BlogStyles() {
           margin: 0 auto;
           display: grid;
           gap: clamp(24px, 4vw, 44px);
+        }
+
+        .embedded-guide-shell {
+          width: min(100%, 1180px);
+          margin: 0 auto;
+          display: grid;
+          gap: 18px;
+        }
+
+        .embedded-guide-frame {
+          width: 100%;
+          min-height: min(82vh, 980px);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 18px;
+          background: #fff;
+          box-shadow: 0 24px 70px rgba(0,0,0,0.24);
         }
 
         .article-kicker {
@@ -1537,33 +1577,55 @@ function TechBlogIndexPage() {
           <div className="tech-blog-index-layout">
             <h1 className="blog-display-title">BLOG</h1>
             <div className="tech-post-grid">
-              <a className="tech-post-card" href="/techblog/claude-dot-md">
+              <a className="tech-post-card" href="/techblog/claude-dot-md" data-tags="aiwriting">
                 <div>
                   <h3>Claude.md</h3>
                   <p>My operating file for cleaner AI-assisted writing, technical taste, and creator workflow defaults.</p>
+                  <div className="tech-post-tags" aria-label="Article tags">
+                    <span className="tech-post-tag">#aiwriting</span>
+                  </div>
                 </div>
                 <div className="tech-post-meta">
                   <small>{claudeMdUpdatedAt}</small>
                   <small>Read article</small>
                 </div>
               </a>
-              <a className="tech-post-card" href="/techblog/3-simple-ai-agents-that-run-my-content">
+              <a className="tech-post-card" href="/techblog/3-simple-ai-agents-that-run-my-content" data-tags="aiautomation">
                 <div>
                   <h3>3 Simple AI Agents That Run My Content</h3>
                   <p>A tiny Claude content team: morning brief, email replies, and a 24H viral-content analyst.</p>
+                  <div className="tech-post-tags" aria-label="Article tags">
+                    <span className="tech-post-tag">#aiautomation</span>
+                  </div>
                 </div>
                 <div className="tech-post-meta">
                   <small>August 3, 2026</small>
                   <small>Read article</small>
                 </div>
               </a>
-              <a className="tech-post-card" href="/techblog/lazymaxxing-video-edit">
+              <a className="tech-post-card" href="/techblog/lazymaxxing-video-edit" data-tags="aivideo">
                 <div>
                   <h3>Lazymaxxing Video Edit</h3>
                   <p>A simple guide for lazy editing: reference video, Claude scene prompts, Higgsfield clips, and CapCut polish.</p>
+                  <div className="tech-post-tags" aria-label="Article tags">
+                    <span className="tech-post-tag">#aivideo</span>
+                  </div>
                 </div>
                 <div className="tech-post-meta">
                   <small>{lazymaxxingUpdatedAt}</small>
+                  <small>Read article</small>
+                </div>
+              </a>
+              <a className="tech-post-card" href="/techblog/everything-you-need-to-know-about-git" data-tags="techinterview">
+                <div>
+                  <h3>Everything You Need To Know About Git</h3>
+                  <p>Branching, merge vs rebase, conflicts, undoing mistakes, internals, GitHub workflows, and debugging.</p>
+                  <div className="tech-post-tags" aria-label="Article tags">
+                    <span className="tech-post-tag">#techinterview</span>
+                  </div>
+                </div>
+                <div className="tech-post-meta">
+                  <small>{gitGuideUpdatedAt}</small>
                   <small>Read article</small>
                 </div>
               </a>
@@ -2043,6 +2105,41 @@ Here is my script:
   );
 }
 
+function GitGuidePostPage() {
+  return (
+    <main
+      className="tech-blog-page min-h-screen bg-black text-white"
+      style={{ fontFamily: '"Space Grotesk", "Inter", sans-serif' }}
+    >
+      <BlogStyles />
+      <div
+        className="relative min-h-screen overflow-hidden px-8 py-10"
+        style={{ background: '#3D3982' }}
+      >
+        <div className="relative z-10 grid min-h-[calc(100vh-80px)] grid-rows-[auto_1fr] gap-10">
+          <div className="flex items-start justify-between gap-6">
+            <a className="blog-secondary-text" href="/techblog" style={{ color: 'rgba(255,255,255,0.58)', textDecoration: 'none' }}>
+              back to blog
+            </a>
+            <div className="article-tag-list" aria-label="Article tags" style={{ justifyContent: 'flex-end', marginTop: 0 }}>
+              <span className="article-tag">#techinterview</span>
+            </div>
+          </div>
+
+          <section className="embedded-guide-shell">
+            <iframe
+              className="embedded-guide-frame"
+              src="/blog-assets/git-guide/index.html"
+              title="Everything you need to know about Git"
+              loading="lazy"
+            />
+          </section>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 function ClaudeMdPostPage({
   copied,
   onCopy,
@@ -2187,6 +2284,10 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/lazymaxxing-video-edit') {
     return <LazymaxxingVideoEditPostPage />;
+  }
+
+  if (currentPath === '/techblog/everything-you-need-to-know-about-git') {
+    return <GitGuidePostPage />;
   }
 
   if (currentPath === '/techblog') {
