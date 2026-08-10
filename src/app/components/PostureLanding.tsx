@@ -1103,6 +1103,7 @@ function BlogStyles() {
           margin: 0 auto;
           display: grid;
           gap: clamp(24px, 4vw, 44px);
+          min-width: 0;
         }
 
         .embedded-guide-shell {
@@ -1141,6 +1142,7 @@ function BlogStyles() {
           background: #d02e2e;
           color: #fff;
           box-shadow: 0 24px 70px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.12);
+          min-width: 0;
         }
 
         .article-card a {
@@ -1292,6 +1294,7 @@ function BlogStyles() {
           padding-left: 1.2rem;
           display: grid;
           gap: 8px;
+          min-width: 0;
         }
 
         .article-section code {
@@ -1514,6 +1517,28 @@ function BlogStyles() {
           .article-need-grid,
           .article-two-col {
             grid-template-columns: 1fr;
+          }
+
+          .article-shell {
+            width: 100%;
+            max-width: 100%;
+            gap: 22px;
+          }
+
+          .article-card {
+            gap: 20px;
+            padding: 20px;
+            border-radius: 16px;
+          }
+
+          .article-section h2 {
+            font-size: clamp(1.35rem, 9vw, 2.1rem);
+            overflow-wrap: anywhere;
+          }
+
+          .article-prompt {
+            font-size: 0.68rem;
+            line-height: 1.55;
           }
 
           .article-demo-figure img {
@@ -1883,7 +1908,7 @@ function TechBlogIndexPage() {
     >
       <BlogStyles />
       <div
-        className="relative min-h-screen overflow-hidden px-8 py-10"
+        className="tech-blog-bg relative min-h-screen overflow-hidden px-8 py-10"
         style={{ background: '#3D3982' }}
       >
         <div className="relative z-10 grid min-h-[calc(100vh-80px)] grid-rows-[auto_1fr_auto] gap-10">
@@ -2218,7 +2243,7 @@ function LazymaxxingVideoEditPostPage() {
     >
       <BlogStyles />
       <div
-        className="relative min-h-screen overflow-hidden px-8 py-10"
+        className="tech-blog-bg relative min-h-screen overflow-hidden px-8 py-10"
         style={{ background: '#3D3982' }}
       >
         <div className="relative z-10 grid min-h-[calc(100vh-80px)] grid-rows-[auto_1fr_auto] gap-10">
@@ -3217,6 +3242,18 @@ image in broken on my main side          }
             transform: translateY(-1px);
           }
 
+          .portfolio-hero-title-wrap {
+            transform: translateY(-4vh);
+            padding-left: 10px;
+          }
+
+          .portfolio-top-link {
+            top: 66px !important;
+            right: 50% !important;
+            transform: translateX(50%);
+            white-space: nowrap;
+          }
+
           .claude-md-inner {
             grid-template-rows: auto 1fr auto;
           }
@@ -3336,6 +3373,28 @@ image in broken on my main side          }
           @media (max-width: 767px) {
             .hero-mobile-hide {
               display: none !important;
+            }
+
+            .portfolio-hero-title-wrap {
+              transform: translateY(-8vh);
+              padding-left: 0;
+            }
+
+            .portfolio-hero-title {
+              font-size: clamp(2.35rem, 17vw, 4.85rem) !important;
+              letter-spacing: 0.055em !important;
+              text-align: center;
+              width: min-content;
+              max-width: calc(100vw - 28px);
+              overflow-wrap: normal;
+            }
+
+            .portfolio-top-link {
+              top: 70px !important;
+              right: 50% !important;
+              transform: translateX(50%);
+              font-size: 0.52rem !important;
+              letter-spacing: 0.14em !important;
             }
 
             .portfolio-nav-tabs {
@@ -3486,7 +3545,7 @@ image in broken on my main side          }
 
       {/* TOP RIGHT — work with me link */}
       <div
-        className="absolute pointer-events-auto"
+        className="portfolio-top-link absolute pointer-events-auto"
         style={{ top: 24, right: 32, zIndex: 40 }}
       >
         <a
@@ -3610,13 +3669,13 @@ image in broken on my main side          }
 
       {/* ── PORTFOLIO HERO TEXT ── */}
       <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        className="portfolio-hero-title-wrap absolute inset-0 flex items-center justify-center pointer-events-none"
         style={{ zIndex: 30 }}
       >
         {/* Blurred ghost layer */}
         <h1
           aria-hidden="true"
-          className="absolute tracking-wider select-none"
+          className="portfolio-hero-title absolute tracking-wider select-none"
           style={{
             fontFamily: '"Space Grotesk", "Inter", sans-serif',
             fontWeight: 800,
@@ -3631,7 +3690,7 @@ image in broken on my main side          }
 
         {/* Sharp layer */}
         <h1
-          className="tracking-wider select-none"
+          className="portfolio-hero-title tracking-wider select-none"
           style={{
             fontFamily: '"Space Grotesk", "Inter", sans-serif',
             fontWeight: 800,
