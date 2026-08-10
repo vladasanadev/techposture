@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Everything you need to know about API, by @vlada.asana</title>
+<meta name="description" content="A system design cheat sheet. REST, GraphQL, gRPC, auth, pagination, versioning, rate limiting, security, real-time patterns. Interview-ready." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="#">@vlada.asana <span class="topbar__sep">·</span> API Cheat Sheet</a>
+    <a class="topbar__cta" href="#contents">CONTENTS</a>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+    <p class="hero__byline">A system design cheat sheet by <a href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">@vlada.asana</a></p>
+    <p class="eyebrow">System design interviews</p>
+    <h1 class="hero__title">Everything you need to know about <span class="hero__title-accent">API</span></h1>
+    <p class="hero__lede">REST, GraphQL, gRPC, auth, pagination, versioning, rate limiting, security, real-time patterns. Built for interview prep and real-world system design.</p>
+  </section>
+
+  <!-- ============================================================
+       TABLE OF CONTENTS
+       ============================================================ -->
+  <section class="toc" id="contents">
+    <p class="eyebrow">Contents</p>
+    <h2 class="toc__title">11 sections. Click to jump.</h2>
+
+    <ol class="toc__list">
+      <li><a href="#protocol"><span class="toc__num">01</span> Choosing the Right Protocol</a></li>
+      <li><a href="#rest"><span class="toc__num">02</span> REST, the Default Choice</a></li>
+      <li><a href="#graphql"><span class="toc__num">03</span> GraphQL</a></li>
+      <li><a href="#grpc"><span class="toc__num">04</span> gRPC and RPC</a></li>
+      <li><a href="#auth"><span class="toc__num">05</span> Authentication and Authorization</a></li>
+      <li><a href="#pagination"><span class="toc__num">06</span> Pagination</a></li>
+      <li><a href="#versioning"><span class="toc__num">07</span> API Versioning</a></li>
+      <li><a href="#ratelimit"><span class="toc__num">08</span> Rate Limiting</a></li>
+      <li><a href="#security"><span class="toc__num">09</span> Security Checklist</a></li>
+      <li><a href="#realtime"><span class="toc__num">10</span> Real-Time Patterns</a></li>
+      <li><a href="#interview"><span class="toc__num">11</span> Interview Quick Reference</a></li>
+    </ol>
+  </section>
+
+  <!-- ============================================================
+       SECTION 01: CHOOSING THE RIGHT PROTOCOL
+       ============================================================ -->
+  <article class="section" id="protocol">
+    <p class="section__eyebrow">Section 01</p>
+    <h2 class="section__title">Choosing the Right Protocol</h2>
+
+    <div class="section__body">
+      <p>Default to REST unless the requirements give you a clear reason not to.</p>
+      <p>In a system design interview, the goal is not to pick the most sophisticated protocol. It is to choose the simplest option that satisfies the requirements, explain why, and keep moving.</p>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Protocol</span>
+          <span>Best For</span>
+          <span>Signals to Listen For</span>
+          <span>Avoid When</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>REST</strong></span>
+          <span>Web/mobile apps, CRUD, public APIs</span>
+          <span>Standard request/response, resources, simple integrations</span>
+          <span>Rarely a bad default</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>GraphQL</strong></span>
+          <span>Flexible client-driven data fetching</span>
+          <span>Different clients need different fields, over-fetching, under-fetching</span>
+          <span>Simple CRUD where endpoints are predictable</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>gRPC / RPC</strong></span>
+          <span>Internal service-to-service communication</span>
+          <span>Microservices, low latency, high throughput, strongly typed contracts</span>
+          <span>Public browser-facing APIs unless paired with a gateway or proxy</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>WebSocket</strong></span>
+          <span>Two-way real-time communication</span>
+          <span>Chat, multiplayer, collaborative editing, live trading</span>
+          <span>Normal request/response flows</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>SSE</strong></span>
+          <span>One-way server-to-client streaming</span>
+          <span>Notifications, live dashboards, progress updates, event feeds</span>
+          <span>Client needs frequent two-way communication</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule</p>
+        <p>Ask these questions in order:</p>
+        <ol class="rules__list">
+          <li><strong>Is normal request/response enough?</strong> Use REST.</li>
+          <li><strong>Do different clients need very different data shapes?</strong> Consider GraphQL.</li>
+          <li><strong>Is this mostly internal service-to-service communication where performance matters?</strong> Consider gRPC.</li>
+          <li><strong>Do both client and server need to send messages at any time?</strong> Use WebSocket.</li>
+          <li><strong>Does only the server need to continuously push updates?</strong> Consider SSE.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> Do not spend five minutes comparing protocols unless protocol choice is actually central to the problem. A strong answer sounds like: <em>"I will use REST for the main client-server API because the access patterns are straightforward CRUD. If we later need real-time updates, I would add WebSockets for that specific path."</em> This shows that you can make a decision now without over-engineering, while still leaving room for the architecture to evolve.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: state the requirement before the technology.</strong> Instead of saying <em>"I want to use WebSockets"</em>, say <em>"Users need to receive updates within seconds without polling, so I would use a persistent WebSocket connection."</em> The second version is stronger because the technology follows from the requirement.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <p>They are usually testing whether you can:</p>
+      <ul class="block__list">
+        <li>Identify the communication pattern</li>
+        <li>Choose a reasonable default</li>
+        <li>Explain one meaningful tradeoff</li>
+        <li>Avoid unnecessary complexity</li>
+      </ul>
+      <p>You do not need to prove that one protocol is universally better.</p>
+
+      <p class="good-default"><strong>Good default:</strong> REST first, specialize only where the requirements justify it.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 02: REST
+       ============================================================ -->
+  <article class="section" id="rest">
+    <p class="section__eyebrow">Section 02</p>
+    <h2 class="section__title">REST, the Default Choice</h2>
+
+    <div class="section__body">
+      <h3 class="section__h3">2.1 Resource Modeling</h3>
+      <p>Think about the things in your system, not the actions. Resources should be plural nouns. Map your core entities directly to URL paths.</p>
+
+      <p><strong>Rules:</strong></p>
+      <ul class="block__list">
+        <li>Use plural nouns: <code>/events</code>, <code>/bookings</code>, <code>/users</code> (never <code>/getEvent</code> or <code>/createUser</code>)</li>
+        <li>Nest resources when the parent is required: <code>/events/{id}/tickets</code></li>
+        <li>Use query parameters for optional filters: <code>/tickets?event_id=123&amp;section=VIP</code></li>
+        <li>Keep nesting shallow, avoid going deeper than 2 levels</li>
+      </ul>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Core entity examples (Ticketmaster-style)</span>
+        </div>
+<pre><code>GET    /events                     # List all events
+GET    /events/{id}               # Get one event
+POST   /events                     # Create new event
+PUT    /events/{id}               # Replace entire event
+PATCH  /events/{id}               # Update partial fields
+DELETE /events/{id}               # Remove event
+
+# Relationships
+GET    /events/{id}/tickets        # Tickets for this event (parent required)
+POST   /events/{id}/bookings       # Create a booking for this event
+GET    /tickets?event_id=123       # Optional filter (flat resource)
+GET    /events?city=NYC&amp;page=2     # Filter and pagination</code></pre>
+      </div>
+
+      <h3 class="section__h3">2.2 HTTP Methods</h3>
+      <p>Each method has a clear purpose. The most important concept is <strong>idempotency</strong>: calling the same request multiple times produces the same result.</p>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Method</span>
+          <span>Purpose</span>
+          <span>Idempotent?</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>GET</strong></span>
+          <span>Retrieve resources. Never changes state.</span>
+          <span>Yes</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>POST</strong></span>
+          <span>Create a new resource. Server assigns the ID.</span>
+          <span>No</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>PUT</strong></span>
+          <span>Replace entire resource. Creates if missing.</span>
+          <span>Yes</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>PATCH</strong></span>
+          <span>Update partial fields only.</span>
+          <span>Maybe</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>DELETE</strong></span>
+          <span>Remove resource. Repeat equals same end state (404).</span>
+          <span>Yes</span>
+        </div>
+      </div>
+
+      <p>Why idempotency matters: networks fail and clients retry requests. GET, PUT, DELETE are safe to retry. POST is not, two POST calls create two bookings.</p>
+
+      <h3 class="section__h3">2.3 Passing Data to APIs</h3>
+      <p>There are three places to put data in a request. Choosing correctly makes your API intuitive.</p>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Location</span>
+          <span>Format</span>
+          <span>Use When</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Path parameter</strong></span>
+          <span><code>/events/123</code></span>
+          <span>Required, identifies the specific resource</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Query parameter</strong></span>
+          <span><code>?city=NYC&amp;page=2</code></span>
+          <span>Optional, filtering, sorting, pagination</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Request body</strong></span>
+          <span>JSON object</span>
+          <span>Creating or updating, complex or sensitive data</span>
+        </div>
+      </div>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Combined example</span>
+        </div>
+<pre><code>POST /events/123/bookings?notify=true
+{
+  "tickets": [{"section": "VIP", "quantity": 2}],
+  "payment_method": "credit_card"
+}
+
+# Path param:   123         (which event, required)
+# Query param:  notify=true (optional behavior)
+# Body:         tickets, payment (the actual data)</code></pre>
+      </div>
+
+      <h3 class="section__h3">2.4 HTTP Status Codes</h3>
+      <p>You only need to know the common ones. The most important distinction is 4xx (client error) vs 5xx (server error).</p>
+
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Code</span>
+          <span>Name</span>
+          <span>When to Use</span>
+        </div>
+        <div class="tgrid__row"><span><strong>200</strong></span><span>OK</span><span>Standard success for GET, PUT, PATCH</span></div>
+        <div class="tgrid__row"><span><strong>201</strong></span><span>Created</span><span>POST succeeded, new resource was made</span></div>
+        <div class="tgrid__row"><span><strong>204</strong></span><span>No Content</span><span>Success but no body to return (DELETE, some PATCH)</span></div>
+        <div class="tgrid__row"><span><strong>400</strong></span><span>Bad Request</span><span>Malformed syntax, missing required fields</span></div>
+        <div class="tgrid__row"><span><strong>401</strong></span><span>Unauthorized</span><span>No auth credentials provided (needs to log in)</span></div>
+        <div class="tgrid__row"><span><strong>403</strong></span><span>Forbidden</span><span>Auth is valid, but no permission for this action</span></div>
+        <div class="tgrid__row"><span><strong>404</strong></span><span>Not Found</span><span>Resource does not exist</span></div>
+        <div class="tgrid__row"><span><strong>409</strong></span><span>Conflict</span><span>State conflict, duplicate booking, optimistic lock</span></div>
+        <div class="tgrid__row"><span><strong>422</strong></span><span>Unprocessable Entity</span><span>Request is well-formed but fails validation</span></div>
+        <div class="tgrid__row"><span><strong>429</strong></span><span>Too Many Requests</span><span>Rate limit exceeded, retry after delay</span></div>
+        <div class="tgrid__row"><span><strong>500</strong></span><span>Internal Server Error</span><span>Bug or crash on the server side</span></div>
+        <div class="tgrid__row"><span><strong>503</strong></span><span>Service Unavailable</span><span>Server is down or overloaded</span></div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Picking the Right Method</p>
+        <p>Match the method to the intent, not the action.</p>
+        <ol class="rules__list">
+          <li><strong>Reading data without changing anything?</strong> Use <code>GET</code>.</li>
+          <li><strong>Creating a new resource where the server picks the ID?</strong> Use <code>POST</code>.</li>
+          <li><strong>Replacing a resource with a new full version?</strong> Use <code>PUT</code>.</li>
+          <li><strong>Updating a few fields without sending the whole object?</strong> Use <code>PATCH</code>.</li>
+          <li><strong>Removing a resource and being okay with repeat calls?</strong> Use <code>DELETE</code>.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> When asked to design a CRUD endpoint, do not just list the five methods. Say <em>"I would use POST for create, GET for read, PATCH for partial update, and DELETE for remove. I would skip PUT because PATCH is more efficient for partial updates in this system."</em> That sentence shows you understand why the methods exist, not just what they are called.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: idempotency is not trivia.</strong> If an interviewer asks why POST is not idempotent, the answer is: <em>"Two POSTs create two resources, so the state changes with each call. PUT and DELETE can be repeated safely because the end state is the same. This matters for retry logic, payment flows, and any system where the network might drop mid-request."</em> That answer ties the concept to production reality.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You modeled the system as resources, not actions</li>
+        <li>You explained when to nest vs when to use query parameters</li>
+        <li>You understood why idempotency matters for retries and payments</li>
+        <li>You chose status codes based on the situation, not from memory</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> plural nouns, GET for reads, POST for create, PATCH for partial update, 2xx for success, 4xx for client error, 5xx for server error.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 03: GRAPHQL
+       ============================================================ -->
+  <article class="section" id="graphql">
+    <p class="section__eyebrow">Section 03</p>
+    <h2 class="section__title">GraphQL</h2>
+
+    <div class="section__body">
+      <h3 class="section__h3">3.1 What Problem It Solves</h3>
+      <p>REST endpoints return a fixed shape. A mobile app may only need event name and date, while the web dashboard needs full details with venue and ticket data. With REST you either:</p>
+      <ul class="block__list">
+        <li>Create multiple endpoints for different use cases (endpoint proliferation)</li>
+        <li>Return everything and make clients filter (over-fetching, wastes bandwidth)</li>
+      </ul>
+      <p>GraphQL uses a single endpoint that accepts queries describing exactly what data the client wants. The server returns precisely that shape, nothing more.</p>
+
+      <h3 class="section__h3">3.2 Schema Design</h3>
+      <p>You define types and their relationships once. Clients can traverse the graph in a single query.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">GraphQL schema example</span>
+        </div>
+<pre><code>type Event {
+  id:      ID!
+  name:    String!
+  date:    DateTime!
+  venue:   Venue!         # Nested type, traversable
+  tickets: [Ticket!]!     # List of tickets
+}
+
+type Venue {
+  id:      ID!
+  name:    String!
+  address: String!
+}
+
+type Query {
+  event(id: ID!): Event
+  events(limit: Int, after: String): [Event!]!   # Cursor pagination
+}
+
+type Mutation {
+  createBooking(input: BookingInput!): Booking!
+  cancelBooking(id: ID!): Boolean!
+}
+
+type Subscription {
+  ticketSold(eventId: ID!): TicketEvent!          # Real-time updates
+}</code></pre>
+      </div>
+
+      <h3 class="section__h3">3.3 Query Examples</h3>
+      <p>The same endpoint handles all queries. Each client requests exactly what it needs.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Mobile vs web queries</span>
+        </div>
+<pre><code># Mobile: only name and date
+query GetEventMobile {
+  event(id: "123") {
+    name
+    date
+  }
+}
+
+# Web: full details in one round trip
+query GetEventWeb {
+  event(id: "123") {
+    name
+    date
+    venue { name address }
+    tickets { section price available }
+  }
+}
+
+# Mutation
+mutation CreateBooking {
+  createBooking(input: { eventId: "123", tickets: [{section: "VIP", qty: 2}] }) {
+    id
+    status
+  }
+}</code></pre>
+      </div>
+
+      <h3 class="section__h3">3.4 The N+1 Problem (Most Important GraphQL Gotcha)</h3>
+      <p>When you query 100 events with their venues, a naive implementation fires 101 database queries: 1 for events, then 1 per event for its venue. This destroys performance at scale.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">N+1 problem and the fix</span>
+        </div>
+<pre><code># Problem: 100 events = 101 queries
+# 1 query:  SELECT * FROM events LIMIT 100
+# 100 more: SELECT * FROM venues WHERE id = ? (once per event)
+
+# Solution: DataLoader batches related queries
+class VenueLoader(DataLoader):
+    async def batch_load_fn(self, venue_ids):
+        # 1 query: SELECT * FROM venues WHERE id IN (...all ids...)
+        venues = await db.query('SELECT * FROM venues WHERE id = ANY($1)', [venue_ids])
+        return [venues_by_id.get(id) for id in venue_ids]</code></pre>
+      </div>
+
+      <h3 class="section__h3">3.5 When to Use GraphQL</h3>
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Situation</span>
+          <span>Use GraphQL?</span>
+        </div>
+        <div class="tgrid__row"><span>Mobile app needs different data than web dashboard</span><span>Yes, classic use case</span></div>
+        <div class="tgrid__row"><span>Frontend team iterates without backend involvement</span><span>Yes, they request new fields freely</span></div>
+        <div class="tgrid__row"><span>Interviewer says over-fetching or under-fetching</span><span>Yes, direct signal</span></div>
+        <div class="tgrid__row"><span>Simple CRUD app with uniform clients</span><span>No, REST is simpler</span></div>
+        <div class="tgrid__row"><span>You need simple HTTP caching (CDN, browser cache)</span><span>No, REST GET is cacheable, GraphQL POST is not</span></div>
+        <div class="tgrid__row"><span>Public API for third-party developers</span><span>No, REST is more familiar and documented</span></div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: REST or GraphQL?</p>
+        <ol class="rules__list">
+          <li><strong>One client type, uniform data needs?</strong> Use REST.</li>
+          <li><strong>Multiple client types needing different shapes?</strong> Use GraphQL.</li>
+          <li><strong>Frontend team shipping faster than backend can ship?</strong> Use GraphQL.</li>
+          <li><strong>Public API for unknown third-party developers?</strong> Use REST.</li>
+          <li><strong>You need CDN-level caching?</strong> Use REST.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> When you mention GraphQL in an interview, always mention its cost. Say <em>"GraphQL solves over-fetching but introduces N+1 query risk and breaks HTTP caching. For this system, I would default to REST and only reach for GraphQL if mobile and web clients need very different data shapes."</em> This signals you understand tradeoffs, not just features.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: name the N+1 problem out loud.</strong> If you say <em>"I would use DataLoader to batch queries"</em> without being asked, you immediately signal senior-level thinking. It shows you have shipped GraphQL at scale and know where it breaks.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know GraphQL solves over-fetching and under-fetching</li>
+        <li>You understand the N+1 problem and how to mitigate it</li>
+        <li>You can articulate when GraphQL is the wrong choice</li>
+        <li>You understand GraphQL breaks standard HTTP caching</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> REST for public APIs and simple CRUD. GraphQL only when multiple client types need different data shapes from the same backend.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 04: gRPC / RPC
+       ============================================================ -->
+  <article class="section" id="grpc">
+    <p class="section__eyebrow">Section 04</p>
+    <h2 class="section__title">gRPC and RPC</h2>
+
+    <div class="section__body">
+      <h3 class="section__h3">4.1 How It Differs from REST</h3>
+      <p>REST is resource-oriented: you model nouns (events, bookings) and use HTTP verbs on them. RPC is action-oriented: you call functions across a network as if they were local.</p>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Aspect</span>
+          <span>REST</span>
+          <span>gRPC</span>
+        </div>
+        <div class="tgrid__row"><span><strong>Paradigm</strong></span><span>Resource-oriented (nouns)</span><span>Action-oriented (functions)</span></div>
+        <div class="tgrid__row"><span><strong>Protocol</strong></span><span>HTTP/1.1 + JSON</span><span>HTTP/2 + Protocol Buffers (binary)</span></div>
+        <div class="tgrid__row"><span><strong>Performance</strong></span><span>Moderate</span><span>High (binary, compressed, multiplexed)</span></div>
+        <div class="tgrid__row"><span><strong>Browser support</strong></span><span>Native</span><span>Requires grpc-web proxy</span></div>
+        <div class="tgrid__row"><span><strong>Contract</strong></span><span>OpenAPI or informal</span><span>Strict .proto file, required</span></div>
+        <div class="tgrid__row"><span><strong>Code generation</strong></span><span>Optional</span><span>Required, generated clients in any language</span></div>
+        <div class="tgrid__row"><span><strong>Streaming</strong></span><span>Workarounds (SSE, WebSocket)</span><span>Native: unary, server, client, bidirectional</span></div>
+        <div class="tgrid__row"><span><strong>Best for</strong></span><span>Public APIs, web and mobile clients</span><span>Internal service-to-service communication</span></div>
+      </div>
+
+      <h3 class="section__h3">4.2 Protocol Buffers (.proto file)</h3>
+      <p>You define your service contract in a <code>.proto</code> file. gRPC generates type-safe client and server code for any language from this single definition.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Proto file example</span>
+        </div>
+<pre><code>syntax = "proto3";
+
+service BookingService {
+  // Unary: one request, one response (like REST)
+  rpc CreateBooking (BookingRequest) returns (BookingResponse);
+
+  // Server streaming: one request, many responses
+  rpc StreamAvailability (EventId) returns (stream TicketUpdate);
+
+  // Bidirectional streaming: many requests, many responses
+  rpc Chat (stream Message) returns (stream Message);
+}
+
+message BookingRequest {
+  string event_id  = 1;    // Field numbers are permanent, never reuse
+  string user_id   = 2;
+  int32  quantity  = 3;
+  string section   = 4;
+}
+
+message BookingResponse {
+  string booking_id = 1;
+  string status     = 2;
+}</code></pre>
+      </div>
+
+      <h3 class="section__h3">4.3 When to Use gRPC</h3>
+      <ul class="block__list">
+        <li>Interviewer mentions microservices or internal service communication</li>
+        <li>Performance is explicitly a constraint, binary encoding is significantly faster</li>
+        <li>Multiple programming languages in the same system (polyglot)</li>
+        <li>You need streaming between services (live price updates, log streaming)</li>
+        <li>You want compile-time type safety across service boundaries</li>
+      </ul>
+      <p>In practice: use REST for public endpoints consumed by web/mobile clients. Use gRPC for internal service-to-service calls where you control both sides.</p>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: REST or gRPC?</p>
+        <ol class="rules__list">
+          <li><strong>Is this a public API for browsers or third parties?</strong> Use REST.</li>
+          <li><strong>Is this internal communication between services you control?</strong> Use gRPC.</li>
+          <li><strong>Do you need streaming between services?</strong> Use gRPC.</li>
+          <li><strong>Are performance and binary payload size critical?</strong> Use gRPC.</li>
+          <li><strong>Do you need strongly typed contracts across polyglot teams?</strong> Use gRPC.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> When the interviewer says <em>"microservices"</em>, say: <em>"I would use gRPC between services for performance and type safety, and expose a REST gateway at the edge for external clients."</em> That single sentence shows you understand the internal vs external protocol split, which is the right answer at almost every company.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: field numbers are forever.</strong> If you mention gRPC, say <em>"Once a field number is in a .proto file, you never reuse it. Renumbering breaks every deployed client silently. Adding a new field with a fresh number is safe; reusing 5 for a different meaning is a four-hour outage waiting to happen."</em> That answer separates people who have shipped protobufs from people who have only read about them.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know gRPC is for internal calls, not public APIs</li>
+        <li>You can articulate the performance vs accessibility tradeoff</li>
+        <li>You understand HTTP/2 streaming and why it matters</li>
+        <li>You know the browser needs grpc-web as a proxy</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> REST at the edge, gRPC between services. Split by audience, not by preference.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 05: AUTHENTICATION AND AUTHORIZATION
+       ============================================================ -->
+  <article class="section" id="auth">
+    <p class="section__eyebrow">Section 05</p>
+    <h2 class="section__title">Authentication and Authorization</h2>
+
+    <div class="section__body">
+      <h3 class="section__h3">5.1 The Difference</h3>
+      <p><strong>Authentication</strong> is who are you. Verifying identity (logging in, presenting credentials).</p>
+      <p><strong>Authorization</strong> is what are you allowed to do. Checking permissions after identity is confirmed.</p>
+      <p>Always authenticate first, then authorize. They are separate steps.</p>
+
+      <h3 class="section__h3">5.2 JWT Tokens</h3>
+      <p>Best for user-facing web and mobile applications. A JWT is a self-contained token that encodes the user's identity and permissions. Any service with the verification key can validate it without a database lookup.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">JWT structure and usage</span>
+        </div>
+<pre><code># JWT structure: header.payload.signature (base64url encoded)
+
+# Payload contains user context:
+{
+  "user_id": "123",
+  "email":   "john@example.com",
+  "role":    "customer",
+  "exp":     1734307200          # Expiry timestamp
+}
+
+# Sent with every request:
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMTIzIn0.abc123
+
+# Server validates:
+# 1. Signature is valid (not tampered)
+# 2. Token is not expired
+# 3. Claims match the required permissions</code></pre>
+      </div>
+
+      <p>Key properties of JWT: stateless, no database lookup needed per request. Short-lived (15 to 60 min) plus refresh token for new access tokens. Any service can verify with the public key.</p>
+
+      <h3 class="section__h3">5.3 API Keys</h3>
+      <p>Best for server-to-server communication and third-party developer access. API keys are long random strings that identify an application, not a user.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">API key verification</span>
+        </div>
+<pre><code># Client sends key in header:
+GET /events
+Authorization: Bearer sk_live_abc123def456...
+
+# Server verifies:
+SELECT client_id, permissions, rate_limit
+FROM   api_keys
+WHERE  key_hash = hash(received_key)
+  AND  revoked = false</code></pre>
+      </div>
+
+      <p><strong>When NOT to use API keys:</strong> never for end users, users should not manage cryptographic strings. API keys carry no user context, have no expiry by default, and cannot represent individual users.</p>
+
+      <h3 class="section__h3">5.4 Role-Based Access Control (RBAC)</h3>
+      <p>Assign roles to users, assign permissions to roles. In interviews, note which roles can access which endpoints.</p>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Endpoint</span>
+          <span>Customer</span>
+          <span>Manager</span>
+          <span>Admin</span>
+        </div>
+        <div class="tgrid__row"><span>GET /events</span><span>Yes, all</span><span>Yes, all</span><span>Yes</span></div>
+        <div class="tgrid__row"><span>POST /events</span><span>No</span><span>Yes, own venue</span><span>Yes</span></div>
+        <div class="tgrid__row"><span>GET /bookings/{id}</span><span>Own only</span><span>Yes, all</span><span>Yes</span></div>
+        <div class="tgrid__row"><span>DELETE /bookings/{id}</span><span>Own only</span><span>No</span><span>Yes</span></div>
+        <div class="tgrid__row"><span>GET /reports/revenue</span><span>No</span><span>Own venue only</span><span>Yes</span></div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: JWT or API Key?</p>
+        <ol class="rules__list">
+          <li><strong>Is the caller an end user with a login?</strong> Use JWT.</li>
+          <li><strong>Is the caller a server or third-party developer?</strong> Use API Key.</li>
+          <li><strong>Does the system need to know <em>which user</em> made the request?</strong> Use JWT.</li>
+          <li><strong>Does the system only need to know <em>which app</em> made the request?</strong> Use API Key.</li>
+          <li><strong>Do you need both user identity and app context?</strong> Use JWT plus an app-level API key in the same request.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> When asked about auth, do not just say <em>"use JWT"</em>. Say <em>"I would use short-lived JWTs (15 minutes) for user identity, refresh tokens stored in HTTP-only cookies for session continuity, and API keys for server-to-server calls between my own services. Authorization happens in a separate middleware that checks roles from the JWT claims."</em> That answer shows you understand the full auth picture, not just one token type.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: never trust the user ID from a request.</strong> Say <em>"For GET /bookings/456, the JWT gives me the user ID. Before I return the booking, I check whether booking 456 actually belongs to that user. Never trust the user-provided ID in the path."</em> That single line shows you understand authorization as a check on every request, not a one-time login event.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You separate authentication from authorization</li>
+        <li>You know when JWT fits and when API keys fit</li>
+        <li>You think about token expiry and refresh</li>
+        <li>You check ownership on every request, not just at login</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> short-lived JWT for users, API keys for services, role checks on every protected request, ownership verified before returning user data.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 06: PAGINATION
+       ============================================================ -->
+  <article class="section" id="pagination">
+    <p class="section__eyebrow">Section 06</p>
+    <h2 class="section__title">Pagination</h2>
+
+    <div class="section__body">
+      <p>Always include pagination on list endpoints. Returning millions of records in one response is a design failure. Use one of these three approaches:</p>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Type</span>
+          <span>How It Works</span>
+          <span>Use When</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Offset</strong></span>
+          <span><code>?offset=40&amp;limit=20</code></span>
+          <span>Simple admin dashboards, no real-time data</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Cursor</strong></span>
+          <span><code>?cursor=eyJpZCI6NDB9&amp;limit=20</code></span>
+          <span>Feeds, timelines, high-volume data</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Keyset</strong></span>
+          <span><code>?after_id=123&amp;after_date=2024-01-01</code></span>
+          <span>Large datasets, production systems</span>
+        </div>
+      </div>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Cursor response shape</span>
+        </div>
+<pre><code>{
+  "data": [ { "id": 1, ... }, { "id": 2, ... } ],
+  "pagination": {
+    "next_cursor":  "eyJpZCI6MjB9",    # Encode the last-seen ID or timestamp
+    "has_next":     true,
+    "total_count":  1547
+  }
+}
+
+# Next page request:
+GET /events?cursor=eyJpZCI6MjB9&amp;limit=20</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Pagination?</p>
+        <ol class="rules__list">
+          <li><strong>Small dataset, admin dashboard, users need to jump to page 47?</strong> Use offset.</li>
+          <li><strong>Large dataset, infinite feed, new items arriving constantly?</strong> Use cursor.</li>
+          <li><strong>Production system with millions of rows and stable sort order?</strong> Use keyset.</li>
+          <li><strong>Never use offset on a table where rows are inserted frequently.</strong></li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> When asked about pagination, mention the failure mode. Say <em>"I would use cursor pagination, not offset, because offset breaks when new items are inserted between page 2 and page 3. The user would see the same item twice or skip an item entirely. Cursor on a unique, monotonic key avoids that."</em> That answer shows you have shipped this in production, not just read about it.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: cursors must be opaque.</strong> Never expose the internal ID or timestamp in the cursor. Encode it with base64 so clients cannot guess <code>?cursor=123</code> and read records they did not pay for. If the cursor is reversible, it is a security bug.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know why offset fails on real-time data</li>
+        <li>You can explain cursor pagination as a stable alternative</li>
+        <li>You keep cursors opaque to prevent enumeration attacks</li>
+        <li>You always include a <code>has_next</code> or equivalent signal so clients know when to stop</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> cursor pagination on a unique, monotonic key, with an opaque encoded cursor and a <code>has_next</code> flag in the response.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 07: API VERSIONING
+       ============================================================ -->
+  <article class="section" id="versioning">
+    <p class="section__eyebrow">Section 07</p>
+    <h2 class="section__title">API Versioning</h2>
+
+    <div class="section__body">
+      <p>APIs change over time. Versioning lets you evolve your API without breaking existing clients.</p>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Strategy</span>
+          <span>Format</span>
+          <span>Best For</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>URL Path (recommended)</strong></span>
+          <span><code>/v1/events</code> then <code>/v2/events</code></span>
+          <span>Explicit, easy to route, easy to test in browser</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Header</strong></span>
+          <span><code>API-Version: 2</code></span>
+          <span>Clean URLs, follows HTTP standards</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Query Parameter</strong></span>
+          <span><code>/events?version=2</code></span>
+          <span>Simple to add without new routes</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Content Type</strong></span>
+          <span><code>Accept: application/vnd.api.v2+json</code></span>
+          <span>Purist REST approach</span>
+        </div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Versioning Strategy?</p>
+        <ol class="rules__list">
+          <li><strong>Public API for thousands of unknown third-party developers?</strong> Use URL path versioning.</li>
+          <li><strong>Internal API where the team controls every client?</strong> Use header versioning.</li>
+          <li><strong>You have a single client and want minimum ceremony?</strong> Use query parameter versioning.</li>
+          <li><strong>You need content negotiation across multiple formats?</strong> Use content type versioning.</li>
+          <li><strong>Default to URL path</strong> when in doubt. It is the most boring choice and that is exactly what you want.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> If the interviewer asks about versioning, you can also say <em>"I would not version the API unless there is a breaking change. Adding fields, adding endpoints, and supporting new parameters are all backwards-compatible. I would only bump the version when I need to remove or rename something."</em> That answer shows maturity. Most teams over-version out of fear.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: the real cost of versioning is the maintenance tax.</strong> Say <em>"Running /v1 and /v2 in production means I am paying double for monitoring, security patches, and bug fixes. I would only fork the version when the breaking change is real, and I would give /v1 an explicit sunset date so it can be turned off."</em> That shows you understand versioning is a business decision, not just a technical one.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You default to URL path versioning for clarity</li>
+        <li>You know that adding fields is backwards-compatible and does not need a new version</li>
+        <li>You give old versions an explicit sunset date</li>
+        <li>You understand versioning has a real maintenance cost</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> URL path versioning, only when there is a breaking change, with a sunset date for the old version.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 08: RATE LIMITING
+       ============================================================ -->
+  <article class="section" id="ratelimit">
+    <p class="section__eyebrow">Section 08</p>
+    <h2 class="section__title">Rate Limiting</h2>
+
+    <div class="section__body">
+      <p>Protects your system from abuse, scraping, and accidental overuse. Implement at the API gateway level.</p>
+
+      <h3 class="section__h3">8.1 Common Strategies</h3>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Strategy</span>
+          <span>How It Works</span>
+          <span>Best For</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Fixed Window</strong></span>
+          <span>Count requests per fixed time window (e.g., 1000/hour). Resets at boundary.</span>
+          <span>Simple implementation, predictable</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Sliding Window</strong></span>
+          <span>Rolling window of the last N seconds. No burst at boundary.</span>
+          <span>Smoother limiting, more accurate</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Token Bucket</strong></span>
+          <span>Bucket refills at fixed rate. Allows controlled bursts up to bucket size.</span>
+          <span>Allows legitimate traffic bursts</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Leaky Bucket</strong></span>
+          <span>Requests queue and are processed at a fixed rate. Smooths bursty traffic.</span>
+          <span>Strict, even output rate</span>
+        </div>
+      </div>
+
+      <h3 class="section__h3">8.2 Response Headers and Status Code</h3>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Rate limit response example</span>
+        </div>
+<pre><code>HTTP/1.1 429 Too Many Requests
+X-RateLimit-Limit:     1000          # Your limit
+X-RateLimit-Remaining: 0             # How many left
+X-RateLimit-Reset:     1672531200    # Unix timestamp when limit resets
+Retry-After:           60            # Seconds until retry is safe</code></pre>
+      </div>
+
+      <p>Typical limits: 1000 requests/hour per authenticated user, 100 requests/hour per IP (unauthenticated), 10 requests/minute for sensitive endpoints like <code>POST /bookings</code>.</p>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Rate Limit Strategy?</p>
+        <ol class="rules__list">
+          <li><strong>Simple internal API, abuse prevention is the only goal?</strong> Use fixed window.</li>
+          <li><strong>Public API, users complain about bursts at the top of the hour?</strong> Use sliding window.</li>
+          <li><strong>API that needs to allow short bursts but block sustained overuse?</strong> Use token bucket.</li>
+          <li><strong>Backend that needs a strict, even output rate?</strong> Use leaky bucket.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> When asked about rate limiting, do not just name a strategy. Say <em>"I would start with a fixed window per user for simplicity, then upgrade to token bucket if I see burst problems. The implementation lives at the API gateway, not in the application code, so individual services do not need to think about it."</em> That answer shows you ship the simple thing first and refactor when needed.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: rate limits belong in the response headers, not just the policy.</strong> If a client gets a 429 with no <code>Retry-After</code> header, they have to guess when to retry. Good APIs tell the client exactly when to come back. The headers are part of the API contract.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You put rate limiting at the gateway, not in app code</li>
+        <li>You know the tradeoff between fixed window (simple) and sliding window (accurate)</li>
+        <li>You return 429 with <code>Retry-After</code> and rate limit headers</li>
+        <li>You have different limits for different endpoint types</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> fixed window per user at the API gateway, 1000/hour for reads, 10/minute for writes, return 429 with <code>Retry-After</code>.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 09: SECURITY CHECKLIST
+       ============================================================ -->
+  <article class="section" id="security">
+    <p class="section__eyebrow">Section 09</p>
+    <h2 class="section__title">Security Checklist</h2>
+
+    <div class="section__body">
+      <h3 class="section__h3">9.1 Input Validation</h3>
+      <ul class="block__list">
+        <li>Validate and sanitize all input, type, length, format, range</li>
+        <li>Reject unexpected fields, do not pass raw input to your database</li>
+        <li>Validate on the server, never trust client-side validation alone</li>
+      </ul>
+
+      <h3 class="section__h3">9.2 Transport and Data</h3>
+      <ul class="block__list">
+        <li>Always use HTTPS, never expose endpoints over plain HTTP</li>
+        <li>Never log sensitive data, no passwords, card numbers, tokens in logs</li>
+        <li>Hash API keys before storing, never store plain text secrets</li>
+      </ul>
+
+      <h3 class="section__h3">9.3 Auth and Access</h3>
+      <ul class="block__list">
+        <li>Validate JWT signature and expiry on every request</li>
+        <li>Never trust user-provided IDs without checking ownership (e.g. <code>GET /bookings/456</code>, does the caller own booking 456?)</li>
+        <li>Apply the principle of least privilege, grant minimum permissions needed</li>
+        <li>Use short-lived access tokens (15 to 60 min) and refresh tokens</li>
+      </ul>
+
+      <h3 class="section__h3">9.4 Infrastructure</h3>
+      <ul class="block__list">
+        <li>Rate limit all public endpoints to prevent abuse and DDoS</li>
+        <li>Set CORS headers to restrict which origins can call your API</li>
+        <li>Return generic error messages to clients, do not expose stack traces or internal details</li>
+      </ul>
+
+      <div class="rules">
+        <p class="rules__label">Quick Security Audit: Walk This List Before Every Deploy</p>
+        <ol class="rules__list">
+          <li><strong>All inputs validated server-side?</strong> No raw strings into SQL or shell.</li>
+          <li><strong>HTTPS enforced everywhere?</strong> No HTTP fallback, no mixed content.</li>
+          <li><strong>Sensitive data scrubbed from logs?</strong> No tokens, no card numbers, no passwords.</li>
+          <li><strong>Auth checked on every request?</strong> Including the ones that feel internal.</li>
+          <li><strong>Ownership verified before returning user data?</strong> Every query, every time.</li>
+          <li><strong>Rate limits live at the gateway?</strong> Per user, per endpoint type.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> When asked about security, do not just list items. Say <em>"My default posture is deny by default. Every endpoint requires auth, every input is validated, every response is sanitized, every secret is hashed. I would rather spend an hour hardening than spend a day explaining a breach."</em> That answer shows you treat security as the default, not an afterthought.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: the most common security bug is the IDOR.</strong> Say <em>"Insecure Direct Object Reference is when GET /users/123 returns any user's data because the endpoint only checks authentication, not authorization. The fix is one line, but it is the line most teams forget."</em> That answer shows you have seen real production bugs, not just read OWASP.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You treat security as deny-by-default, not bolt-on</li>
+        <li>You validate on the server, never trust the client</li>
+        <li>You check ownership, not just authentication</li>
+        <li>You know IDOR is the most common API security bug</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> HTTPS everywhere, server-side validation, ownership checks on every read, hashed secrets, no sensitive data in logs, rate limits at the gateway.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 10: REAL-TIME PATTERNS
+       ============================================================ -->
+  <article class="section" id="realtime">
+    <p class="section__eyebrow">Section 10</p>
+    <h2 class="section__title">Real-Time Patterns</h2>
+
+    <div class="section__body">
+      <p>Standard REST APIs are request/response. When you need the server to push data, you need a different approach.</p>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Pattern</span>
+          <span>Direction</span>
+          <span>Protocol</span>
+          <span>Best For</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>WebSocket</strong></span>
+          <span>Both (full-duplex)</span>
+          <span><code>ws://</code></span>
+          <span>Chat, games, collaborative editing</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>SSE</strong></span>
+          <span>Server to Client</span>
+          <span>HTTP text/event-stream</span>
+          <span>Live notifications, dashboards, feeds</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Long Polling</strong></span>
+          <span>Server to Client</span>
+          <span>HTTP</span>
+          <span>Simple notifications, legacy support</span>
+        </div>
+        <div class="tgrid__row">
+          <span><strong>Short Polling</strong></span>
+          <span>Client polls server</span>
+          <span>HTTP</span>
+          <span>When real-time is a nice-to-have</span>
+        </div>
+      </div>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Server-Sent Events (SSE) example</span>
+        </div>
+<pre><code># Server (Node.js):
+res.setHeader("Content-Type", "text/event-stream");
+res.setHeader("Cache-Control", "no-cache");
+setInterval(() => {
+  res.write(`data: ${JSON.stringify({ price: getPrice() })}\n\n`);
+}, 1000);
+
+# Client:
+const es = new EventSource("/prices/AAPL");
+es.onmessage = (e) => updateDisplay(JSON.parse(e.data));</code></pre>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: Which Real-Time Pattern?</p>
+        <ol class="rules__list">
+          <li><strong>Real-time is nice-to-have, not critical?</strong> Use short polling.</li>
+          <li><strong>Server only needs to push updates, no client messages?</strong> Use SSE.</li>
+          <li><strong>Both sides need to send messages in real time?</strong> Use WebSocket.</li>
+          <li><strong>Legacy systems that cannot do WebSocket or SSE?</strong> Use long polling.</li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> When asked about real-time, name the tradeoff first. Say <em>"WebSocket is the most powerful but the most expensive to operate. SSE is one-way and uses plain HTTP, so it works through any proxy. Short polling is the simplest and the cheapest. I would start with short polling, upgrade to SSE when latency matters, and only reach for WebSocket when the client also needs to push data."</em> That progression shows you ship the simple thing first.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: SSE is criminally underused.</strong> Most engineers jump to WebSocket because it is more famous. But if the server is the only one talking (notifications, live feeds, dashboards), SSE does the job over plain HTTP, works through every proxy, and reconnects automatically on disconnect. Reach for WebSocket only when the client needs to push back.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You know the difference between WebSocket and SSE</li>
+        <li>You can articulate why you would pick one over the other</li>
+        <li>You understand the operational cost of keeping persistent connections alive</li>
+        <li>You start simple and only reach for WebSocket when justified</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> short polling for non-critical updates, SSE for one-way server push, WebSocket only when both sides need real-time communication.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 11: INTERVIEW QUICK REFERENCE
+       ============================================================ -->
+  <article class="section" id="interview">
+    <p class="section__eyebrow">Section 11</p>
+    <h2 class="section__title">Interview Quick Reference</h2>
+
+    <div class="section__body">
+      <h3 class="section__h3">Time Allocation</h3>
+      <p>Spend at most 5 minutes on API design. Show judgment and move on. Interviewers lose marks for candidates who get bogged down here instead of discussing architecture.</p>
+
+      <h3 class="section__h3">What to Cover (in order)</h3>
+      <ul class="block__list">
+        <li>State your protocol choice: <em>"I will use REST APIs here"</em></li>
+        <li>List your key endpoints, 3 to 6 is enough</li>
+        <li>Mention authentication: <em>"endpoints are secured with JWT"</em></li>
+        <li>Mention pagination on list endpoints</li>
+        <li>Move on to high-level design</li>
+      </ul>
+
+      <h3 class="section__h3">What to Skip (unless asked)</h3>
+      <ul class="block__list">
+        <li>Exact status codes, say <em>"2xx for success, 4xx for client error"</em></li>
+        <li>Versioning, only mention if the interviewer raises it</li>
+        <li>Detailed rate limiting algorithms</li>
+        <li>Complete request/response schemas</li>
+      </ul>
+
+      <h3 class="section__h3">Signal Words and Your Response</h3>
+
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>If the interviewer says</span>
+          <span>Your response</span>
+        </div>
+        <div class="tgrid__row"><span>Over-fetching or under-fetching</span><span>Mention GraphQL and explain why it fits</span></div>
+        <div class="tgrid__row"><span>Microservices or internal service communication</span><span>Consider gRPC for those internal calls</span></div>
+        <div class="tgrid__row"><span>Real-time, live, notifications</span><span>Mention WebSocket or SSE and explain the tradeoff</span></div>
+        <div class="tgrid__row"><span>Millions of users or scale</span><span>Ensure pagination, rate limiting, and auth are mentioned</span></div>
+        <div class="tgrid__row"><span>Mobile and web clients need different data</span><span>GraphQL is the right answer here</span></div>
+        <div class="tgrid__row"><span>Third-party developers or public API</span><span>REST with API keys, versioning, and rate limiting</span></div>
+      </div>
+
+      <div class="rules">
+        <p class="rules__label">Quick Decision Rule: The 5-Minute API Answer</p>
+        <p>Structure every API design answer in this order so you do not run out of time:</p>
+        <ol class="rules__list">
+          <li><strong>Protocol (30 seconds):</strong> <em>"REST, with one path where I add WebSocket."</em></li>
+          <li><strong>Endpoints (90 seconds):</strong> List 3 to 6. Resource, method, brief purpose.</li>
+          <li><strong>Auth (45 seconds):</strong> <em>"JWT for users, API keys for services."</em></li>
+          <li><strong>Pagination (30 seconds):</strong> <em>"Cursor on list endpoints."</em></li>
+          <li><strong>Rate limiting (30 seconds):</strong> <em>"Fixed window per user at the gateway."</em></li>
+          <li><strong>Hand off to the next topic (15 seconds):</strong> <em>"That covers the API surface, I would like to move on to the data model."</em></li>
+        </ol>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Interview Tip.</strong> The single biggest differentiator between senior and junior candidates in system design is the ability to <em>stop talking about API design and move on</em>. Most candidates burn 15 minutes explaining the API and have 5 minutes left for the actual architecture. State the API surface in 3 to 5 minutes and spend the rest on data model, scaling, and tradeoffs. The API is the table of contents; the architecture is the book.
+        </div>
+      </div>
+
+      <div class="callout callout--blue callout--inline">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Extra Interview Tip: have one prepared sentence for every signal word.</strong> Memorize a one-sentence answer for <em>over-fetching</em>, <em>microservices</em>, <em>real-time</em>, <em>scale</em>, <em>mobile and web</em>, and <em>public API</em>. In the interview, you will not have time to think. You will have time to remember. A memorized sentence that names the tradeoff is worth more than a five-minute improvised explanation.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What Interviewers Usually Want to Hear</h3>
+      <ul class="block__list">
+        <li>You made a decision without over-engineering</li>
+        <li>You named the tradeoff behind each choice</li>
+        <li>You moved on to the architecture after 3 to 5 minutes</li>
+        <li>You asked one clarifying question before designing the API</li>
+      </ul>
+
+      <p class="good-default"><strong>Good default:</strong> REST for the surface, JWT for users, cursor pagination, rate limits at the gateway, then move on to the part of the system that actually matters.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       CLOSING
+       ============================================================ -->
+  <section class="closing">
+    <h2 class="closing__h">That's it.</h2>
+    <p class="closing__sub">11 sections, one cheat sheet. Bookmark it before your next system design round.</p>
+    <a href="#contents" class="cta cta--lg">BACK TO CONTENTS</a>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <a class="footer__ig" href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">Instagram: @vlada.asana</a>
+  <p class="footer__small">Built by @vlada.asana · Everything you need to know about API</p>
+</footer>
+
+<!-- Toast for copy buttons -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="./script.js"></script>
+</body>
+</html>

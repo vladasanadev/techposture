@@ -280,6 +280,8 @@ const embeddedGuidePaletteStyles = `
     background: #3D3982;
     color: var(--text);
     font-family: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   .topbar {
@@ -291,6 +293,7 @@ const embeddedGuidePaletteStyles = `
   .page,
   .footer {
     max-width: 1040px;
+    width: min(100% - 32px, 1040px);
   }
 
   .topbar__brand,
@@ -377,6 +380,8 @@ const embeddedGuidePaletteStyles = `
   .closing {
     padding: clamp(22px, 4vw, 42px);
     margin: 20px 0;
+    width: 100%;
+    max-width: 100%;
   }
 
   .need,
@@ -399,6 +404,21 @@ const embeddedGuidePaletteStyles = `
   pre,
   code {
     color: rgba(255,255,255,0.94);
+  }
+
+  .codeblock,
+  .tgrid {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .step,
+  .need__card,
+  .callout,
+  .toc,
+  .closing,
+  .good-default {
+    min-width: 0;
   }
 
   .codeblock__bar {
@@ -426,13 +446,28 @@ const embeddedGuidePaletteStyles = `
     .topbar__inner,
     .page,
     .footer {
-      padding-left: 18px;
-      padding-right: 18px;
+      width: min(100% - 24px, 1040px);
+      padding-left: 0;
+      padding-right: 0;
     }
 
     .hero__title {
-      max-width: 9ch;
-      font-size: clamp(3rem, 17vw, 5rem);
+      max-width: 100%;
+      font-size: clamp(2.65rem, 14vw, 4.8rem);
+      overflow-wrap: anywhere;
+    }
+
+    .need__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tgrid:not(.tgrid--3col) .tgrid__row,
+    .tgrid--3col .tgrid__row {
+      grid-template-columns: 1fr;
+    }
+
+    .tgrid__row--head {
+      display: none;
     }
   }
 `;
@@ -904,6 +939,7 @@ function BlogStyles() {
           margin: 0 auto;
           display: grid;
           gap: clamp(28px, 4vw, 54px);
+          min-width: 0;
         }
 
         .blog-display-title {
@@ -932,10 +968,15 @@ function BlogStyles() {
           line-height: 1.5;
         }
 
+        .tech-blog-bg {
+          overflow-x: hidden;
+        }
+
         .tech-post-grid {
           display: grid;
           grid-template-columns: 1fr;
           gap: 14px;
+          min-width: 0;
         }
 
         .tech-tag-filter {
@@ -972,6 +1013,9 @@ function BlogStyles() {
 
         .tech-post-card {
           min-height: 148px;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
           display: grid;
           grid-template-columns: minmax(0, 1fr) auto;
           align-items: end;
@@ -1012,6 +1056,7 @@ function BlogStyles() {
           line-height: 0.96;
           letter-spacing: 0.04em;
           text-transform: uppercase;
+          overflow-wrap: anywhere;
         }
 
         .tech-post-card p {
@@ -1413,12 +1458,22 @@ function BlogStyles() {
         }
 
         @media (max-width: 767px) {
+          .tech-blog-bg {
+            padding-left: 18px !important;
+            padding-right: 18px !important;
+          }
+
           .tech-blog-index-layout {
             grid-template-columns: 1fr;
+            width: 100%;
+            max-width: 100%;
+            margin-inline: auto;
           }
 
           .blog-display-title {
             text-align: left;
+            font-size: clamp(2.7rem, 22vw, 5rem);
+            letter-spacing: 0.06em;
           }
 
           .tech-post-grid {
@@ -1437,10 +1492,12 @@ function BlogStyles() {
             align-items: end;
             gap: 14px;
             padding: 18px;
+            border-radius: 16px;
           }
 
           .tech-post-card h3 {
-            font-size: clamp(1.55rem, 12vw, 3rem);
+            font-size: clamp(1.45rem, 10.5vw, 2.6rem);
+            letter-spacing: 0.025em;
           }
 
           .tech-post-card p {
@@ -1851,7 +1908,7 @@ function TechBlogIndexPage() {
 
           <div className="tech-blog-index-layout">
             <h1 className="blog-display-title">BLOG</h1>
-            <div className="tech-tag-filter" aria-label="Filter blog articles by tag">
+          <div className="tech-tag-filter" aria-label="Filter blog articles by tag">
               {[
                 { label: 'all', value: 'all' },
                 { label: '#content', value: 'content' },
@@ -1899,7 +1956,7 @@ function AiAgentsPostPage() {
     >
       <BlogStyles />
       <div
-        className="relative min-h-screen overflow-hidden px-8 py-10"
+        className="tech-blog-bg relative min-h-screen overflow-hidden px-8 py-10"
         style={{ background: '#3D3982' }}
       >
         <div className="relative z-10 grid min-h-[calc(100vh-80px)] grid-rows-[auto_1fr_auto] gap-10">
@@ -2365,11 +2422,13 @@ function GitGuidePostPage() {
       srcDoc={gitGuideDocument}
       title="Everything you need to know about Git"
       style={{
-        width: '100vw',
-        height: '100vh',
+        width: '100%',
+        maxWidth: '100%',
+        height: '100dvh',
         display: 'block',
         border: 0,
-        background: '#ffffff',
+        background: '#3D3982',
+        overflow: 'hidden',
       }}
     />
   );
@@ -2381,11 +2440,13 @@ function ApiGuidePostPage() {
       srcDoc={apiGuideDocument}
       title="Everything you need to know about API"
       style={{
-        width: '100vw',
-        height: '100vh',
+        width: '100%',
+        maxWidth: '100%',
+        height: '100dvh',
         display: 'block',
         border: 0,
         background: '#3D3982',
+        overflow: 'hidden',
       }}
     />
   );
