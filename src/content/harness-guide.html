@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Harness 101, by @vlada.asana</title>
+<meta name="description" content="A teaching guide for setting up your first Claude Code harness. Context, skill, tool, guardrail, state, and the maturity ladder from chatbot to workflow. The bigger upgrade over better prompts." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="#">@vlada.asana <span class="topbar__sep">·</span> First AI Harness</a>
+    <a class="topbar__cta" href="#contents">CONTENTS</a>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero hero--compact">
+    <p class="hero__byline">A teaching guide by <a href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">@vlada.asana</a></p>
+    <p class="eyebrow">Harness Design</p>
+    <h1 class="hero__title">Harness <span class="hero__title-accent">101</span></h1>
+    <p class="hero__lede">Most people try to make AI smarter with better prompts. The bigger upgrade is giving the model a better environment to work inside. That environment is your harness.</p>
+  </section>
+
+  <!-- ============================================================
+       INTRO
+       ============================================================ -->
+  <section class="intro-block">
+    <p>Build a basic Claude Code harness and ship it today. By the end of this guide, you will have a working version 0.1 on disk, plus a clear ladder for what to improve once it starts saving you real work.</p>
+  </section>
+
+  <!-- ============================================================
+       TABLE OF CONTENTS
+       ============================================================ -->
+  <section class="toc" id="contents">
+    <p class="eyebrow">Contents</p>
+    <h2 class="toc__title">6 steps. Click to jump.</h2>
+
+    <ol class="toc__list">
+      <li><a href="#start-small"><span class="toc__num">01</span> Start smaller than you think</a></li>
+      <li><a href="#context"><span class="toc__num">02</span> Create your context file</a></li>
+      <li><a href="#skill"><span class="toc__num">03</span> Add one reusable skill</a></li>
+      <li><a href="#tool"><span class="toc__num">04</span> Give it one tool</a></li>
+      <li><a href="#guardrail"><span class="toc__num">05</span> Add one guardrail</a></li>
+      <li><a href="#ladder"><span class="toc__num">06</span> The maturity ladder</a></li>
+    </ol>
+  </section>
+
+  <!-- ============================================================
+       SECTION 01: START SMALLER
+       ============================================================ -->
+  <article class="section" id="start-small">
+    <p class="section__eyebrow">Step 01</p>
+    <h2 class="section__title">Start smaller than you think</h2>
+
+    <div class="section__body">
+      <p>Your first harness does not need 10 agents, 15 MCP servers, a vector database, autonomous workflows, or complicated memory infrastructure. It needs three things: 1 context file, 1 skill, 1 tool. That is enough to feel the difference.</p>
+
+      <h3 class="section__h3">The Minimum Viable Harness</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>What</span>
+          <span>What It Does</span>
+          <span>Why It Matters</span>
+        </div>
+        <div class="tgrid__row"><span><strong>CONTEXT.md</strong></span><span>Tells the model who you are, how you work, what to never do</span><span>The model is no longer starting from zero on every prompt</span></div>
+        <div class="tgrid__row"><span><strong>1 skill</strong></span><span>Teaches the model how to perform one task you do repeatedly</span><span>You stop rewriting the same instructions for the same task</span></div>
+        <div class="tgrid__row"><span><strong>1 tool</strong></span><span>Connects the model to one place where real work happens</span><span>The model can act, not just answer</span></div>
+      </div>
+
+      <div class="callout">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>The principle.</strong> The goal of a version 0.1 harness is not feature completeness. It is to remove one specific kind of friction. The first friction to remove is the one you feel every single day, the same prompt you have typed five times this week. Build for that one.
+        </div>
+      </div>
+
+      <h3 class="section__h3">Common Mistake: Building the "Dream Harness"</h3>
+      <p>Most first attempts fail because they try to design the harness the user <em>wishes</em> they had, not the one they need today. The result is a folder full of half-configured agents and skills, none of which are connected to a real workflow. Smaller beats better. A working version 0.1 you use every day is worth more than a perfect version 0.9 you do not.</p>
+
+      <h3 class="section__h3">What You Will Have Built by the End</h3>
+      <ul class="block__list">
+        <li>A <code>my-harness/</code> folder with <code>CONTEXT.md</code>, one skill, and one project state file</li>
+        <li>One tool connected (pick the one you will actually use this week)</li>
+        <li>One explicit permission boundary in writing</li>
+        <li>A clear sense of what level your harness is at on the 0 to 5 ladder</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 02: CONTEXT FILE
+       ============================================================ -->
+  <article class="section" id="context">
+    <p class="section__eyebrow">Step 02</p>
+    <h2 class="section__title">Create your context file</h2>
+
+    <div class="section__body">
+      <p>Make a file called <code>CONTEXT.md</code>. Put only information the AI repeatedly needs. The most common beginner mistake is to turn this into a giant biography. More context is not automatically better context. The model has a limited attention budget, and every useless instruction competes with the useful ones.</p>
+
+      <h3 class="section__h3">What Goes In</h3>
+      <p>Four sections, in this order. Nothing more for version 0.1.</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">CONTEXT.md template</span>
+          <button class="copybtn" data-copy="# About me
+
+I am a frontend developer and tech creator.
+
+## How I work
+- I prefer short explanations.
+- I like examples before theory.
+- I want strong hooks for content.
+- Avoid corporate language.
+
+## Current priorities
+- AI content
+- coding education
+- creator workflows
+
+## Rules
+- Do not publish anything without approval.
+- Ask before spending money." type="button">Copy</button>
+        </div>
+<pre><code># About me
+
+I am a frontend developer and tech creator.
+
+## How I work
+- I prefer short explanations.
+- I like examples before theory.
+- I want strong hooks for content.
+- Avoid corporate language.
+
+## Current priorities
+- AI content
+- coding education
+- creator workflows
+
+## Rules
+- Do not publish anything without approval.
+- Ask before spending money.</code></pre>
+      </div>
+
+      <h3 class="section__h3">The "Context as RAM" Mental Model</h3>
+      <p>Think of context like RAM. Load what matters for this task, not your entire life. A good <code>CONTEXT.md</code> is the small set of facts that <em>every</em> task needs. Project-specific details belong in a project file. One-off facts do not belong in the harness at all.</p>
+
+      <div class="callout">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Common mistake: putting the wrong things in context.</strong> Two patterns show up in almost every beginner harness. (1) Stuffing the file with "about me" biography content the model never references. If you have not asked the AI to use a fact in three sessions, it is taking up space for no reason. (2) Putting live project state in <code>CONTEXT.md</code>. That belongs in a separate project file, addressed in Step 06.
+        </div>
+      </div>
+
+      <h3 class="section__h3">How to Know It Is Working</h3>
+      <p>Use the harness on three real tasks in the first week. Anything you find yourself explaining again belongs in the file. Anything the AI never uses should probably come out. This is a feedback loop, not a one-time write. Most well-tuned <code>CONTEXT.md</code> files end up shorter, not longer, than the first draft.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 03: SKILL
+       ============================================================ -->
+  <article class="section" id="skill">
+    <p class="section__eyebrow">Step 03</p>
+    <h2 class="section__title">Add one reusable skill</h2>
+
+    <div class="section__body">
+      <p>A skill teaches the AI how you want a task performed. Create a folder for it, then a single <code>SKILL.md</code> inside. The first skill should be a task you do at least once a week, where you have already figured out the steps in your head and just keep re-explaining them.</p>
+
+      <h3 class="section__h3">The Folder Structure</h3>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Skill folder</span>
+          <button class="copybtn" data-copy="skills/short-form-video/SKILL.md" type="button">Copy</button>
+        </div>
+<pre><code>skills/
+  short-form-video/
+    SKILL.md</code></pre>
+      </div>
+
+      <h3 class="section__h3">A Real Example: Short-Form Video Skill</h3>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">SKILL.md example</span>
+          <button class="copybtn" data-copy="# Short Form Tech Video
+
+When creating a tech video:
+
+1. Start with the surprising part.
+2. Explain the idea in plain English.
+3. Introduce the technical term only after the viewer understands the problem.
+4. Keep spoken sentences short.
+5. Include one visual example.
+6. End with one clear CTA." type="button">Copy</button>
+        </div>
+<pre><code># Short Form Tech Video
+
+When creating a tech video:
+
+1. Start with the surprising part.
+2. Explain the idea in plain English.
+3. Introduce the technical term only after the viewer understands the problem.
+4. Keep spoken sentences short.
+5. Include one visual example.
+6. End with one clear CTA.</code></pre>
+      </div>
+
+      <p>Now you do not need to rewrite that workflow every time.</p>
+
+      <h3 class="section__h3">The Context vs Skill Distinction</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span></span>
+          <span>What Goes In</span>
+          <span>Example</span>
+        </div>
+        <div class="tgrid__row"><span><strong>Context</strong></span><span>What the AI should know about you</span><span>"I prefer short explanations."</span></div>
+        <div class="tgrid__row"><span><strong>Skill</strong></span><span>How the AI should perform a specific task</span><span>"When writing a video script, start with the surprising part."</span></div>
+        <div class="tgrid__row"><span><strong>Project state</strong></span><span>Where the current work is right now</span><span>"Script approved, next step is filming, deadline Aug 20."</span></div>
+      </div>
+
+      <div class="callout">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Common mistake: mixing context and skill into one file.</strong> People write "how to do this task" and "who I am" into the same document. The result is a file that has to be loaded on every task, even the ones where only the context part is needed. Keeping them separate lets the system load the right thing at the right time.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 04: TOOL
+       ============================================================ -->
+  <article class="section" id="tool">
+    <p class="section__eyebrow">Step 04</p>
+    <h2 class="section__title">Give it one tool</h2>
+
+    <div class="section__body">
+      <p>Now connect one place where real work happens. Good first options are Google Drive, Gmail, GitHub, the filesystem, or Notion. Pick the one that removes the most repeated copying and pasting from your week, not the one that sounds the most impressive.</p>
+
+      <h3 class="section__h3">What "Good First Tool" Looks Like</h3>
+      <ul class="block__list">
+        <li>You currently copy and paste content between this tool and your AI at least three times a week</li>
+        <li>The content inside is text or file-based, not heavy media that needs special handling</li>
+        <li>You are comfortable with the model reading from it. You would not flinch at the words "the AI is going to open my Drive"</li>
+        <li>The tool has a clean MCP or API integration, or a simple file-based alternative</li>
+      </ul>
+
+      <h3 class="section__h3">What Changes Once a Tool Is Connected</h3>
+      <p>This is the moment the harness stops being a configuration and starts being a workflow:</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">A connected flow, in plain text</span>
+        </div>
+<pre><code>YOU
+ "make a reel from the latest brand brief"
+        |
+        v
+       AI
+        |
+ reads Drive     &lt;- tool
+        |
+ loads skill     &lt;-- skills/short-form-video/SKILL.md
+        |
+ uses context    &lt;-- CONTEXT.md
+        |
+        v
+ creates draft</code></pre>
+      </div>
+
+      <p>That already behaves very differently from a blank chatbot. You are not longer typing context, skill, and instructions into every prompt. They are loaded automatically, and the AI is acting on real content from a real system.</p>
+
+      <h3 class="section__h3">How to Choose Which Tool Comes First</h3>
+      <p>Ask three questions. (1) What content do I copy and paste the most? That is the tool. (2) Which of those tools has the cleanest MCP integration? Pick that one even if it is not the most-used, because a tool that does not connect cleanly is worse than a tool you have to live without. (3) Which one would I trust the AI to read-only first, before giving it write access? Start with read-only access to the highest-traffic tool, and graduate to write access after you have watched how it behaves.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 05: GUARDRAIL
+       ============================================================ -->
+  <article class="section" id="guardrail">
+    <p class="section__eyebrow">Step 05</p>
+    <h2 class="section__title">Add one guardrail</h2>
+
+    <div class="section__body">
+      <p>The moment AI gets tools, you need boundaries. A useful agent is not the one with maximum access. It is the one with the minimum access required to finish the job. That principle becomes much more important as your harness grows.</p>
+
+      <h3 class="section__h3">A Simple Permission Model</h3>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">Permissions template</span>
+          <button class="copybtn" data-copy="## Permissions
+
+Can do automatically:
+- read files
+- summarize
+- create drafts
+- research
+
+Needs approval:
+- send emails
+- publish content
+- delete files
+- spend money" type="button">Copy</button>
+        </div>
+<pre><code>## Permissions
+
+Can do automatically:
+- read files
+- summarize
+- create drafts
+- research
+
+Needs approval:
+- send emails
+- publish content
+- delete files
+- spend money</code></pre>
+      </div>
+
+      <h3 class="section__h3">The Three Layers of Guardrails</h3>
+      <div class="tgrid tgrid--3col">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Layer</span>
+          <span>What It Does</span>
+          <span>Example</span>
+        </div>
+        <div class="tgrid__row"><span><strong>Written rules</strong></span><span>Tell the model what it can and cannot do, in plain text in your context or skill file</span><span>"Do not publish without approval"</span></div>
+        <div class="tgrid__row"><span><strong>Tool-level scope</strong></span><span>Configure each tool integration to allow only the actions you actually want</span><span>Read-only Drive access, draft-only Gmail folder</span></div>
+        <div class="tgrid__row"><span><strong>Human checkpoints</strong></span><span>Define the exact moments where the model must stop and wait for you</span><span>Before any send, publish, delete, or spend action</span></div>
+      </div>
+
+      <div class="callout">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>Common mistake: skipping the written rules.</strong> Most people focus on tool-level scope ("I gave the AI read-only access") and skip the written rules. Both are needed. Tool scope is what the system enforces when you are not watching. Written rules are what the model falls back on when it is making a judgment call. The two together is what a real guardrail looks like.
+        </div>
+      </div>
+
+      <h3 class="section__h3">What to Add Later, Not Now</h3>
+      <p>You do not need a full permission framework in version 0.1. You need one written list of what is automatic versus what needs your approval. That single document, attached to the harness, is enough to keep you out of trouble. The bigger permission system comes when you have multiple skills and tools working together, and you need to express more nuanced rules.</p>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       SECTION 06: MATURITY LADDER
+       ============================================================ -->
+  <article class="section" id="ladder">
+    <p class="section__eyebrow">Step 06</p>
+    <h2 class="section__title">The maturity ladder</h2>
+
+    <div class="section__body">
+      <p>You now have a basic AI harness. Not because it looks complicated. Because the model is no longer starting from zero. The diagram below is what you have actually built.</p>
+
+      <h3 class="section__h3">6.1 What You Have Right Now</h3>
+      <div class="graph-figure">
+        <svg viewBox="0 0 560 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="180" y="20" width="200" height="48" rx="4" fill="none" stroke="#a09e9a" stroke-width="2"/>
+          <text x="280" y="50" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="#2f2d2d">AI MODEL</text>
+
+          <line x1="280" y1="68" x2="280" y2="100" stroke="#a09e9a" stroke-width="1.5"/>
+
+          <line x1="280" y1="100" x2="100" y2="100" stroke="#a09e9a" stroke-width="1.5"/>
+          <line x1="280" y1="100" x2="280" y2="100" stroke="#a09e9a" stroke-width="1.5"/>
+          <line x1="280" y1="100" x2="460" y2="100" stroke="#a09e9a" stroke-width="1.5"/>
+
+          <line x1="100" y1="100" x2="100" y2="130" stroke="#a09e9a" stroke-width="1.5"/>
+          <line x1="280" y1="100" x2="280" y2="130" stroke="#a09e9a" stroke-width="1.5"/>
+          <line x1="460" y1="100" x2="460" y2="130" stroke="#a09e9a" stroke-width="1.5"/>
+
+          <rect x="40" y="130" width="120" height="60" rx="4" fill="#fff5e6" stroke="#d02e2e" stroke-width="2"/>
+          <text x="100" y="155" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#a82525">CONTEXT</text>
+          <text x="100" y="175" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#2f2d2d">knows you</text>
+
+          <rect x="220" y="130" width="120" height="60" rx="4" fill="#fff5e6" stroke="#d02e2e" stroke-width="2"/>
+          <text x="280" y="155" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#a82525">SKILL</text>
+          <text x="280" y="175" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#2f2d2d">knows how</text>
+
+          <rect x="400" y="130" width="120" height="60" rx="4" fill="#fff5e6" stroke="#d02e2e" stroke-width="2"/>
+          <text x="460" y="155" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#a82525">TOOL</text>
+          <text x="460" y="175" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#2f2d2d">can act</text>
+
+          <line x1="100" y1="190" x2="100" y2="220" stroke="#a09e9a" stroke-width="1.5"/>
+          <line x1="280" y1="190" x2="280" y2="220" stroke="#a09e9a" stroke-width="1.5"/>
+          <line x1="460" y1="190" x2="460" y2="220" stroke="#a09e9a" stroke-width="1.5"/>
+
+          <line x1="100" y1="220" x2="460" y2="220" stroke="#a09e9a" stroke-width="1.5"/>
+          <line x1="280" y1="220" x2="280" y2="250" stroke="#a09e9a" stroke-width="1.5"/>
+
+          <rect x="180" y="250" width="200" height="48" rx="4" fill="#fff5e6" stroke="#d02e2e" stroke-width="2.5"/>
+          <text x="280" y="280" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="#a82525">GUARDRAIL</text>
+
+          <line x1="280" y1="298" x2="280" y2="320" stroke="#a09e9a" stroke-width="1.5"/>
+
+          <polygon points="280,340 270,325 290,325" fill="#d02e2e"/>
+          <rect x="220" y="340" width="120" height="0" fill="none"/>
+        </svg>
+        <p class="graph-caption">AI Model, fed by Context, Skill, and Tool, filtered by Guardrail, producing Work. This is your version 0.1.</p>
+      </div>
+
+      <h3 class="section__h3">6.2 The Levels</h3>
+      <div class="tgrid">
+        <div class="tgrid__row tgrid__row--head">
+          <span>Level</span>
+          <span>What You Have</span>
+          <span>The Phrase That Describes It</span>
+        </div>
+        <div class="tgrid__row"><span><strong>Level 0</strong></span><span>Chatbot</span><span>"I prompt it."</span></div>
+        <div class="tgrid__row"><span><strong>Level 1</strong></span><span>Context</span><span>"It knows me."</span></div>
+        <div class="tgrid__row"><span><strong>Level 2</strong></span><span>Skills</span><span>"It knows how I work."</span></div>
+        <div class="tgrid__row"><span><strong>Level 3</strong></span><span>Tools</span><span>"It can do things."</span></div>
+        <div class="tgrid__row"><span><strong>Level 4</strong></span><span>State</span><span>"It knows where we left off."</span></div>
+        <div class="tgrid__row"><span><strong>Level 5</strong></span><span>Workflows</span><span>"It can keep work moving."</span></div>
+      </div>
+
+      <h3 class="section__h3">6.3 The Subtle Part: Context Engineering</h3>
+      <p>The goal is not permanent memory of everything. The real goal is to give the model the right context at the right moment. This is where harness design starts becoming context engineering. A good system decides three things:</p>
+
+      <ul class="block__list">
+        <li><strong>What should always be loaded?</strong> The small set of facts that every task needs, the <code>CONTEXT.md</code> content</li>
+        <li><strong>What should be retrieved only when relevant?</strong> Project state, large reference docs, past decisions</li>
+        <li><strong>What should never enter context at all?</strong> One-off facts, old project history, content the model will not reference</li>
+      </ul>
+
+      <p>This matters because every useless instruction competes with the useful ones. A 500-line context file does not give the model more capability. It gives it less, because the attention budget is now spread across things the task did not need.</p>
+
+      <h3 class="section__h3">6.4 State vs Memory</h3>
+      <p>Another thing beginners usually miss. Your harness should have state. State simply means "what happened already?" For example, a <code>projects/current.md</code> file:</p>
+
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">projects/current.md</span>
+          <button class="copybtn" data-copy="# current-project.md
+
+Brand: ExampleAI
+Status: script approved
+Next step: film
+Deadline: August 20" type="button">Copy</button>
+        </div>
+<pre><code># current-project.md
+
+Brand: ExampleAI
+Status: script approved
+Next step: film
+Deadline: August 20</code></pre>
+      </div>
+
+      <p>Without state, even a well-designed agent can repeatedly rediscover the same information. <strong>Memory tells it who you are. State tells it where the work currently is.</strong> Different problem. Different file.</p>
+
+      <h3 class="section__h3">6.5 The Folder You Will Build Today</h3>
+      <div class="codeblock">
+        <div class="codeblock__bar">
+          <span class="codeblock__lang">my-harness/ version 0.1</span>
+        </div>
+<pre><code>my-harness/
+
+CONTEXT.md
+
+skills/
+  content/
+    SKILL.md
+
+projects/
+  current.md
+
+# then connect one tool</code></pre>
+      </div>
+
+      <p>That is your version 0.1. Do not automate it yet. Use it manually for several real tasks first. If the same sequence keeps repeating, then turn that sequence into a workflow. Another rule people skip: <strong>automate proven behavior, not imagined behavior</strong>.</p>
+
+      <div class="callout">
+        <div class="callout__icon"></div>
+        <div class="callout__body">
+          <strong>You do not need level 5 on day one.</strong> Build level 1 properly first. The maturity ladder is a diagnosis tool, not a to-do list. If you are at level 2, do not skip to level 5 because the diagram looked good. Each level unlocks new failure modes you have not seen yet, and the time to learn them is when your harness is small enough to debug.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ============================================================
+       TAKEAWAY
+       ============================================================ -->
+  <section class="takeaway">
+    <p class="takeaway__eyebrow">Your First Assignment</p>
+    <h2 class="takeaway__h">Build the version 0.1 today</h2>
+    <p>Create one <code>CONTEXT.md</code> file today with only the information your AI repeatedly needs. Then use it on three real tasks. Anything you find yourself explaining again belongs in the harness. Anything the AI never uses should probably come out. The harness is a feedback loop, not a one-time write.</p>
+
+    <div class="takeaway__grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="takeaway__cell"><strong>DAY 1</strong><br>Write CONTEXT.md</div>
+      <div class="takeaway__cell"><strong>WEEK 1</strong><br>Use it on 3 real tasks</div>
+      <div class="takeaway__cell"><strong>WEEK 2</strong><br>Add 1 skill + 1 tool</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CLOSING
+       ============================================================ -->
+  <section class="closing">
+    <h2 class="closing__h">That's it.</h2>
+    <p class="closing__sub">Six steps, one folder, one feedback loop. Build the version 0.1 today, then come back to this guide as you grow.</p>
+    <a href="#contents" class="cta cta--lg">BACK TO CONTENTS</a>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <a class="footer__ig" href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">Instagram: @vlada.asana</a>
+  <p class="footer__small">A practical guide to building a basic AI harness · Built by @vlada.asana</p>
+</footer>
+
+<!-- Toast for copy buttons -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="./script.js"></script>
+</body>
+</html>
