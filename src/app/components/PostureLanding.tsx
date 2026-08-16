@@ -16,6 +16,9 @@ import databaseGuideScript from '../../../public/blog-assets/database-guide/scri
 import dockerGuideHtml from '../../content/docker-guide.html?raw';
 import dockerGuideStyles from '../../../public/blog-assets/docker-guide/styles.css?raw';
 import dockerGuideScript from '../../../public/blog-assets/docker-guide/script.js?raw';
+import harnessGuideHtml from '../../content/harness-guide.html?raw';
+import harnessGuideStyles from '../../../public/blog-assets/harness-guide/styles.css?raw';
+import harnessGuideScript from '../../../public/blog-assets/harness-guide/script.js?raw';
 
 interface TrailPoint {
   x: number;
@@ -263,6 +266,7 @@ const gitGuideUpdatedAt = 'August 10, 2026';
 const apiGuideUpdatedAt = 'August 10, 2026';
 const databaseGuideUpdatedAt = 'August 10, 2026';
 const dockerGuideUpdatedAt = 'August 10, 2026';
+const harnessGuideUpdatedAt = 'August 16, 2026';
 const embeddedGuidePaletteStyles = `
   :root {
     --bg: #3D3982;
@@ -482,7 +486,7 @@ const embeddedGuidePaletteStyles = `
 function buildEmbeddedGuideDocument(html: string, styles: string, script: string, tag: string) {
   return html
     .replace('<link rel="stylesheet" href="./styles.css" />', `<style>${styles}</style><style>${embeddedGuidePaletteStyles}</style>`)
-    .replace('<p class="eyebrow">System design interviews</p>', `<span class="embedded-article-tag">#${tag}</span><p class="eyebrow">System design interviews</p>`)
+    .replace(/<p class="eyebrow">([^<]+)<\/p>/, `<span class="embedded-article-tag">#${tag}</span><p class="eyebrow">$1</p>`)
     .replace('<script src="./script.js"></script>', `<script>${script}</script>`);
 }
 
@@ -490,6 +494,7 @@ const gitGuideDocument = buildEmbeddedGuideDocument(gitGuideHtml, gitGuideStyles
 const apiGuideDocument = buildEmbeddedGuideDocument(apiGuideHtml, apiGuideStyles, apiGuideScript, 'techinterview');
 const databaseGuideDocument = buildEmbeddedGuideDocument(databaseGuideHtml, databaseGuideStyles, databaseGuideScript, 'techinterview');
 const dockerGuideDocument = buildEmbeddedGuideDocument(dockerGuideHtml, dockerGuideStyles, dockerGuideScript, 'techinterview');
+const harnessGuideDocument = buildEmbeddedGuideDocument(harnessGuideHtml, harnessGuideStyles, harnessGuideScript, 'techinterview');
 
 const blogPosts = [
   {
@@ -539,6 +544,13 @@ const blogPosts = [
     title: 'Everything You Need To Know About Docker',
     description: 'Docker images, layers, Dockerfiles, Kubernetes pods, deployments, services, health probes, scaling, config, and secrets.',
     date: dockerGuideUpdatedAt,
+    tag: 'techinterview',
+  },
+  {
+    href: '/techblog/harness-101',
+    title: 'Harness 101',
+    description: 'Build a basic Claude Code harness and ship it today, with context files, skills, tools, guardrails, and state.',
+    date: harnessGuideUpdatedAt,
     tag: 'techinterview',
   },
 ];
@@ -2519,6 +2531,15 @@ function DockerGuidePostPage() {
   );
 }
 
+function HarnessGuidePostPage() {
+  return (
+    <EmbeddedGuidePostPage
+      document={harnessGuideDocument}
+      title="Harness 101"
+    />
+  );
+}
+
 function ClaudeMdPostPage({
   copied,
   onCopy,
@@ -2679,6 +2700,10 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/everything-you-need-to-know-about-docker') {
     return <DockerGuidePostPage />;
+  }
+
+  if (currentPath === '/techblog/harness-101') {
+    return <HarnessGuidePostPage />;
   }
 
   if (currentPath === '/techblog') {
