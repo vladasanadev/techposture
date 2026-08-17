@@ -19,6 +19,9 @@ import dockerGuideScript from '../../../public/blog-assets/docker-guide/script.j
 import harnessGuideHtml from '../../content/harness-guide.html?raw';
 import harnessGuideStyles from '../../../public/blog-assets/harness-guide/styles.css?raw';
 import harnessGuideScript from '../../../public/blog-assets/harness-guide/script.js?raw';
+import reactRoadmapGuideHtml from '../../content/react-roadmap-guide.html?raw';
+import reactRoadmapGuideStyles from '../../../public/blog-assets/react-roadmap-guide/styles.css?raw';
+import reactRoadmapGuideScript from '../../../public/blog-assets/react-roadmap-guide/script.js?raw';
 
 interface TrailPoint {
   x: number;
@@ -267,6 +270,7 @@ const apiGuideUpdatedAt = 'August 10, 2026';
 const databaseGuideUpdatedAt = 'August 10, 2026';
 const dockerGuideUpdatedAt = 'August 10, 2026';
 const harnessGuideUpdatedAt = 'August 16, 2026';
+const reactRoadmapGuideUpdatedAt = 'August 17, 2026';
 const embeddedGuidePaletteStyles = `
   :root {
     --bg: #3D3982;
@@ -573,6 +577,7 @@ const apiGuideDocument = buildEmbeddedGuideDocument(apiGuideHtml, apiGuideStyles
 const databaseGuideDocument = buildEmbeddedGuideDocument(databaseGuideHtml, databaseGuideStyles, databaseGuideScript, 'techinterview');
 const dockerGuideDocument = buildEmbeddedGuideDocument(dockerGuideHtml, dockerGuideStyles, dockerGuideScript, 'techinterview');
 const harnessGuideDocument = buildEmbeddedGuideDocument(harnessGuideHtml, harnessGuideStyles, harnessGuideScript, 'techinterview');
+const reactRoadmapGuideDocument = buildEmbeddedGuideDocument(reactRoadmapGuideHtml, reactRoadmapGuideStyles, reactRoadmapGuideScript, 'techinterview');
 
 const blogPosts = [
   {
@@ -629,6 +634,13 @@ const blogPosts = [
     title: 'Harness 101',
     description: 'Build a basic Claude Code harness and ship it today, with context files, skills, tools, guardrails, and state.',
     date: harnessGuideUpdatedAt,
+    tag: 'techinterview',
+  },
+  {
+    href: '/techblog/react-2026-roadmap',
+    title: 'React 2026 Roadmap',
+    description: 'A 3-resource React learning path: get productive, understand the mental model, then update to modern React 19.',
+    date: reactRoadmapGuideUpdatedAt,
     tag: 'techinterview',
   },
 ];
@@ -2618,6 +2630,15 @@ function HarnessGuidePostPage() {
   );
 }
 
+function ReactRoadmapGuidePostPage() {
+  return (
+    <EmbeddedGuidePostPage
+      document={reactRoadmapGuideDocument}
+      title="React 2026 Roadmap"
+    />
+  );
+}
+
 function ClaudeMdPostPage({
   copied,
   onCopy,
@@ -2782,6 +2803,10 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/harness-101') {
     return <HarnessGuidePostPage />;
+  }
+
+  if (currentPath === '/techblog/react-2026-roadmap') {
+    return <ReactRoadmapGuidePostPage />;
   }
 
   if (currentPath === '/techblog') {
