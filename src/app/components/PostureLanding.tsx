@@ -336,6 +336,24 @@ const embeddedGuidePaletteStyles = `
     padding-top: 64px;
   }
 
+  .hero,
+  .intro-block,
+  .toc,
+  .section,
+  .takeaway,
+  .closing,
+  .footer {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .intro-block {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .hero__title,
   .toc__title,
   .need__title,
@@ -373,6 +391,7 @@ const embeddedGuidePaletteStyles = `
   .toc,
   .need,
   .step,
+  .section,
   .closing,
   .footer,
   .callout,
@@ -389,15 +408,17 @@ const embeddedGuidePaletteStyles = `
   .toc,
   .need,
   .step,
+  .section,
   .closing {
     padding: clamp(22px, 4vw, 42px);
-    margin: 20px 0;
+    margin: 20px auto;
     width: 100%;
-    max-width: 100%;
+    max-width: 760px;
   }
 
   .need,
-  .step {
+  .step,
+  .section {
     border-top: 1px solid rgba(255,255,255,0.2);
   }
 
@@ -425,6 +446,7 @@ const embeddedGuidePaletteStyles = `
   }
 
   .step,
+  .section,
   .need__card,
   .callout,
   .toc,
@@ -454,7 +476,55 @@ const embeddedGuidePaletteStyles = `
     text-transform: uppercase;
   }
 
+  .toc__list,
+  .section__body {
+    max-width: 100%;
+  }
+
+  .takeaway {
+    background: #d02e2e;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: var(--shadow);
+  }
+
+  .takeaway__eyebrow,
+  .takeaway__h,
+  .takeaway p,
+  .takeaway strong,
+  .takeaway code {
+    color: #ffffff;
+  }
+
+  .takeaway__cell {
+    background: rgba(0,0,0,0.16);
+    border-color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.88);
+  }
+
+  .takeaway__grid[style] {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .footer {
+    text-align: center;
+  }
+
+  .footer__small {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   @media (max-width: 767px) {
+    .hero,
+    .intro-block,
+    .toc,
+    .section,
+    .takeaway,
+    .closing,
+    .footer {
+      max-width: 100%;
+    }
+
     .topbar__inner,
     .page,
     .footer {
@@ -471,6 +541,14 @@ const embeddedGuidePaletteStyles = `
 
     .need__grid {
       grid-template-columns: 1fr;
+    }
+
+    .toc__list {
+      grid-template-columns: 1fr;
+    }
+
+    .takeaway__grid[style] {
+      grid-template-columns: 1fr !important;
     }
 
     .tgrid:not(.tgrid--3col) .tgrid__row,
