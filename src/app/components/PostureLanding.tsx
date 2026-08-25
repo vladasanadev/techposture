@@ -550,6 +550,7 @@ const embeddedGuidePaletteStyles = `
     width: 100%;
     max-width: 800px;
     background: #3D3982;
+    padding: clamp(24px, 4vw, 34px);
     font-size: 16px;
     text-align: left;
   }
@@ -585,6 +586,11 @@ const embeddedGuidePaletteStyles = `
 
     .job-guide .page {
       width: min(100% - 24px, 800px);
+    }
+
+    .job-guide .footer--crea {
+      width: 100%;
+      padding: 24px 20px;
     }
 
     .need__grid {
