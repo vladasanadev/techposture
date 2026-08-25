@@ -526,6 +526,22 @@ const embeddedGuidePaletteStyles = `
     margin-right: auto;
   }
 
+  .job-guide .hero {
+    max-width: 800px;
+  }
+
+  .job-guide .hero__title {
+    max-width: 100%;
+    font-size: clamp(2.7rem, 8vw, 5.8rem);
+  }
+
+  .job-guide .footer--crea {
+    max-width: 800px;
+    background: #3D3982;
+    font-size: 16px;
+    text-align: left;
+  }
+
   @media (max-width: 767px) {
     .hero,
     .intro-block,
@@ -551,6 +567,10 @@ const embeddedGuidePaletteStyles = `
       overflow-wrap: anywhere;
     }
 
+    .job-guide .hero__title {
+      font-size: clamp(2.35rem, 11.5vw, 4rem);
+    }
+
     .need__grid {
       grid-template-columns: 1fr;
     }
@@ -574,10 +594,11 @@ const embeddedGuidePaletteStyles = `
   }
 `;
 function buildEmbeddedGuideDocument(html: string, styles: string, script: string, tag: string) {
-  return html
-    .replace('<link rel="stylesheet" href="./styles.css" />', `<style>${styles}</style><style>${embeddedGuidePaletteStyles}</style>`)
-    .replace(/<p class="eyebrow">([^<]+)<\/p>/, `<span class="embedded-article-tag">#${tag}</span><p class="eyebrow">$1</p>`)
-    .replace('<script src="./script.js"></script>', `<script>${script}</script>`);
+  const withStyles = html.replace('<link rel="stylesheet" href="./styles.css" />', `<style>${styles}</style><style>${embeddedGuidePaletteStyles}</style>`);
+  const withTag = tag
+    ? withStyles.replace(/<p class="eyebrow">([^<]+)<\/p>/, `<span class="embedded-article-tag">#${tag}</span><p class="eyebrow">$1</p>`)
+    : withStyles;
+  return withTag.replace('<script src="./script.js"></script>', `<script>${script}</script>`);
 }
 
 const gitGuideDocument = buildEmbeddedGuideDocument(gitGuideHtml, gitGuideStyles, gitGuideScript, 'techinterview');
@@ -587,7 +608,7 @@ const dockerGuideDocument = buildEmbeddedGuideDocument(dockerGuideHtml, dockerGu
 const harnessGuideDocument = buildEmbeddedGuideDocument(harnessGuideHtml, harnessGuideStyles, harnessGuideScript, 'techinterview');
 const reactRoadmapGuideDocument = buildEmbeddedGuideDocument(reactRoadmapGuideHtml, reactRoadmapGuideStyles, reactRoadmapGuideScript, 'techinterview');
 const topClaudeSkillsGuideDocument = buildEmbeddedGuideDocument(topClaudeSkillsGuideHtml, topClaudeSkillsGuideStyles, topClaudeSkillsGuideScript, 'techinterview');
-const landJobGuideDocument = buildEmbeddedGuideDocument(landJobGuideHtml, landJobGuideStyles, landJobGuideScript, 'content');
+const landJobGuideDocument = buildEmbeddedGuideDocument(landJobGuideHtml, landJobGuideStyles, landJobGuideScript, '');
 
 const blogPosts = [
   {

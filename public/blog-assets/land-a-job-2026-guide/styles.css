@@ -83,6 +83,7 @@ a {
 
 .hero {
   margin-bottom: 24px;
+  width: 100%;
 }
 
 .hero__byline {
@@ -114,9 +115,9 @@ h2 {
 }
 
 .hero__title {
-  max-width: 10ch;
+  max-width: 100%;
   margin: 0 0 20px;
-  font-size: clamp(3.2rem, 10vw, 7rem);
+  font-size: clamp(2.7rem, 8vw, 5.8rem);
   font-weight: 900;
   line-height: 0.88;
   letter-spacing: 0.02em;
@@ -130,7 +131,7 @@ h2 {
 }
 
 .hero__note {
-  max-width: 66ch;
+  max-width: 70ch;
   margin: 0 0 18px;
   color: var(--muted);
 }
@@ -179,6 +180,7 @@ h2 {
 }
 
 .agent {
+  display: inline-flex;
   width: fit-content;
   margin: 0 0 14px;
   padding: 7px 10px;
@@ -189,6 +191,13 @@ h2 {
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.agent:hover {
+  background: rgba(0,0,0,0.26);
+  color: #ffffff;
 }
 
 .calibrate {
@@ -200,26 +209,10 @@ h2 {
   font-size: 12px;
 }
 
-.workflow-box,
 .copy-box,
 .footer {
   margin-top: 18px;
   padding: clamp(22px, 4vw, 34px);
-}
-
-.workflow-line {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  color: #ffffff;
-  font-size: 12px;
-}
-
-.workflow-line span {
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--card-dark);
 }
 
 blockquote {
@@ -229,13 +222,68 @@ blockquote {
   line-height: 1.35;
 }
 
-.footer {
-  color: rgba(255,255,255,0.82);
+.outreach-copy {
+  position: relative;
+}
+
+.copy-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 10px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card-dark);
+  color: #ffffff;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
+  cursor: pointer;
+}
+
+.copy-icon {
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+}
+
+.copy-icon::before,
+.copy-icon::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+}
+
+.copy-icon::before {
+  left: 1px;
+  top: 4px;
+}
+
+.copy-icon::after {
+  left: 5px;
+  top: 0;
+  background: var(--card);
+}
+
+.footer {
+  background: var(--bg);
+  color: rgba(255,255,255,0.82);
+  font-size: 16px;
 }
 
 .footer p {
   margin: 0;
+}
+
+.footer a {
+  color: #ffffff;
+  font-weight: 800;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.45);
 }
 
 @media (max-width: 640px) {
@@ -250,7 +298,7 @@ blockquote {
 
   .hero__title {
     max-width: 100%;
-    font-size: clamp(2.75rem, 13.5vw, 4.8rem);
+    font-size: clamp(2.35rem, 11.5vw, 4rem);
     overflow-wrap: anywhere;
   }
 
@@ -265,10 +313,8 @@ blockquote {
 
   .agent {
     width: 100%;
+    justify-content: center;
+    text-align: center;
   }
 
-  .workflow-line {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
 }
