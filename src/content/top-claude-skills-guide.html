@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="A breakdown of the 5 most-installed Claude Skills, with repo links and copy-ready install commands." />
+  <title>Top 5 Claude Skills, by @vlada.asana</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="topbar__brand" href="/techblog">BLOG</a>
+      <a class="topbar__cta" href="#skills">SKILLS</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <p class="hero__byline">A practical breakdown by <a href="https://www.instagram.com/vlada.asana/" target="_blank" rel="noopener">@vlada.asana</a></p>
+      <p class="eyebrow">Claude Skills · install leaderboard</p>
+      <h1 class="hero__title">The 5 most-installed Claude Skills.</h1>
+      <p class="hero__lede">A useful shortcut if you want Claude to do more than answer prompts. These skills add workflows for finding tools, improving UI, pressure-testing plans, reading docs, and cleaning codebase structure.</p>
+      <div class="meta">
+        <span><strong>5</strong> skills</span>
+        <span><strong>3</strong> repositories</span>
+        <span>public leaderboard data</span>
+      </div>
+    </section>
+
+    <section class="skills" id="skills">
+      <article class="skill-card">
+        <div class="rank">05</div>
+        <div class="skill-card__body">
+          <h2>Improve Codebase Architecture</h2>
+          <p class="desc">Scans your codebase for messy or disorganized areas and reorganizes them so everything has a logical home.</p>
+          <div class="row">
+            <div class="stars">~221.7k stars</div>
+            <a class="repo-link" href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">github.com/mattpocock/skills</a>
+          </div>
+          <div class="cmd">npx skills add mattpocock/skills --skill improve-codebase-architecture</div>
+        </div>
+      </article>
+
+      <article class="skill-card">
+        <div class="rank">04</div>
+        <div class="skill-card__body">
+          <h2>Grill With Docs</h2>
+          <p class="desc">Pressure-tests your plan against your actual codebase and docs, updating them as it goes so decisions do not drift from reality.</p>
+          <div class="row">
+            <div class="stars">~221.7k stars</div>
+            <a class="repo-link" href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">github.com/mattpocock/skills</a>
+          </div>
+          <div class="cmd">npx skills add mattpocock/skills --skill grill-with-docs</div>
+        </div>
+      </article>
+
+      <article class="skill-card">
+        <div class="rank">03</div>
+        <div class="skill-card__body">
+          <h2>Grill Me</h2>
+          <p class="desc">Interrogates your plan with hard questions before you build, so weak spots surface while they are still cheap to fix.</p>
+          <div class="row">
+            <div class="stars">~221.7k stars</div>
+            <a class="repo-link" href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">github.com/mattpocock/skills</a>
+          </div>
+          <div class="cmd">npx skills add mattpocock/skills --skill grill-me</div>
+        </div>
+      </article>
+
+      <article class="skill-card">
+        <div class="rank">02</div>
+        <div class="skill-card__body">
+          <h2>Frontend Design</h2>
+          <p class="desc">Gives Claude real design taste: typography, spacing, layout, and stronger defaults, so interfaces look custom instead of generic AI output.</p>
+          <div class="row">
+            <div class="stars">~167k stars</div>
+            <a class="repo-link" href="https://github.com/anthropics/skills" target="_blank" rel="noopener">github.com/anthropics/skills</a>
+          </div>
+          <div class="cmd">npx skills add anthropics/skills --skill frontend-design</div>
+        </div>
+      </article>
+
+      <article class="skill-card skill-card--top">
+        <div class="rank">01</div>
+        <div class="skill-card__body">
+          <div class="top-pill">Top install</div>
+          <h2>Find Skills</h2>
+          <p class="desc">Acts as a search engine for the other 85,000+ skills, finding and installing the right one based on what you describe.</p>
+          <div class="row">
+            <div class="stars">~29k stars</div>
+            <a class="repo-link" href="https://github.com/vercel-labs/skills" target="_blank" rel="noopener">github.com/vercel-labs/skills</a>
+          </div>
+          <div class="cmd">npx skills add vercel-labs/skills --skill find-skills</div>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <p>#3, #4, and #5 live in the same repository, so one star count applies to all three. Stars are per repo, not per skill.</p>
+      <p>Rankings came from public GitHub pages and the skills.sh / claudeskills.club leaderboards, current as of August 2026. Repo stats move, so use the linked repo for the live count.</p>
+    </footer>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>

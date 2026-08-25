@@ -1,0 +1,274 @@
+:root {
+  --bg: #3D3982;
+  --card: #d02e2e;
+  --card-dark: rgba(0,0,0,0.16);
+  --text: rgba(255,255,255,0.96);
+  --muted: rgba(255,255,255,0.8);
+  --soft: rgba(255,255,255,0.58);
+  --line: rgba(255,255,255,0.2);
+  --shadow: 0 24px 70px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.55;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(61,57,130,0.92);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+}
+
+.topbar__inner,
+.page {
+  width: min(100% - 32px, 800px);
+  margin: 0 auto;
+}
+
+.topbar__inner {
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.topbar__brand,
+.topbar__cta,
+.eyebrow,
+.agent,
+.calibrate,
+.workflow-line,
+.footer {
+  font-family: "JetBrains Mono", monospace;
+}
+
+.topbar__brand,
+.topbar__cta {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.topbar__cta {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.24);
+  background: rgba(0,0,0,0.16);
+}
+
+.page {
+  padding: 54px 0 70px;
+}
+
+.hero {
+  margin-bottom: 24px;
+}
+
+.hero__byline {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.hero__byline a {
+  color: #ffffff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+  color: var(--soft);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero__title,
+h2 {
+  font-family: "Big Shoulders Display", "Inter", sans-serif;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.hero__title {
+  max-width: 10ch;
+  margin: 0 0 20px;
+  font-size: clamp(3.2rem, 10vw, 7rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: 0.02em;
+}
+
+.hero__lede {
+  max-width: 58ch;
+  margin: 0 0 14px;
+  color: rgba(255,255,255,0.88);
+  font-size: clamp(18px, 2.5vw, 22px);
+}
+
+.hero__note {
+  max-width: 66ch;
+  margin: 0 0 18px;
+  color: var(--muted);
+}
+
+.steps {
+  display: grid;
+  gap: 16px;
+}
+
+.step-card,
+.workflow-box,
+.copy-box,
+.footer {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.step-card {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 22px;
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.step-num {
+  font-family: "Big Shoulders Display", "Inter", sans-serif;
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 900;
+  line-height: 0.9;
+  color: rgba(255,255,255,0.62);
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  line-height: 0.96;
+  letter-spacing: 0.025em;
+}
+
+.step-card p {
+  margin: 0 0 14px;
+  color: rgba(255,255,255,0.84);
+}
+
+.agent {
+  width: fit-content;
+  margin: 0 0 14px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card-dark);
+  color: rgba(255,255,255,0.78);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.calibrate {
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card-dark);
+  color: rgba(255,255,255,0.86);
+  font-size: 12px;
+}
+
+.workflow-box,
+.copy-box,
+.footer {
+  margin-top: 18px;
+  padding: clamp(22px, 4vw, 34px);
+}
+
+.workflow-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.workflow-line span {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card-dark);
+}
+
+blockquote {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(18px, 3vw, 24px);
+  line-height: 1.35;
+}
+
+.footer {
+  color: rgba(255,255,255,0.82);
+  font-size: 12px;
+}
+
+.footer p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .topbar__inner,
+  .page {
+    width: min(100% - 24px, 800px);
+  }
+
+  .page {
+    padding-top: 36px;
+  }
+
+  .hero__title {
+    max-width: 100%;
+    font-size: clamp(2.75rem, 13.5vw, 4.8rem);
+    overflow-wrap: anywhere;
+  }
+
+  .step-card {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .step-num {
+    font-size: 2.7rem;
+  }
+
+  .agent {
+    width: 100%;
+  }
+
+  .workflow-line {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
