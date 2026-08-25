@@ -142,8 +142,6 @@ h2 {
 }
 
 .step-card,
-.workflow-box,
-.copy-box,
 .footer {
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -209,64 +207,9 @@ h2 {
   font-size: 12px;
 }
 
-.copy-box,
 .footer {
   margin-top: 18px;
   padding: clamp(22px, 4vw, 34px);
-}
-
-blockquote {
-  margin: 0;
-  color: #ffffff;
-  font-size: clamp(18px, 3vw, 24px);
-  line-height: 1.35;
-}
-
-.outreach-copy {
-  position: relative;
-}
-
-.copy-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 18px;
-  padding: 10px 13px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--card-dark);
-  color: #ffffff;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.copy-icon {
-  position: relative;
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-}
-
-.copy-icon::before,
-.copy-icon::after {
-  content: "";
-  position: absolute;
-  width: 9px;
-  height: 9px;
-  border: 1.5px solid currentColor;
-  border-radius: 2px;
-}
-
-.copy-icon::before {
-  left: 1px;
-  top: 4px;
-}
-
-.copy-icon::after {
-  left: 5px;
-  top: 0;
-  background: var(--card);
 }
 
 .footer {

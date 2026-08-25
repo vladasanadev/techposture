@@ -526,7 +526,18 @@ const embeddedGuidePaletteStyles = `
     margin-right: auto;
   }
 
+  .job-guide .page {
+    max-width: 800px;
+    width: min(100% - 32px, 800px);
+  }
+
   .job-guide .hero {
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .job-guide .steps {
+    width: 100%;
     max-width: 800px;
   }
 
@@ -536,6 +547,7 @@ const embeddedGuidePaletteStyles = `
   }
 
   .job-guide .footer--crea {
+    width: 100%;
     max-width: 800px;
     background: #3D3982;
     font-size: 16px;
@@ -569,6 +581,10 @@ const embeddedGuidePaletteStyles = `
 
     .job-guide .hero__title {
       font-size: clamp(2.35rem, 11.5vw, 4rem);
+    }
+
+    .job-guide .page {
+      width: min(100% - 24px, 800px);
     }
 
     .need__grid {
