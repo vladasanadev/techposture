@@ -22,6 +22,12 @@ import harnessGuideScript from '../../../public/blog-assets/harness-guide/script
 import reactRoadmapGuideHtml from '../../content/react-roadmap-guide.html?raw';
 import reactRoadmapGuideStyles from '../../../public/blog-assets/react-roadmap-guide/styles.css?raw';
 import reactRoadmapGuideScript from '../../../public/blog-assets/react-roadmap-guide/script.js?raw';
+import topClaudeSkillsGuideHtml from '../../content/top-claude-skills-guide.html?raw';
+import topClaudeSkillsGuideStyles from '../../../public/blog-assets/top-claude-skills-guide/styles.css?raw';
+import topClaudeSkillsGuideScript from '../../../public/blog-assets/top-claude-skills-guide/script.js?raw';
+import landJobGuideHtml from '../../content/land-a-job-2026-guide.html?raw';
+import landJobGuideStyles from '../../../public/blog-assets/land-a-job-2026-guide/styles.css?raw';
+import landJobGuideScript from '../../../public/blog-assets/land-a-job-2026-guide/script.js?raw';
 
 interface TrailPoint {
   x: number;
@@ -271,6 +277,8 @@ const databaseGuideUpdatedAt = 'August 10, 2026';
 const dockerGuideUpdatedAt = 'August 10, 2026';
 const harnessGuideUpdatedAt = 'August 16, 2026';
 const reactRoadmapGuideUpdatedAt = 'August 17, 2026';
+const topClaudeSkillsGuideUpdatedAt = 'August 19, 2026';
+const landJobGuideUpdatedAt = 'August 24, 2026';
 const embeddedGuidePaletteStyles = `
   :root {
     --bg: #3D3982;
@@ -578,6 +586,8 @@ const databaseGuideDocument = buildEmbeddedGuideDocument(databaseGuideHtml, data
 const dockerGuideDocument = buildEmbeddedGuideDocument(dockerGuideHtml, dockerGuideStyles, dockerGuideScript, 'techinterview');
 const harnessGuideDocument = buildEmbeddedGuideDocument(harnessGuideHtml, harnessGuideStyles, harnessGuideScript, 'techinterview');
 const reactRoadmapGuideDocument = buildEmbeddedGuideDocument(reactRoadmapGuideHtml, reactRoadmapGuideStyles, reactRoadmapGuideScript, 'techinterview');
+const topClaudeSkillsGuideDocument = buildEmbeddedGuideDocument(topClaudeSkillsGuideHtml, topClaudeSkillsGuideStyles, topClaudeSkillsGuideScript, 'techinterview');
+const landJobGuideDocument = buildEmbeddedGuideDocument(landJobGuideHtml, landJobGuideStyles, landJobGuideScript, 'content');
 
 const blogPosts = [
   {
@@ -642,6 +652,20 @@ const blogPosts = [
     description: 'A 3-resource React learning path: get productive, understand the mental model, then update to modern React 19.',
     date: reactRoadmapGuideUpdatedAt,
     tag: 'techinterview',
+  },
+  {
+    href: '/techblog/top-5-claude-skills',
+    title: 'Top 5 Claude Skills',
+    description: 'A breakdown of the most-installed Claude Skills, with repo links and copy-ready install commands.',
+    date: topClaudeSkillsGuideUpdatedAt,
+    tag: 'techinterview',
+  },
+  {
+    href: '/techblog/land-a-job-in-2026',
+    title: 'Land A Job In 2026',
+    description: 'A simple job-search system: reach a human, tailor the CV, then negotiate properly once they want you.',
+    date: landJobGuideUpdatedAt,
+    tag: 'content',
   },
 ];
 
@@ -2639,6 +2663,24 @@ function ReactRoadmapGuidePostPage() {
   );
 }
 
+function TopClaudeSkillsGuidePostPage() {
+  return (
+    <EmbeddedGuidePostPage
+      document={topClaudeSkillsGuideDocument}
+      title="Top 5 Claude Skills"
+    />
+  );
+}
+
+function LandJobGuidePostPage() {
+  return (
+    <EmbeddedGuidePostPage
+      document={landJobGuideDocument}
+      title="Land a Job in 2026"
+    />
+  );
+}
+
 function ClaudeMdPostPage({
   copied,
   onCopy,
@@ -2807,6 +2849,14 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/react-2026-roadmap') {
     return <ReactRoadmapGuidePostPage />;
+  }
+
+  if (currentPath === '/techblog/top-5-claude-skills') {
+    return <TopClaudeSkillsGuidePostPage />;
+  }
+
+  if (currentPath === '/techblog/land-a-job-in-2026') {
+    return <LandJobGuidePostPage />;
   }
 
   if (currentPath === '/techblog') {
