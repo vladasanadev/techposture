@@ -28,6 +28,9 @@ import topClaudeSkillsGuideScript from '../../../public/blog-assets/top-claude-s
 import landJobGuideHtml from '../../content/land-a-job-2026-guide.html?raw';
 import landJobGuideStyles from '../../../public/blog-assets/land-a-job-2026-guide/styles.css?raw';
 import landJobGuideScript from '../../../public/blog-assets/land-a-job-2026-guide/script.js?raw';
+import reviewingAiCodeGuideHtml from '../../content/reviewing-ai-code-guide.html?raw';
+import reviewingAiCodeGuideStyles from '../../../public/blog-assets/reviewing-ai-code-guide/styles.css?raw';
+import reviewingAiCodeGuideScript from '../../../public/blog-assets/reviewing-ai-code-guide/script.js?raw';
 
 interface TrailPoint {
   x: number;
@@ -279,6 +282,7 @@ const harnessGuideUpdatedAt = 'August 16, 2026';
 const reactRoadmapGuideUpdatedAt = 'August 17, 2026';
 const topClaudeSkillsGuideUpdatedAt = 'August 19, 2026';
 const landJobGuideUpdatedAt = 'August 24, 2026';
+const reviewingAiCodeGuideUpdatedAt = 'August 26, 2026';
 const embeddedGuidePaletteStyles = `
   :root {
     --bg: #3D3982;
@@ -555,6 +559,30 @@ const embeddedGuidePaletteStyles = `
     text-align: left;
   }
 
+  .ai-code-guide .page {
+    max-width: 860px;
+    width: min(100% - 32px, 860px);
+  }
+
+  .ai-code-guide .hero,
+  .ai-code-guide .intro-card,
+  .ai-code-guide .checklist,
+  .ai-code-guide .red-flags,
+  .ai-code-guide .final-bar {
+    width: 100%;
+    max-width: 860px;
+  }
+
+  .ai-code-guide .hero__title {
+    max-width: 13ch;
+    font-size: clamp(2.8rem, 8.2vw, 6.6rem);
+  }
+
+  .ai-code-guide .final-bar {
+    background: #3D3982;
+    text-align: left;
+  }
+
   @media (max-width: 767px) {
     .hero,
     .intro-block,
@@ -591,6 +619,15 @@ const embeddedGuidePaletteStyles = `
     .job-guide .footer--crea {
       width: 100%;
       padding: 24px 20px;
+    }
+
+    .ai-code-guide .page {
+      width: min(100% - 24px, 860px);
+    }
+
+    .ai-code-guide .hero__title {
+      max-width: 100%;
+      font-size: clamp(2.45rem, 12vw, 4.25rem);
     }
 
     .need__grid {
@@ -631,6 +668,7 @@ const harnessGuideDocument = buildEmbeddedGuideDocument(harnessGuideHtml, harnes
 const reactRoadmapGuideDocument = buildEmbeddedGuideDocument(reactRoadmapGuideHtml, reactRoadmapGuideStyles, reactRoadmapGuideScript, 'techinterview');
 const topClaudeSkillsGuideDocument = buildEmbeddedGuideDocument(topClaudeSkillsGuideHtml, topClaudeSkillsGuideStyles, topClaudeSkillsGuideScript, 'techinterview');
 const landJobGuideDocument = buildEmbeddedGuideDocument(landJobGuideHtml, landJobGuideStyles, landJobGuideScript, '');
+const reviewingAiCodeGuideDocument = buildEmbeddedGuideDocument(reviewingAiCodeGuideHtml, reviewingAiCodeGuideStyles, reviewingAiCodeGuideScript, '');
 
 const blogPosts = [
   {
@@ -709,6 +747,13 @@ const blogPosts = [
     description: 'A simple job-search system: reach a human, tailor the CV, then negotiate properly once they want you.',
     date: landJobGuideUpdatedAt,
     tag: 'content',
+  },
+  {
+    href: '/techblog/reviewing-ai-generated-code',
+    title: 'Reviewing AI-Generated Code',
+    description: 'An engineer’s checklist for reviewing AI code across behavior, architecture, security, reliability, tests, and production readiness.',
+    date: reviewingAiCodeGuideUpdatedAt,
+    tag: 'techinterview',
   },
 ];
 
@@ -2724,6 +2769,15 @@ function LandJobGuidePostPage() {
   );
 }
 
+function ReviewingAiCodeGuidePostPage() {
+  return (
+    <EmbeddedGuidePostPage
+      document={reviewingAiCodeGuideDocument}
+      title="Reviewing AI-Generated Code"
+    />
+  );
+}
+
 function ClaudeMdPostPage({
   copied,
   onCopy,
@@ -2900,6 +2954,10 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/land-a-job-in-2026') {
     return <LandJobGuidePostPage />;
+  }
+
+  if (currentPath === '/techblog/reviewing-ai-generated-code') {
+    return <ReviewingAiCodeGuidePostPage />;
   }
 
   if (currentPath === '/techblog') {
