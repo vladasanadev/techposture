@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="An engineer's guide to reviewing AI-generated code: correctness, architecture, security, reliability, tests, and production readiness." />
+  <title>Reviewing AI-Generated Code, by @vlada.asana</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="ai-code-guide">
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="topbar__brand" href="/techblog">BLOG</a>
+      <a class="topbar__cta" href="#checklist">CHECKLIST</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <p class="hero__byline">Vlada / engineering notes</p>
+      <h1 class="hero__title">Engineer’s guide to reviewing <span class="title-highlight">AI-generated</span> code</h1>
+      <p class="hero__lede">AI can write the implementation. You still own the judgment.</p>
+      <p class="hero__note">You do not need to manually worship every line AI generated. You do need to understand what the code is trying to do, how the important pieces fit together, and where it can fail.</p>
+      <div class="callout">Start with behavior, architecture, and high-risk paths. Then zoom into the details that can break correctness, security, reliability, or maintainability.</div>
+    </section>
+
+    <section class="intro-card">
+      <p class="eyebrow">Start with the problem, not the code</p>
+      <p>Before reading implementation details, answer these:</p>
+      <ul>
+        <li>What problem are we solving?</li>
+        <li>What constraints matter?</li>
+        <li>What should happen when everything works?</li>
+        <li>What should happen when something fails?</li>
+        <li>What assumptions is this code making?</li>
+      </ul>
+      <p>If you cannot explain the intended behavior in plain English, you are not ready to approve the implementation.</p>
+      <div class="example">Example: If the goal is to reduce failed checkouts, a prettier checkout refactor is irrelevant unless the actual failure path improves.</div>
+    </section>
+
+    <section class="checklist" id="checklist">
+      <article class="review-card">
+        <div class="num">01</div>
+        <div>
+          <h2>Correctness + edge cases</h2>
+          <p>Check the happy path, then immediately attack the assumptions.</p>
+          <ul>
+            <li>invalid, null, empty, or malformed input</li>
+            <li>boundary values</li>
+            <li>partial failures</li>
+            <li>state transitions</li>
+            <li>concurrency, transactions, idempotency</li>
+          </ul>
+          <p>Errors should be intentional. They should not be silently swallowed or converted into fake success.</p>
+          <div class="note">AI loves a clean happy path. Production loves finding the one path nobody asked it about.</div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="num">02</div>
+        <div>
+          <h2>Design + architecture</h2>
+          <p>Ask whether the change actually fits the system you already have.</p>
+          <ul>
+            <li>existing boundaries and ownership</li>
+            <li>interfaces and data flow</li>
+            <li>state changes</li>
+            <li>abstractions and new dependencies</li>
+            <li>whether the code is harder to understand than the problem itself</li>
+          </ul>
+          <div class="code-pair">
+            <div>
+              <span>Overcomplicated</span>
+              <pre>return [user].filter(u => u.active).map(u => u.age >= 18).reduce((_, result) => result, false);</pre>
+            </div>
+            <div>
+              <span>Clear</span>
+              <pre>return user.active && user.age >= 18;</pre>
+            </div>
+          </div>
+          <div class="note">More code is not more engineering. Sometimes it is just more places to hide a bug.</div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="num">03</div>
+        <div>
+          <h2>Readability + maintainability</h2>
+          <p>You should be able to follow the important control flow end to end.</p>
+          <ul>
+            <li>clear responsibilities</li>
+            <li>useful variable names</li>
+            <li>duplicated logic and dead code</li>
+            <li>unrelated generated changes</li>
+            <li>comments that explain why, not what</li>
+          </ul>
+          <p>AI tends to over-comment obvious code. Delete commentary that only repeats the syntax.</p>
+          <div class="example">Example: Instead of passing a value called data through five stages, names such as rawOrder and validatedOrder make the state change visible.</div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="num">04</div>
+        <div>
+          <h2>Security + privacy</h2>
+          <p>Treat every external input as untrusted until proven otherwise.</p>
+          <ul>
+            <li>input validation at system boundaries</li>
+            <li>injection risks and unsafe deserialization</li>
+            <li>file access</li>
+            <li>authentication and authorization</li>
+            <li>tenant and user isolation</li>
+            <li>secrets in source code, prompts, logs, metrics, or errors</li>
+          </ul>
+          <p>Authentication asks, “who are you?” Authorization asks, “are you allowed to do this?”</p>
+          <div class="note">If security exists only in the frontend, it does not exist.</div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="num">05</div>
+        <div>
+          <h2>Reliability + operability</h2>
+          <p>Ask what happens when a dependency becomes slow, unavailable, or weird.</p>
+          <ul>
+            <li>timeouts, retries, exponential backoff</li>
+            <li>cancellation and rate limits</li>
+            <li>cleanup and safe degradation</li>
+            <li>rollout and rollback</li>
+            <li>logs, metrics, traces, and alerts</li>
+          </ul>
+          <p>Retries must not duplicate side effects.</p>
+          <div class="example">Example: If an email provider is down, the request should fail predictably, retry safely, and expose a useful metric instead of hanging forever or pretending success.</div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="num">06</div>
+        <div>
+          <h2>Performance + scale</h2>
+          <p>Do not review only against the tiny dataset from the prompt.</p>
+          <ul>
+            <li>N+1 queries</li>
+            <li>unbounded loops and data loads</li>
+            <li>repeated network calls</li>
+            <li>large allocations</li>
+            <li>missing pagination</li>
+            <li>unnecessary caching</li>
+          </ul>
+          <p>Ask: what happens at the scale this product is actually expected to reach?</p>
+          <div class="note">“Works on my sample data” is not a scaling strategy.</div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="num">07</div>
+        <div>
+          <h2>APIs + dependencies</h2>
+          <p>AI is very capable of confidently using an API that your project does not actually have.</p>
+          <ul>
+            <li>installed SDK or package version</li>
+            <li>unfamiliar methods</li>
+            <li>configuration flags</li>
+            <li>deprecated APIs</li>
+            <li>new dependencies</li>
+            <li>maintenance and trustworthiness of packages</li>
+          </ul>
+          <p>Use official documentation when the behavior matters.</p>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="num">08</div>
+        <div>
+          <h2>Tests + verification</h2>
+          <p>Green tests are evidence. They are not proof.</p>
+          <ul>
+            <li>do not only mirror the generated implementation</li>
+            <li>do not only verify mock calls instead of outcomes</li>
+            <li>do not execute lines just to raise coverage</li>
+            <li>do not ignore failure and authorization paths</li>
+          </ul>
+          <div class="code-pair">
+            <div>
+              <span>Weak</span>
+              <pre>pricingService.calculateTotal(order);
+verify(discountRepository).findDiscountFor(order.getCustomerId());</pre>
+            </div>
+            <div>
+              <span>Better</span>
+              <pre>BigDecimal total = pricingService.calculateTotal(order);
+assertEquals(new BigDecimal("90.00"), total);</pre>
+            </div>
+          </div>
+          <div class="note">Coverage tells you what ran. It does not tell you whether the thing that ran was correct.</div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="num">09</div>
+        <div>
+          <h2>Scope + production readiness</h2>
+          <p>Before approving, check the change as something that has to survive deployment, not just code review.</p>
+          <ul>
+            <li>focused diff</li>
+            <li>backward compatibility</li>
+            <li>schema and API changes</li>
+            <li>feature flags</li>
+            <li>deployment order and rollback</li>
+            <li>docs and runbooks</li>
+          </ul>
+          <div class="example">Example: Removing a database column can break older app instances during a rolling deployment. A safe migration preserves compatibility until the new version is fully deployed.</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="red-flags">
+      <p class="eyebrow">Common AI code red flags</p>
+      <ul>
+        <li>A simple requirement produced a huge diff.</li>
+        <li>You cannot explain why an important block is structured the way it is.</li>
+        <li>The code introduces abstractions before they are needed.</li>
+        <li>Tests mostly verify mocks or implementation details.</li>
+        <li>An unfamiliar API was accepted without checking docs.</li>
+        <li>Broad exception handling catches everything.</li>
+        <li>New packages appeared for trivial problems.</li>
+        <li>“It works locally” is the only evidence.</li>
+        <li>The code is technically valid but does not solve the actual product problem.</li>
+      </ul>
+    </section>
+
+    <section class="final-bar">
+      <p class="eyebrow">The final bar</p>
+      <p>Before you approve AI-generated code, you should be able to say:</p>
+      <ul>
+        <li>I can explain how the important components work together.</li>
+        <li>I understand the assumptions and the highest-risk failure modes.</li>
+        <li>I verified the parts where correctness, security, reliability, or scale actually matter.</li>
+        <li>I would be comfortable debugging and changing this in production.</li>
+      </ul>
+      <p>AI can produce the implementation. You, as the engineer, own the judgment.</p>
+    </section>
+
+    <section class="resources">
+      <p class="eyebrow">Useful reading + watching</p>
+      <div class="resource-grid">
+        <a href="https://sourcegraph.com/blog/ai-code-review" target="_blank" rel="noopener">
+          <span>Sourcegraph</span>
+          AI Code Review in 2026: How It Works and How to Adopt It
+        </a>
+        <a href="https://www.sonarsource.com/resources/library/best-ai-code-review-tools/" target="_blank" rel="noopener">
+          <span>SonarSource</span>
+          Best AI Code Review Tools to Trust in 2026
+        </a>
+        <a href="https://medium.com/google-cloud/how-i-actually-code-and-review-with-ai-in-2026-005c89fbd113" target="_blank" rel="noopener">
+          <span>Google Cloud</span>
+          How I Actually Code and Review With AI in 2026
+        </a>
+        <a href="https://www.youtube.com/watch?v=kBU0LKOE9RU" target="_blank" rel="noopener">
+          <span>YouTube</span>
+          5 Code Review Best Practices in 2026
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>
