@@ -184,6 +184,12 @@ body.behavioral-guide {
   font-size: clamp(3rem, 8vw, 5.8rem);
   line-height: 0.9;
   margin-bottom: 18px;
+  display: inline;
+  padding: 0.02em 0.12em 0.08em;
+  border-radius: 14px;
+  background: rgba(61, 57, 130, 0.46);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 .behavioral-guide .lede,
@@ -231,6 +237,14 @@ body.behavioral-guide {
 .behavioral-guide svg {
   max-width: 100%;
   height: auto;
+}
+
+.behavioral-guide .graph-figure text {
+  fill: #ffffff;
+}
+
+.behavioral-guide .graph-caption {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 @media (max-width: 720px) {

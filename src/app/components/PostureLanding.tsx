@@ -2147,6 +2147,1031 @@ function CopyablePrompt({ text, label }: { text: string; label: string }) {
   );
 }
 
+const automationFreeArticleUrl = 'https://www.vladasana.com/techblog/3-simple-ai-agents-that-run-my-content';
+const automationStripeUrl = (
+  import.meta.env.VITE_AUTOMATION_VAULT_STRIPE_URL ||
+  import.meta.env.NEXT_PUBLIC_AUTOMATION_VAULT_STRIPE_URL ||
+  ''
+) as string;
+const automationSubscribeEndpoint = (import.meta.env.VITE_AUTOMATIONS_SUBSCRIBE_ENDPOINT || '') as string;
+
+function getPreservedSearchParams() {
+  if (typeof window === 'undefined') {
+    return '';
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  return params.toString() ? `?${params.toString()}` : '';
+}
+
+function withPreservedParams(url: string) {
+  if (typeof window === 'undefined') {
+    return url;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+
+  if (!params.toString()) {
+    return url;
+  }
+
+  const target = new URL(url, window.location.origin);
+  params.forEach((value, key) => target.searchParams.set(key, value));
+  return target.toString();
+}
+
+function trackAutomationEvent(name: string, data: Record<string, string> = {}) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const payload = { event: name, ...data };
+  (window as Window & { dataLayer?: Record<string, string>[] }).dataLayer?.push(payload);
+  window.dispatchEvent(new CustomEvent('vlada:analytics', { detail: payload }));
+}
+
+function upsertMetaTag(selector: string, attribute: 'name' | 'property', key: string, content: string) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  let tag = document.head.querySelector<HTMLMetaElement>(selector);
+
+  if (!tag) {
+    tag = document.createElement('meta');
+    tag.setAttribute(attribute, key);
+    document.head.appendChild(tag);
+  }
+
+  tag.setAttribute('content', content);
+}
+
+function upsertCanonicalLink(href: string) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  let link = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+
+  if (!link) {
+    link = document.createElement('link');
+    link.setAttribute('rel', 'canonical');
+    document.head.appendChild(link);
+  }
+
+  link.setAttribute('href', href);
+}
+
+function setAutomationsMetadata({
+  title,
+  description,
+  path,
+}: {
+  title: string;
+  description: string;
+  path: string;
+}) {
+  document.title = title;
+  upsertMetaTag('meta[name="description"]', 'name', 'description', description);
+  upsertMetaTag('meta[name="robots"]', 'name', 'robots', 'index, follow');
+  upsertMetaTag('meta[property="og:title"]', 'property', 'og:title', title);
+  upsertMetaTag('meta[property="og:description"]', 'property', 'og:description', description);
+  upsertMetaTag('meta[property="og:type"]', 'property', 'og:type', 'website');
+  upsertMetaTag('meta[property="og:url"]', 'property', 'og:url', `https://www.vladasana.com${path}`);
+  upsertMetaTag('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
+  upsertMetaTag('meta[name="twitter:title"]', 'name', 'twitter:title', title);
+  upsertMetaTag('meta[name="twitter:description"]', 'name', 'twitter:description', description);
+  upsertCanonicalLink(`https://www.vladasana.com${path}`);
+}
+
+function AutomationsStyles() {
+  return (
+    <style>
+      {`
+        .automations-page {
+          position: relative;
+          min-height: 100vh;
+          background:
+            linear-gradient(rgba(61, 57, 130, 0.12), rgba(61, 57, 130, 0.3)),
+            url('/automations-assets/cherry-sky-bg.jpg') center / cover fixed;
+          color: #fff;
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          overflow-x: hidden;
+        }
+
+        .automations-page::before {
+          content: "";
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          background: rgba(61, 57, 130, 0.18);
+          z-index: 0;
+        }
+
+        .automations-shell {
+          position: relative;
+          z-index: 1;
+          width: min(100% - 40px, 1080px);
+          margin: 0 auto;
+          padding: clamp(20px, 4vw, 44px) 0;
+        }
+
+        .automations-nav,
+        .automations-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 18px;
+          color: rgba(255, 255, 255, 0.72);
+          font-size: 0.72rem;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+        }
+
+        .automations-footer {
+          align-items: flex-start;
+          margin-top: 28px;
+          border-top: 1px solid rgba(255, 255, 255, 0.18);
+          padding-top: 22px;
+        }
+
+        .automations-footer-links {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px 18px;
+        }
+
+        .automations-footer-legal {
+          max-width: 680px;
+          margin: 14px 0 0;
+          color: rgba(255, 255, 255, 0.56);
+          font-size: 0.68rem;
+          line-height: 1.65;
+          letter-spacing: 0.04em;
+          text-transform: none;
+        }
+
+        .automations-logo,
+        .automations-link {
+          color: #fff;
+          text-decoration: none;
+        }
+
+        .automations-grid,
+        .automations-vault-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1fr);
+          gap: clamp(18px, 2.6vw, 28px);
+          align-items: center;
+          margin-top: clamp(24px, 4.6vw, 52px);
+        }
+
+        .automations-hero-visual {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+        }
+
+        .automations-guide-image {
+          display: block;
+          width: min(100%, 430px);
+          height: auto;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+          user-select: none;
+        }
+
+        .automations-card {
+          position: relative;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.22);
+          border-radius: 28px;
+          background-color: rgba(95, 26, 35, 0.9);
+          background-image: url('/automations-assets/red-card-texture.jpg');
+          background-position: center;
+          background-size: cover;
+          box-shadow: 0 24px 70px rgba(20, 12, 48, 0.22);
+          backdrop-filter: blur(14px) saturate(1.12);
+          padding: clamp(24px, 3.2vw, 38px);
+        }
+
+        .automations-card::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background-color: rgba(71, 16, 26, 0.32);
+        }
+
+        .automations-card > * {
+          position: relative;
+          z-index: 1;
+        }
+
+        .automations-hero-card {
+          padding: clamp(26px, 3.4vw, 40px);
+        }
+
+        .automations-card.is-dark {
+          background-color: rgba(61, 57, 130, 0.8);
+          background-blend-mode: multiply;
+          backdrop-filter: blur(18px);
+        }
+
+        .automations-eyebrow {
+          display: inline-flex;
+          width: fit-content;
+          border: 1px solid rgba(255, 255, 255, 0.28);
+          border-radius: 999px;
+          padding: 8px 12px;
+          background: rgba(61, 57, 130, 0.46);
+          color: rgba(255, 255, 255, 0.88);
+          font-size: 0.68rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+
+        .automations-title {
+          margin: 18px 0 16px;
+          max-width: 560px;
+          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-size: clamp(3rem, 5.2vw, 4.7rem);
+          font-weight: 900;
+          line-height: 0.92;
+          letter-spacing: -0.055em;
+          text-transform: uppercase;
+        }
+
+        .automations-title-line {
+          display: block;
+          overflow-wrap: normal;
+        }
+
+        .automations-title-word {
+          display: block;
+        }
+
+        .automations-title.is-offer {
+          font-size: clamp(2.9rem, 6.2vw, 5.35rem);
+          max-width: 700px;
+        }
+
+        .automations-copy {
+          max-width: 620px;
+          color: rgba(255, 255, 255, 0.84);
+          font-size: clamp(0.98rem, 1.7vw, 1.14rem);
+          line-height: 1.62;
+        }
+
+        .automations-muted {
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 0.92rem;
+          line-height: 1.7;
+        }
+
+        .automations-form {
+          display: grid;
+          gap: 14px;
+          margin-top: 26px;
+        }
+
+        .automations-field {
+          display: grid;
+          gap: 8px;
+        }
+
+        .automations-field label {
+          color: rgba(255, 255, 255, 0.74);
+          font-size: 0.68rem;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+        }
+
+        .automations-input {
+          width: 100%;
+          min-height: 52px;
+          border: 1px solid rgba(255, 255, 255, 0.24);
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+          padding: 0 16px;
+          outline: none;
+        }
+
+        .automations-input::placeholder {
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .automations-input:focus {
+          border-color: #9bdcff;
+          box-shadow: 0 0 0 3px rgba(155, 220, 255, 0.18);
+        }
+
+        .automations-button {
+          display: inline-flex;
+          min-height: 54px;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid rgba(255, 255, 255, 0.26);
+          border-radius: 999px;
+          background: #9bdcff;
+          color: #151244;
+          padding: 0 24px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-decoration: none;
+          text-transform: uppercase;
+          transition: transform 180ms ease, filter 180ms ease;
+        }
+
+        .automations-button:hover {
+          transform: translateY(-2px);
+          filter: brightness(1.04);
+        }
+
+        .automations-button.is-secondary {
+          background: transparent;
+          color: #fff;
+        }
+
+        .automations-button.is-disabled {
+          cursor: not-allowed;
+          opacity: 0.62;
+        }
+
+        .automations-status {
+          min-height: 22px;
+          color: rgba(255, 255, 255, 0.76);
+          font-size: 0.86rem;
+        }
+
+        .automations-benefits,
+        .automations-list,
+        .automations-faq {
+          display: grid;
+          gap: 14px;
+          margin-top: 22px;
+        }
+
+        .automations-benefits {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .automations-mini-card,
+        .automations-faq-item,
+        .automations-window {
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 20px;
+          background: rgba(0, 0, 0, 0.16);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          padding: 18px;
+        }
+
+        .automations-mini-card h3,
+        .automations-faq-item h3 {
+          margin: 0 0 8px;
+          color: #fff;
+          font-size: 1rem;
+        }
+
+        .automations-mini-card p,
+        .automations-faq-item p {
+          margin: 0;
+          color: rgba(255, 255, 255, 0.72);
+          line-height: 1.62;
+        }
+
+        .automations-list {
+          list-style: none;
+          padding: 0;
+        }
+
+        .automations-list li {
+          position: relative;
+          padding-left: 22px;
+          color: rgba(255, 255, 255, 0.84);
+          line-height: 1.55;
+        }
+
+        .automations-list li::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0.7em;
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          background: #9bdcff;
+        }
+
+        .automations-price {
+          margin: 20px 0;
+          font-family: "Big Shoulders Display", "Space Grotesk", sans-serif;
+          font-size: clamp(4rem, 14vw, 9rem);
+          line-height: 0.82;
+          text-transform: uppercase;
+        }
+
+        .automations-offer-row {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(220px, 0.42fr);
+          gap: clamp(18px, 4vw, 34px);
+          align-items: end;
+          margin-top: 22px;
+        }
+
+        .automations-price-panel {
+          border: 1px solid rgba(255, 255, 255, 0.22);
+          border-radius: 22px;
+          background: rgba(155, 220, 255, 0.9);
+          color: #151244;
+          padding: 20px;
+        }
+
+        .automations-price-panel .automations-price {
+          margin: 10px 0 8px;
+          color: #151244;
+        }
+
+        .automations-price-panel .automations-muted {
+          color: rgba(21, 18, 68, 0.74);
+        }
+
+        .automations-visual {
+          display: grid;
+          gap: 14px;
+          align-content: center;
+          min-height: auto;
+        }
+
+        .automations-window {
+          min-height: 108px;
+        }
+
+        .automations-window strong {
+          display: block;
+          margin-bottom: 10px;
+          color: #9bdcff;
+          font-size: 0.74rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
+        .automations-window span {
+          display: block;
+          color: rgba(255, 255, 255, 0.74);
+          line-height: 1.55;
+        }
+
+        .automations-section {
+          margin-top: 22px;
+        }
+
+        .automations-section h2 {
+          margin: 0 0 14px;
+          font-family: "Big Shoulders Display", "Space Grotesk", sans-serif;
+          font-size: clamp(2.7rem, 7vw, 5.4rem);
+          line-height: 0.9;
+          text-transform: uppercase;
+        }
+
+        .automations-section-kicker {
+          margin-bottom: 18px;
+        }
+
+        .automations-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 22px;
+        }
+
+        .automations-skip {
+          display: inline-flex;
+          margin-top: 16px;
+          color: rgba(255, 255, 255, 0.8);
+          text-decoration-color: rgba(255, 255, 255, 0.36);
+          text-underline-offset: 5px;
+        }
+
+        @media (max-width: 820px) {
+          .automations-shell {
+            width: min(100% - 20px, 620px);
+            padding-top: 14px;
+          }
+
+          .automations-nav,
+          .automations-footer {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+
+          .automations-grid,
+          .automations-vault-grid,
+          .automations-benefits,
+          .automations-offer-row {
+            grid-template-columns: 1fr;
+          }
+
+          .automations-grid,
+          .automations-vault-grid {
+            gap: 14px;
+            margin-top: 18px;
+          }
+
+          .automations-hero-visual {
+            padding: 0;
+          }
+
+          .automations-title,
+          .automations-title.is-offer {
+            max-width: 100%;
+            font-size: clamp(2rem, 8.8vw, 2.72rem);
+            line-height: 0.96;
+            letter-spacing: -0.052em;
+            margin: 16px 0 14px;
+          }
+
+          .automations-card {
+            border-radius: 22px;
+            background-color: rgba(95, 26, 35, 0.92);
+            padding: 22px 16px;
+          }
+
+          .automations-hero-card {
+            padding: 22px 16px 20px;
+          }
+
+          .automations-card.is-dark {
+            background-color: rgba(61, 57, 130, 0.84);
+          }
+
+          .automations-copy {
+            font-size: 0.96rem;
+            line-height: 1.55;
+          }
+
+          .automations-muted {
+            font-size: 0.86rem;
+          }
+
+          .automations-form {
+            gap: 12px;
+            margin-top: 18px;
+          }
+
+          .automations-window {
+            min-height: auto;
+            padding: 16px;
+          }
+
+          .automations-page {
+            background:
+              linear-gradient(rgba(61, 57, 130, 0.08), rgba(61, 57, 130, 0.24)),
+              url('/automations-assets/cherry-sky-bg.jpg') center top / cover scroll;
+          }
+
+          .automations-button {
+            width: 100%;
+            min-height: 58px;
+            text-align: center;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .automations-title,
+          .automations-title.is-offer {
+            font-size: clamp(1.96rem, 9vw, 2.56rem);
+            letter-spacing: -0.075em;
+          }
+
+          .automations-hero-visual {
+            padding: 0;
+          }
+
+        }
+      `}
+    </style>
+  );
+}
+
+function AutomationsOptInForm({ compact = false }: { compact?: boolean }) {
+  const [firstName, setFirstName] = useState('');
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const cleanEmail = email.trim();
+    const cleanName = firstName.trim();
+
+    if (!cleanName || !cleanEmail || !/^\\S+@\\S+\\.\\S+$/.test(cleanEmail)) {
+      setStatus('error');
+      setMessage('Add your first name and a valid email.');
+      return;
+    }
+
+    setStatus('loading');
+    setMessage('Sending you to the next step...');
+    trackAutomationEvent('free_form_submitted', { email: cleanEmail });
+
+    const subscriber = {
+      firstName: cleanName,
+      email: cleanEmail,
+      resourceUrl: automationFreeArticleUrl,
+      utm: Object.fromEntries(new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')),
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      if (automationSubscribeEndpoint) {
+        const response = await fetch(automationSubscribeEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(subscriber),
+        });
+
+        if (!response.ok) {
+          throw new Error('Subscribe endpoint failed');
+        }
+      } else if (typeof window !== 'undefined') {
+        const saved = JSON.parse(window.localStorage.getItem('vladaAutomationSubscribers') || '[]');
+        window.localStorage.setItem('vladaAutomationSubscribers', JSON.stringify([...saved, subscriber]));
+      }
+
+      if (typeof window !== 'undefined') {
+        window.location.href = `/automations/vault${getPreservedSearchParams()}`;
+      }
+    } catch {
+      setStatus('error');
+      setMessage('Something did not save. Try again, or email hello@vladasana.com.');
+    }
+  };
+
+  return (
+    <form className="automations-form" onSubmit={handleSubmit}>
+      <div className="automations-field">
+        <label htmlFor={compact ? 'final-first-name' : 'first-name'}>first name</label>
+        <input
+          id={compact ? 'final-first-name' : 'first-name'}
+          className="automations-input"
+          value={firstName}
+          onChange={(event) => {
+            setFirstName(event.target.value);
+            trackAutomationEvent('free_form_started');
+          }}
+          placeholder="Vlada"
+          autoComplete="given-name"
+          required
+        />
+      </div>
+      <div className="automations-field">
+        <label htmlFor={compact ? 'final-email' : 'email'}>email address</label>
+        <input
+          id={compact ? 'final-email' : 'email'}
+          className="automations-input"
+          type="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          placeholder="you@email.com"
+          autoComplete="email"
+          required
+        />
+      </div>
+      <button className="automations-button" type="submit" disabled={status === 'loading'}>
+        {status === 'loading' ? 'loading...' : 'send me 3 automations'}
+      </button>
+      <p className="automations-status" role={status === 'error' ? 'alert' : 'status'}>
+        {message || 'No spam. Just the resource and occasional practical AI workflows.'}
+      </p>
+    </form>
+  );
+}
+
+function AutomationsFooter({ supportEmail = 'hello@vladasana.com' }: { supportEmail?: string }) {
+  return (
+    <footer className="automations-footer">
+      <div>
+        <a className="automations-logo" href="/">vladasanadev</a>
+        <p className="automations-footer-legal">
+          © 2026 Vladasana Productions · All Rights Reserved
+        </p>
+        <p className="automations-footer-legal">
+          Results mentioned are individual stories, not a guarantee of your results. Your results will depend on your effort, experience, and market conditions. This site is not part of, or endorsed by, Facebook, Google, or any social media platform. FACEBOOK is a trademark of META PLATFORMS, INC.
+        </p>
+      </div>
+      <nav className="automations-footer-links" aria-label="Automations legal links">
+        <a className="automations-link" href="/privacy">Privacy Policy</a>
+        <a className="automations-link" href="/terms">Terms & Conditions</a>
+        <a className="automations-link" href={`mailto:${supportEmail}`}>Contact</a>
+      </nav>
+    </footer>
+  );
+}
+
+function AutomationsPage() {
+  useEffect(() => {
+    setAutomationsMetadata({
+      title: 'Busy Brain Automations | Vlada Kandyba',
+      description: 'Get three simple AI automations for creators, plus Vlada Kandyba’s Busy Brain Automation Vault.',
+      path: '/automations',
+    });
+    trackAutomationEvent('automations_page_viewed');
+  }, []);
+
+  const vaultHref = `/automations/vault${getPreservedSearchParams()}`;
+
+  return (
+    <main className="automations-page">
+      <BlogStyles />
+      <AutomationsStyles />
+      <div className="automations-shell">
+        <header className="automations-nav">
+          <a className="automations-logo" href="/">vladasanadev</a>
+          <a className="automations-link" href="/techblog">blog</a>
+        </header>
+
+        <section className="automations-grid">
+          <div className="automations-hero-visual">
+            <img
+              className="automations-guide-image"
+              src="/automations-assets/busy-brain-guide.png"
+              alt="Busy Brain Automation guide preview"
+            />
+          </div>
+
+          <div className="automations-card automations-hero-card">
+            <span className="automations-eyebrow">get your free copy</span>
+            <h1 className="automations-title">
+              <span className="automations-title-line">3 simple</span>
+              <span className="automations-title-line">AI</span>
+              <span className="automations-title-line automations-title-word">automations</span>
+              <span className="automations-title-line">to start</span>
+            </h1>
+            <p className="automations-copy">
+              Start with three practical AI systems that help capture ideas, manage content, and reduce the number of things your brain has to remember.
+            </p>
+            <p className="automations-muted">
+              Built from the workflows I use as a software engineer and content creator.
+            </p>
+            <AutomationsOptInForm />
+          </div>
+        </section>
+
+        <section className="automations-card automations-section">
+          <h2>start small. automate what keeps repeating.</h2>
+          <p className="automations-copy">
+            These three automations are the easiest place to begin. No complicated dashboards and no productivity system that becomes another job.
+          </p>
+          <div className="automations-benefits">
+            <div className="automations-mini-card">
+              <h3>capture ideas before they disappear</h3>
+              <p>Turn half-formed thoughts into saved context you can actually find later.</p>
+            </div>
+            <div className="automations-mini-card">
+              <h3>turn existing context into content</h3>
+              <p>Use what you already wrote, watched, saved, and tested as source material.</p>
+            </div>
+            <div className="automations-mini-card">
+              <h3>reduce repetitive manual work</h3>
+              <p>Let the system prepare drafts and summaries, then keep the final judgment with you.</p>
+            </div>
+          </div>
+          <div className="automations-actions">
+            <a className="automations-button is-secondary" href="#free-guide">get the free starter guide</a>
+          </div>
+        </section>
+
+        <section className="automations-card automations-section">
+          <span className="automations-eyebrow automations-section-kicker">want the complete system?</span>
+          <h2>The Busy Brain Automation Vault</h2>
+          <p className="automations-copy">
+            Get every automation I actually use, plus a private walkthrough video showing you exactly how I set everything up.
+          </p>
+          <ul className="automations-list">
+            <li>my complete automation collection</li>
+            <li>ready-to-copy prompts</li>
+            <li>reusable workflow templates</li>
+            <li>ADHD-friendly setup tips</li>
+            <li>step-by-step implementation notes</li>
+            <li>a private walkthrough video from me</li>
+            <li>lifetime access to this version</li>
+          </ul>
+          <div className="automations-offer-row">
+            <div>
+              <p className="automations-muted">Built for creators who need practical systems, not another dashboard to maintain.</p>
+              <div className="automations-actions">
+                <a className="automations-button" href={vaultHref}>see the special offer</a>
+              </div>
+            </div>
+            <div className="automations-price-panel">
+              <span className="automations-eyebrow">launch price</span>
+              <p className="automations-price">$19</p>
+              <p className="automations-muted">One payment. Immediate access.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="automations-card automations-section">
+          <h2>built from my real workflow</h2>
+          <p className="automations-copy">
+            I’m Vlada, a software engineer and content creator. These are the systems I use to manage ideas, research, content, and multiple projects without expecting my brain to remember everything.
+          </p>
+        </section>
+
+        <section className="automations-card automations-section">
+          <h2>FAQ</h2>
+          <div className="automations-faq">
+            <div className="automations-faq-item">
+              <h3>Is this beginner-friendly?</h3>
+              <p>Yes. Start with the free three automations. The paid Vault includes setup guidance, templates, and a walkthrough video.</p>
+            </div>
+            <div className="automations-faq-item">
+              <h3>Which tools will I need?</h3>
+              <p>Each workflow clearly lists the tools it uses and whether a free plan is available.</p>
+            </div>
+            <div className="automations-faq-item">
+              <h3>Is this only for women?</h3>
+              <p>No. The aesthetic is mine. The systems are for any busy brain.</p>
+            </div>
+            <div className="automations-faq-item">
+              <h3>Is this a course?</h3>
+              <p>No. It is a practical collection of automations, prompts, templates, and a walkthrough video.</p>
+            </div>
+            <div className="automations-faq-item">
+              <h3>Will the price stay at $19?</h3>
+              <p>No. This is the early launch price while I collect feedback and expand the Vault.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="free-guide" className="automations-card automations-section">
+          <h2>your brain creates. the system remembers.</h2>
+          <p className="automations-copy">Start with three free automations or get my complete system.</p>
+          <AutomationsOptInForm compact />
+        </section>
+
+        <AutomationsFooter />
+      </div>
+    </main>
+  );
+}
+
+function AutomationVaultPage() {
+  useEffect(() => {
+    setAutomationsMetadata({
+      title: 'Automation Vault | Vlada Kandyba',
+      description: 'The Busy Brain Automation Vault, a complete $19 system of automations, prompts, templates, and setup notes by Vlada Kandyba.',
+      path: '/automations/vault',
+    });
+    trackAutomationEvent('vault_offer_viewed');
+  }, []);
+
+  const checkoutHref = automationStripeUrl ? withPreservedParams(automationStripeUrl) : '';
+  const skipHref = withPreservedParams(automationFreeArticleUrl);
+
+  const handleCheckoutClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!checkoutHref) {
+      event.preventDefault();
+      return;
+    }
+
+    trackAutomationEvent('vault_cta_clicked');
+    trackAutomationEvent('checkout_started');
+  };
+
+  const handleSkipClick = () => {
+    trackAutomationEvent('vault_offer_skipped');
+    trackAutomationEvent('free_article_opened');
+  };
+
+  return (
+    <main className="automations-page">
+      <BlogStyles />
+      <AutomationsStyles />
+      <div className="automations-shell">
+        <header className="automations-nav">
+          <a className="automations-logo" href="/">vladasanadev</a>
+          <a className="automations-link" href="/automations">free guide</a>
+        </header>
+
+        <section className="automations-vault-grid">
+          <div className="automations-card automations-hero-card">
+            <span className="automations-eyebrow">one more thing before you go</span>
+            <h1 className="automations-title is-offer">your brain is for ideas. not remembering where you put them.</h1>
+            <p className="automations-copy">
+              The free guide gives you three simple automations to start. The Vault gives you the complete system I use to manage content, ideas, research, and the repetitive work I do not want living in my brain.
+            </p>
+          </div>
+
+          <aside className="automations-card is-dark automations-visual">
+            <div className="automations-window">
+              <strong>private walkthrough video</strong>
+              <span>Placeholder for your walkthrough preview. Upload the real video screenshot when ready.</span>
+            </div>
+            <div className="automations-window">
+              <strong>workflow screenshots</strong>
+              <span>Placeholder for automation workflow screens, content-brain views, prompts, and templates.</span>
+            </div>
+            <div className="automations-window">
+              <strong>Automation Vault</strong>
+              <span>Everything grouped into one practical creator system, not another pile of tabs.</span>
+            </div>
+          </aside>
+        </section>
+
+        <section className="automations-card automations-section">
+          <span className="automations-eyebrow">special launch offer</span>
+          <h2>The Busy Brain Automation Vault</h2>
+          <p className="automations-copy">all my automations. one system. $19 full package with Vlada.</p>
+          <p className="automations-muted">
+            Get every automation I actually use, plus a private walkthrough video showing you how I set everything up.
+          </p>
+          <p className="automations-price">$19</p>
+          <p className="automations-muted">launch price. One payment. Immediate access.</p>
+          <div className="automations-actions">
+            <a
+              className={`automations-button${checkoutHref ? '' : ' is-disabled'}`}
+              href={checkoutHref || '#missing-stripe-link'}
+              onClick={handleCheckoutClick}
+              aria-disabled={!checkoutHref}
+            >
+              get the full Automation Vault for $19
+            </a>
+          </div>
+          {!checkoutHref && (
+            <p id="missing-stripe-link" className="automations-status" role="alert">
+              Add VITE_AUTOMATION_VAULT_STRIPE_URL before checkout can open.
+            </p>
+          )}
+          <a className="automations-skip" href={skipHref} onClick={handleSkipClick}>
+            no thanks, take me to the 3 free automations
+          </a>
+        </section>
+
+        <section className="automations-card automations-section">
+          <h2>stop collecting AI tools. build a system that works together.</h2>
+          <p className="automations-copy">
+            Random tools create more tabs. The Vault shows you how I connect everything into practical workflows I can actually use.
+          </p>
+          <p className="automations-muted">
+            The free guide gives you the starting point. The Vault gives you the prompts, templates, setup instructions, and complete walkthrough.
+          </p>
+          <ul className="automations-list">
+            <li>all the automations I use for content and everyday work</li>
+            <li>my complete Obsidian content-brain setup</li>
+            <li>ready-to-copy Claude instructions</li>
+            <li>idea capture and retrieval workflows</li>
+            <li>note-to-content workflows</li>
+            <li>ADHD-friendly reminders and closure systems</li>
+            <li>reusable prompts and templates</li>
+            <li>step-by-step setup notes</li>
+            <li>a private walkthrough video from me</li>
+            <li>lifetime access to this version</li>
+          </ul>
+        </section>
+
+        <AutomationsFooter supportEmail="support@vladasana.com" />
+      </div>
+    </main>
+  );
+}
+
+function AutomationsSuccessPage() {
+  useEffect(() => {
+    setAutomationsMetadata({
+      title: 'Automation Vault Confirmed | Vlada Kandyba',
+      description: 'Your Busy Brain Automation Vault purchase is confirmed. Access details have been sent by email.',
+      path: '/automations/success',
+    });
+    trackAutomationEvent('purchase_success');
+    trackAutomationEvent('vault_purchase_completed');
+  }, []);
+
+  return (
+    <main className="automations-page">
+      <BlogStyles />
+      <AutomationsStyles />
+      <div className="automations-shell">
+        <section className="automations-card">
+          <span className="automations-eyebrow">purchase confirmed</span>
+          <h1 className="automations-title is-offer">you are in the Vault</h1>
+          <p className="automations-copy">
+            Access has been sent to your email. If it does not arrive, check spam first, then email support@vladasana.com.
+          </p>
+          <div className="automations-actions">
+            <a className="automations-button" href={automationFreeArticleUrl}>open the free automations guide</a>
+            <a className="automations-button is-secondary" href="/">back to portfolio</a>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
+
 function TechBlogIndexPage() {
   const [activeTag, setActiveTag] = useState<'all' | 'content' | 'techinterview'>('all');
   const visiblePosts = activeTag === 'all' ? blogPosts : blogPosts.filter(post => post.tag === activeTag);
@@ -2987,6 +4012,18 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog') {
     return <TechBlogIndexPage />;
+  }
+
+  if (currentPath === '/automations') {
+    return <AutomationsPage />;
+  }
+
+  if (currentPath === '/automations/vault') {
+    return <AutomationVaultPage />;
+  }
+
+  if (currentPath === '/automations/success') {
+    return <AutomationsSuccessPage />;
   }
 
   const now = Date.now();
