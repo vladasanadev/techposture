@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Everything you need to know about Behavioral Interviews</title>
+<meta name="description" content="A behavioral interview cheat sheet. STAR method, story banks, failure and conflict questions, and the 2026 AI-era angle interviewers now probe for. Interview-ready.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="behavioral-guide">
+
+<header class="hero">
+  <div class="wrap">
+    <svg class="hero-svg" viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="90" cy="70" r="28" stroke="#DFD8D3" stroke-width="2" fill="none"/>
+      <path d="M50 150 Q90 105 130 150" stroke="#DFD8D3" stroke-width="2" fill="none"/>
+      <circle cx="210" cy="70" r="28" stroke="#A8425A" stroke-width="2.5" fill="none"/>
+      <path d="M170 150 Q210 105 250 150" stroke="#A8425A" stroke-width="2.5" fill="none"/>
+      <path d="M118 70 L172 70" stroke="#B8862E" stroke-width="2" stroke-dasharray="4 3"/>
+    </svg>
+    <p class="eyebrow">Behavioral &amp; STAR Cheat Sheet</p>
+    <h1 class="title">Everything you need to know about Behavioral Interviews</h1>
+    <p class="subtitle">The STAR method done properly, building a story bank, the failure and conflict questions everyone fears, and the 2026 AI-era angle interviewers have started probing for. Interview-ready.</p>
+    <div class="meta-row">
+      <span>11 sections</span>
+      <span>~16 min read</span>
+      <span>companion to the API, Git, Database, Big-O, Containers &amp; SQL cheat sheets</span>
+    </div>
+  </div>
+</header>
+
+<nav class="contents" id="contents">
+  <div class="wrap">
+    <h2>Contents — 11 sections, click to jump</h2>
+    <div class="contents-grid">
+      <a href="#why"><span class="num">01</span> Why This Feels Harder Than Technical</a>
+      <a href="#star"><span class="num">02</span> The STAR Method, Properly Deconstructed</a>
+      <a href="#bank"><span class="num">03</span> Building Your Story Bank</a>
+      <a href="#patterns"><span class="num">04</span> Signal Words → Which Story to Use</a>
+      <a href="#failure"><span class="num">05</span> The Failure Question</a>
+      <a href="#conflict"><span class="num">06</span> The Conflict / Disagreement Question</a>
+      <a href="#leadership"><span class="num">07</span> Leadership &amp; Ownership Questions</a>
+      <a href="#ai" class="highlight"><span class="num">08</span> The 2026 AI-Era Angle</a>
+      <a href="#delivery"><span class="num">09</span> Delivery: Tone, Pacing &amp; Remote Presence</a>
+      <a href="#mistakes"><span class="num">10</span> Common Mistakes &amp; Pitfalls</a>
+      <a href="#interview"><span class="num">11</span> Interview Quick Reference</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 01 -->
+<section class="block" id="why">
+  <div class="wrap">
+    <p class="section-label">Section 01</p>
+    <h2 class="h">Why This Feels Harder Than Technical</h2>
+    <p>Every other guide in this series has a right answer you can verify — code runs or it doesn't, a query returns the correct rows or it doesn't. Behavioral interviews don't have that anchor, which is exactly why they cause more anxiety than a whiteboard coding round for a lot of people, even senior engineers who are otherwise completely calm under technical pressure.</p>
+
+    <p>The uncertainty isn't really about not having good stories. Almost everyone has lived through a real conflict, a real failure, a real deadline crunch. The anxiety comes from not knowing how to <em>package</em> a true, messy, real experience into something that reads as competent in five minutes, without it sounding rehearsed or fake.</p>
+
+    <div class="box tip">
+      <div class="box-title">Interview Tip</div>
+      <p>Reframe the goal before you do anything else. You're not inventing an impressive story — you're giving an interviewer a structured, honest sample of how you actually think and behave under real conditions. Say to yourself: <em class="quote">"I already have the material. My only job is structure."</em> That reframe alone reduces a surprising amount of the freeze-up.</p>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>A real, specific situation — not a hypothetical or a generic "we as a team" story</li>
+        <li>Evidence of how you think and decide, not just what eventually happened</li>
+        <li>Enough structure to follow easily, without sounding like a memorized script</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> treat behavioral prep as organizing true stories you already have, not inventing impressive ones you don't.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="block" id="star">
+  <div class="wrap">
+    <p class="section-label">Section 02</p>
+    <h2 class="h">The STAR Method, Properly Deconstructed</h2>
+    <p>Everyone has heard of STAR. Almost nobody uses it correctly, because most explanations stop at the acronym without explaining what each letter is actually <em>for</em> and how much time it deserves.</p>
+
+    <table>
+      <tr><th>Letter</th><th>What It Covers</th><th>Time Share</th><th>Common Error</th></tr>
+      <tr><td><strong>Situation</strong></td><td>The specific context — team, project, stakes, timeframe</td><td>~15%</td><td>Spending two minutes on backstory nobody asked for</td></tr>
+      <tr><td><strong>Task</strong></td><td>What was specifically your responsibility, distinct from the team's</td><td>~10%</td><td>Blurring this into Situation, leaving your actual role unclear</td></tr>
+      <tr><td><strong>Action</strong></td><td>What YOU specifically did, decision by decision</td><td>~50%</td><td>This is almost always too short — it's the entire point of the question</td></tr>
+      <tr><td><strong>Result</strong></td><td>The outcome, ideally with a concrete number or measurable change</td><td>~25%</td><td>Vague ("it went well") instead of specific ("cut deploy time from 40 to 12 minutes")</td></tr>
+    </table>
+
+    <div class="graph-figure">
+      <svg viewBox="0 0 560 90" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="20" width="80" height="40" fill="none" stroke="#DFD8D3" stroke-width="2"/>
+        <rect x="90" y="20" width="55" height="40" fill="none" stroke="#DFD8D3" stroke-width="2"/>
+        <rect x="145" y="20" width="270" height="40" fill="#A8425A" opacity="0.12" stroke="#A8425A" stroke-width="2.5"/>
+        <rect x="415" y="20" width="135" height="40" fill="none" stroke="#B8862E" stroke-width="2"/>
+        <text x="50" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#5A5250">S</text>
+        <text x="117" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#5A5250">T</text>
+        <text x="280" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#A8425A" font-weight="bold">A — the actual point</text>
+        <text x="482" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#B8862E">R</text>
+      </svg>
+      <p class="graph-caption">Roughly to scale: Action should be about half your answer. Most people invert this.</p>
+    </div>
+
+    <div class="box mistake">
+      <div class="box-title">Common Mistake: The Inverted Pyramid</div>
+      <p>The single most common STAR failure is spending most of the answer on Situation — elaborate context about the company, the team, the project history — and rushing through Action in one sentence: <em class="quote">"...and so I worked with the team to fix it and it went well."</em> That one sentence is the entire reason the question was asked. Everything before it is just setup.</p>
+    </div>
+
+    <div class="box tip">
+      <div class="box-title">Interview Tip</div>
+      <p>Practice compressing Situation and Task into two sentences total, out loud, with a timer. Say <em class="quote">"Our checkout service was throwing intermittent 500s during peak traffic, and as the on-call engineer that week, it was on me to diagnose and fix it before the next sales event."</em> That's Situation and Task, done, in under 10 seconds — leaving the rest of your time for Action.</p>
+    </div>
+
+    <div class="box extra">
+      <div class="box-title">Extra Interview Tip</div>
+      <p>Within Action, narrate decisions, not just activities. Say <em class="quote">"I could have just restarted the service, which would've bought time but not found the root cause, so instead I pulled logs first to see if it was a pattern..."</em> Naming the decision point — the option you didn't take and why — shows judgment, which is what STAR is actually trying to surface. A list of things you did shows effort; a narrated decision shows thinking.</p>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>Situation and Task compressed to under 15% of your total answer combined</li>
+        <li>Action taking up roughly half the answer, with visible decision points, not just a list of tasks</li>
+        <li>A Result with a real number or concrete change, not a vague "it worked out"</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> two sentences of Situation/Task, then spend most of your time in Action narrating decisions, close with a specific, ideally quantified Result.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="block" id="bank">
+  <div class="wrap">
+    <p class="section-label">Section 03</p>
+    <h2 class="h">Building Your Story Bank</h2>
+    <p>You don't need one story per possible question — that's an impossible number of scenarios to prep. You need 5 to 7 real stories, each flexible enough to answer several different question types depending on which part you emphasize.</p>
+
+    <h3 class="sub">3.1 The Core Categories to Cover</h3>
+    <table>
+      <tr><th>Category</th><th>Covers Questions Like</th></tr>
+      <tr><td><strong>A time you failed or made a mistake</strong></td><td>"Tell me about a failure," "time you were wrong," "biggest mistake"</td></tr>
+      <tr><td><strong>A time you disagreed with someone</strong></td><td>"Conflict with a manager/peer," "pushed back on a decision"</td></tr>
+      <tr><td><strong>A time you led without formal authority</strong></td><td>"Leadership example," "influenced without authority"</td></tr>
+      <tr><td><strong>A time you dealt with ambiguity</strong></td><td>"Unclear requirements," "had to make a judgment call"</td></tr>
+      <tr><td><strong>A time you went above and beyond</strong></td><td>"Exceeded expectations," "proudest achievement"</td></tr>
+      <tr><td><strong>A time you had to learn something fast</strong></td><td>"Picked up a new skill/tool quickly," adaptability questions</td></tr>
+      <tr><td><strong>A time you gave or received tough feedback</strong></td><td>"Difficult feedback conversation," growth mindset questions</td></tr>
+    </table>
+
+    <div class="box tip">
+      <div class="box-title">Interview Tip</div>
+      <p>One well-chosen story often covers two or three categories at once. A single incident — you shipped a feature under a tight deadline, made a technical tradeoff your lead disagreed with, and it turned out to have a bug in production — contains a disagreement story, a failure story, and an ownership story, depending on which part you lead with and which you background. Pick stories with enough real complexity to be reusable this way, rather than memorizing seven fully separate scripts.</p>
+    </div>
+
+    <div class="box extra">
+      <div class="box-title">Extra Interview Tip</div>
+      <p>Write each story down as bullet points, not a full script. Say why: <em class="quote">"I keep a one-page document with 6 stories, each with 4-5 bullets for Situation/Task/Action/Result — enough to jog my memory and stay consistent, but not memorized word for word, so it comes out naturally instead of sounding recited."</em> Bullet points instead of full prose is the difference between "prepared" and "robotic," which interviewers can tell apart instantly.</p>
+    </div>
+
+    <div class="box rule">
+      <div class="box-title">Quick Decision Rule: Which Story Goes Where?</div>
+      <ol>
+        <li><strong>Story has real technical depth and a clear before/after metric?</strong> Use it for "proudest achievement" or technical impact questions.</li>
+        <li><strong>Story involves another person's differing opinion, resolved constructively?</strong> Use it for conflict and disagreement questions.</li>
+        <li><strong>Story involves something going wrong that was genuinely your fault, not just bad luck?</strong> Use it for failure questions — genuine ownership matters more than the size of the mistake.</li>
+        <li><strong>Story involves organizing others without being asked to?</strong> Use it for leadership questions, even without a formal title.</li>
+      </ol>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>You have real, specific stories ready, not "let me think of one" hesitation</li>
+        <li>You have genuine range across categories, especially failure and conflict, which people under-prepare</li>
+        <li>Your delivery sounds natural, not memorized word-for-word</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> 5–7 real stories with enough complexity to flex across categories, kept as bullet points, not full scripts.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="block" id="patterns">
+  <div class="wrap">
+    <p class="section-label">Section 04</p>
+    <h2 class="h">Signal Words → Which Story to Use</h2>
+    <p>The same pattern-matching approach that works for coding interviews (see the Big-O guide) applies here. Recognizing the category behind a question's phrasing, fast, is most of the battle.</p>
+
+    <table>
+      <tr><th>If the question says...</th><th>They're actually asking about...</th></tr>
+      <tr><td>"Tell me about a time you failed," "biggest mistake"</td><td>Ownership and self-awareness — see Section 05</td></tr>
+      <tr><td>"Disagreed with your manager," "pushed back on a decision"</td><td>Conflict handling and communication — see Section 06</td></tr>
+      <tr><td>"Led a project," "influenced without authority"</td><td>Leadership and initiative — see Section 07</td></tr>
+      <tr><td>"Ambiguous requirements," "had to make a judgment call"</td><td>Independent decision-making under uncertainty</td></tr>
+      <tr><td>"Tight deadline," "competing priorities"</td><td>Prioritization and communication under pressure</td></tr>
+      <tr><td>"Received difficult feedback"</td><td>Coachability and growth mindset</td></tr>
+      <tr><td>"Worked with a difficult teammate"</td><td>Interpersonal patience, not conflict escalation</td></tr>
+      <tr><td>"Why do you want to leave your current role"</td><td>Whether you'll speak about a past employer constructively or bitterly</td></tr>
+    </table>
+
+    <div class="box tip">
+      <div class="box-title">Interview Tip</div>
+      <p>Silently name the category before you start answering, the same discipline recommended for coding interviews. If a question sounds like it could fit two categories, pick the story that lets you demonstrate the harder-to-prove trait — ownership and conflict-handling are scrutinized more closely than "I worked hard," so lean toward those when a story genuinely supports either framing.</p>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>You identify the actual competency being tested, not just the surface question</li>
+        <li>You select the story that demonstrates that specific competency, not just the first story that comes to mind</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> decode what trait the question is actually probing before selecting which story to tell.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="block" id="failure">
+  <div class="wrap">
+    <p class="section-label">Section 05</p>
+    <h2 class="h">The Failure Question</h2>
+    <p>The most avoided, most under-prepared question category, and precisely because of that, one of the highest-leverage to prepare well. Most candidates either pick a fake-failure ("I work too hard") or a real failure told defensively. Neither works.</p>
+
+    <div class="box mistake">
+      <div class="box-title">Common Mistake: The Humble-Brag Failure</div>
+      <p><em class="quote">"My biggest weakness is I care too much about quality"</em> is instantly recognizable and reads as evasive, not honest. Interviewers ask this question specifically to see how you relate to your own mistakes — dodging it with a disguised strength answers a different, easier question than the one being asked, and it's obvious that you did.</p>
+    </div>
+
+    <h3 class="sub">5.1 What Actually Makes a Failure Story Work</h3>
+    <ul>
+      <li>The mistake was genuinely yours, not "the requirements were unclear" or "a teammate dropped the ball"</li>
+      <li>You can state, specifically, what you'd do differently — not just that you "learned a lot"</li>
+      <li>The stakes were real enough to matter, but not so catastrophic that it raises new concerns about your judgment</li>
+      <li>You've clearly moved past defensiveness about it — you can tell it evenly, not tensely</li>
+    </ul>
+
+    <pre>Weak: "We had a bug in production once and I fixed it and learned to test more."
+
+Strong: "I shipped a schema migration without a rollback plan, assuming the
+change was backward-compatible — it wasn't, and we had a 20-minute partial
+outage before I caught it from an alert. I rolled it back manually, which
+took longer than it should have because I hadn't rehearsed the process.
+Since then I require a tested rollback plan before any migration touching
+a table with live traffic, no exceptions — including ones I'm confident about."</pre>
+
+    <div class="box tip">
+      <div class="box-title">Interview Tip</div>
+      <p>End every failure story with a concrete behavior change, stated as a rule you now follow, not a feeling you now have. Say <em class="quote">"Since then I always do X"</em> rather than <em class="quote">"I learned to be more careful."</em> The former is verifiable and specific; the latter is what everyone says and proves nothing.</p>
+    </div>
+
+    <div class="box extra">
+      <div class="box-title">Extra Interview Tip</div>
+      <p>Pick a failure where the consequence was contained but the underlying mistake was real. Say <em class="quote">"I want a story where the blast radius was small enough that I'm not raising new red flags, but the actual error in judgment was significant enough to be worth discussing honestly."</em> A failure that was fully your fault but had low real-world impact is usually the sweet spot — it lets you be candid without the interviewer worrying about repeat risk.</p>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>Genuine ownership — not blame-shifted to circumstances or other people</li>
+        <li>A specific, concrete, ongoing behavior change, not a vague lesson</li>
+        <li>Even, non-defensive delivery — you're comfortable discussing it, not performing discomfort</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> pick a real, fully-owned mistake with contained consequences, and close with a specific rule you follow now as a direct result.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section class="block" id="conflict">
+  <div class="wrap">
+    <p class="section-label">Section 06</p>
+    <h2 class="h">The Conflict / Disagreement Question</h2>
+    <p>There's no "right answer" to a disagreement — the question isn't testing whether you won the argument, it's testing how you handle a difference of opinion without damaging the relationship or the outcome.</p>
+
+    <table>
+      <tr><th>Weak Framing</th><th>Strong Framing</th></tr>
+      <tr><td>"I was right and eventually they came around"</td><td>"I made my case with data, and we found a version that addressed both concerns"</td></tr>
+      <tr><td>"I just deferred to them since they're senior"</td><td>"I raised the concern once clearly, then trusted their call once they'd heard it, since they had context I didn't"</td></tr>
+      <tr><td>"We argued about it in the meeting for a while"</td><td>"I asked for a follow-up conversation one-on-one instead of debating in the group setting"</td></tr>
+    </table>
+
+    <div class="box tip">
+      <div class="box-title">Interview Tip</div>
+      <p>Say <em class="quote">"I disagreed with the approach, so I asked to walk through the tradeoffs together rather than pushing back in the group meeting — once they saw the specific failure case I was worried about, we adjusted the design. If they'd still disagreed after that, I would have deferred, since it was ultimately their call to make."</em> This shows both conviction (you raised it) and collaboration (you didn't dig in past the point of diminishing returns).</p>
+    </div>
+
+    <div class="box extra">
+      <div class="box-title">Extra Interview Tip</div>
+      <p>If your best conflict story didn't fully resolve in your favor, that's fine to say directly. Say <em class="quote">"We ultimately went with their approach, not mine — in hindsight I think it was the right call, and even if I still disagreed, I'd rather have raised the concern clearly once than either stayed silent or kept re-litigating it after the decision was made."</em> A conflict story where you gracefully lost the argument is often more convincing than one where you conveniently turned out to be right.</p>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>You raised the disagreement directly and early, not silently or passive-aggressively</li>
+        <li>You separated "I disagree" from "I refuse to comply" — pushback with a clear exit point</li>
+        <li>You can describe the other person's reasoning fairly, not as a strawman</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> raise it once, clearly, with your reasoning — then commit to the decision either way, without re-litigating it afterward.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 -->
+<section class="block" id="leadership">
+  <div class="wrap">
+    <p class="section-label">Section 07</p>
+    <h2 class="h">Leadership &amp; Ownership Questions</h2>
+    <p>You do not need a management title to answer this well. "Leadership" in an interview almost always means influence without formal authority — getting people aligned, unblocked, or moving in a direction, using persuasion and initiative rather than a reporting line.</p>
+
+    <h3 class="sub">7.1 What Counts as a Leadership Story</h3>
+    <ul>
+      <li>You noticed a problem nobody had officially assigned to you, and drove the fix</li>
+      <li>You coordinated people across teams to unblock a shared dependency</li>
+      <li>You mentored someone junior through a hard problem, not just answered their question</li>
+      <li>You made the case for a technical direction and got buy-in from skeptical stakeholders</li>
+    </ul>
+
+    <div class="box mistake">
+      <div class="box-title">Common Mistake: The "We" Story</div>
+      <p>A leadership answer told entirely in "we" — <em class="quote">"we decided," "we figured out," "we fixed it"</em> — leaves the interviewer unable to tell what you specifically contributed versus what the team did around you. Even in a genuinely collaborative effort, be explicit about your individual role: <em class="quote">"I proposed we split the migration into three phases, and coordinated the two other teams' schedules around that"</em> is very different from a vague "we."</p>
+    </div>
+
+    <div class="box tip">
+      <div class="box-title">Interview Tip</div>
+      <p>Say <em class="quote">"Nobody officially owned this, so I put together a short proposal, got the two affected teams into a room, and drove the decision to a resolution within a week — that's the kind of leadership I mean when I don't have a formal title over the people involved."</em> Naming "no formal authority" explicitly preempts the interviewer wondering if you're overstating a manager's actual role.</p>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>You can distinguish your individual contribution from the team's, explicitly, not just with "we"</li>
+        <li>The story shows initiative — you acted before being asked, not just executed a delegated task well</li>
+        <li>You handled the coordination/persuasion side, not just the technical side</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> pick a story where you drove something without formal authority, and narrate your individual role explicitly rather than defaulting to "we."</div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 -->
+<section class="block" id="ai">
+  <div class="wrap">
+    <p class="section-label">Section 08</p>
+    <h2 class="h">The 2026 AI-Era Angle <span class="badge-2026">NEW FOR 2026</span></h2>
+    <p>This is the section most other behavioral guides don't have, because most were written before AI coding assistants and agents became a normal part of daily engineering work. By 2026, this isn't a niche question anymore — it shows up in a meaningful share of behavioral rounds, and the expectations around it have sharpened noticeably.</p>
+
+    <h3 class="sub">8.1 The New Question Category: AI Judgment</h3>
+    <p>Interviewers have started using AI-collaboration questions as a proxy for something they've always cared about — critical thinking and independent judgment — but now with a concrete, current scenario to hang it on.</p>
+
+    <table>
+      <tr><th>Question</th><th>What They're Actually Testing</th></tr>
+      <tr><td>"Tell me about a time an AI tool gave you wrong or risky code"</td><td>Whether you verify output or trust it blindly</td></tr>
+      <tr><td>"How do you decide when to use AI vs write something yourself"</td><td>Judgment about appropriate tool use, not just tool enthusiasm</td></tr>
+      <tr><td>"Walk me through a project where you used AI heavily — what was your role vs the tool's"</td><td>Genuine ownership and understanding of your own work, not just prompt-and-paste</td></tr>
+      <tr><td>"Tell me about a time you had to explain AI-assisted code you didn't fully understand"</td><td>Whether you'd ship code you can't personally defend</td></tr>
+      <tr><td>"How has AI changed the way you work day to day"</td><td>Adaptability and honest self-reflection, not a rehearsed pro-AI or anti-AI stance</td></tr>
+    </table>
+
+    <div class="box ai">
+      <div class="box-title">2026 Reality Check</div>
+      <p>The expected answer isn't "I use AI for everything" or "I don't trust AI and write everything by hand" — both read as extreme and un-nuanced in 2026, when almost every engineer uses these tools daily in some form. The strongest answers describe a specific, working <em>judgment process</em>: what you delegate, what you verify, and where you draw the line, illustrated with one real example rather than a general philosophy.</p>
+    </div>
+
+    <pre>Weak: "I use AI tools constantly, they make me way more productive."
+
+Strong: "I used an AI assistant to draft a database migration script, and it
+looked correct at a glance — but I ran it against a staging copy of prod
+data first, out of habit, and caught that it would have silently dropped
+a constraint that mattered for a downstream job. I still use AI heavily
+for boilerplate and first drafts, but anything touching schema or data
+integrity gets the same review I'd give a junior engineer's PR: I read
+every line and understand why it's correct before it ships."</pre>
+
+    <h3 class="sub">8.2 The Authenticity Concern — Read This Carefully</h3>
+    <p>The flip side of AI's rise in the interview process itself is worth naming directly: some companies have started specifically probing for over-rehearsed or AI-generated answers, by asking rapid, specific follow-up questions after your initial response — <em class="quote">"what was the exact error message," "who else was in that room," "what did you say next."</em> This isn't paranoia on their part; it's a direct response to candidates using AI chat tools to generate polished-sounding behavioral answers that don't hold up under follow-up.</p>
+
+    <div class="box mistake">
+      <div class="box-title">Common Mistake: Reading From an AI-Generated Script</div>
+      <p>Some remote interview platforms in 2026 flag unusual eye movement patterns consistent with reading a second screen, and interviewers themselves are now trained to probe harder when an answer sounds unusually polished but goes vague under a specific follow-up. Beyond the detection risk, there's a simpler problem: a story you didn't actually live falls apart the moment someone asks a real specific question about it. Prepare your stories in advance with AI as a thinking tool if that helps you organize them — but the story itself needs to be something you actually experienced, told from memory, not read live.</p>
+    </div>
+
+    <div class="box tip">
+      <div class="box-title">Interview Tip</div>
+      <p>It's fine, and increasingly normal, to say <em class="quote">"I used an AI tool to help me think through which of my projects would make the strongest failure story, but this is something that actually happened to me"</em> if it comes up naturally. Using AI to prepare is not the concern; presenting AI-generated content as a live, spontaneous answer is. Interviewers can generally tell the difference between well-organized and synthetic — organize freely, but tell your own real story in your own words.</p>
+    </div>
+
+    <div class="box extra">
+      <div class="box-title">Extra Interview Tip</div>
+      <p>Have one AI-specific story ready even if not directly asked, since it can be woven into an adaptability or learning-new-tools question. Say <em class="quote">"When our team adopted an AI coding assistant, I noticed junior engineers were accepting suggestions without fully reading them, so I proposed a lightweight rule: any AI-suggested code touching business logic gets the same review comment explaining why it's correct, same as a human PR."</em> This simultaneously demonstrates technical currency, leadership, and judgment — three competencies in one story.</p>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>A specific, nuanced relationship with AI tools — not blanket enthusiasm or blanket distrust</li>
+        <li>Evidence you verify and understand AI-assisted output before it ships, especially anything high-stakes</li>
+        <li>A real story, told from memory, that survives specific follow-up questions</li>
+        <li>Comfort discussing how your workflow has genuinely changed, without defensiveness either direction</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> use AI freely for drafts and boilerplate, apply the same scrutiny to its output you'd apply to a junior engineer's PR, and have one real, specific AI-related story ready — told from memory, not read from a script.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 -->
+<section class="block" id="delivery">
+  <div class="wrap">
+    <p class="section-label">Section 09</p>
+    <h2 class="h">Delivery: Tone, Pacing &amp; Remote Presence</h2>
+    <p>The content of your stories only matters if the delivery doesn't undermine them. This is where interviewers form gut impressions that are hard to reverse later in the conversation.</p>
+
+    <table>
+      <tr><th>Element</th><th>What Works</th><th>What Undermines You</th></tr>
+      <tr><td><strong>Pacing</strong></td><td>A natural pause before answering — signals you're actually recalling, not reciting</td><td>Zero-latency answers to every question, which can read as rehearsed</td></tr>
+      <tr><td><strong>Length</strong></td><td>90 seconds to 2.5 minutes per story</td><td>Under 45 seconds (too thin) or over 4 minutes (loses the thread, eats the interviewer's time)</td></tr>
+      <tr><td><strong>Eye contact (remote)</strong></td><td>Looking at the camera during key points, not just the interviewer's face on screen</td><td>Constant glancing to the side or down, which reads as reading from notes</td></tr>
+      <tr><td><strong>Tone on hard topics</strong></td><td>Even, matter-of-fact, slightly reflective</td><td>Overly rehearsed cheerfulness, or visible defensiveness/tension</td></tr>
+    </table>
+
+    <div class="box tip">
+      <div class="box-title">Interview Tip</div>
+      <p>It's genuinely fine, and often better, to pause for a second or two before answering a hard behavioral question. Say <em class="quote">"Let me think of the best example for that"</em> out loud if you need a moment — a brief, honest pause reads as thoughtful. Instant, polished answers to every single question, back to back, is one of the specific patterns interviewers say makes them suspicious of over-rehearsal or AI assistance in 2026.</p>
+    </div>
+
+    <div class="box extra">
+      <div class="box-title">Extra Interview Tip</div>
+      <p>For remote interviews specifically, keep brief bullet-point notes visible near your camera, not a full script — glancing at 3-4 keywords reads very differently from reading full sentences, which is detectable in eye movement and cadence. Say the keywords out loud as your own explanation rather than as a recitation.</p>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>Natural pacing with an occasional genuine pause, not instant recitation</li>
+        <li>Answers landing in the 90-second to 2.5-minute range consistently</li>
+        <li>Steady, reflective tone even on failure or conflict stories</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> pause briefly before answering, aim for under 2.5 minutes per story, and keep only keyword notes visible if remote — never full sentences.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="block" id="mistakes">
+  <div class="wrap">
+    <p class="section-label">Section 10</p>
+    <h2 class="h">Common Mistakes &amp; Pitfalls</h2>
+    <p>The gap between "I have good stories" and "I interview well behaviorally" is almost entirely in this list.</p>
+
+    <table>
+      <tr><th>Mistake</th><th>Why It Hurts</th><th>Fix</th></tr>
+      <tr><td>Answering in "we" for the entire story</td><td>Interviewer can't isolate your specific contribution</td><td>Explicitly separate "I did X" from "the team did Y"</td></tr>
+      <tr><td>No real failure or conflict story prepared</td><td>Visible freeze-up or a deflected, unconvincing answer under exactly the questions designed to be hard</td><td>Prepare these two categories first, not last — they're the ones people skip</td></tr>
+      <tr><td>Vague, unquantified results</td><td>"It went well" gives the interviewer nothing to remember or evaluate</td><td>Attach a real number, timeframe, or concrete before/after wherever honestly possible</td></tr>
+      <tr><td>Badmouthing a past employer or manager</td><td>Reads as a future risk — will this person do the same about us later</td><td>Describe friction factually and neutrally, focus on your own response to it</td></tr>
+      <tr><td>Over-rehearsed, word-perfect delivery</td><td>Reads as inauthentic, invites deeper follow-up probing in 2026 specifically</td><td>Practice the structure and key points, not a memorized script</td></tr>
+      <tr><td>Same story reused for every question</td><td>Interviewer notices you're stretching one anecdote to fit everything, which reads as thin experience</td><td>Build genuine range across the 5–7 story categories in Section 03</td></tr>
+    </table>
+
+    <div class="box mistake">
+      <div class="box-title">The Mistake That Actually Costs Interview Points</div>
+      <p>It's rarely a "bad" story. It's arriving with no real failure or conflict example prepared, and having to construct one live under pressure — which is visible, and which is exactly the scenario this whole guide exists to prevent. The single highest-leverage hour of behavioral prep is sitting down and writing out your failure story and your conflict story specifically, since these are the two categories almost everyone under-prepares.</p>
+    </div>
+
+    <div class="box tip">
+      <div class="box-title">Interview Tip</div>
+      <p>Say your story out loud to another person, or record yourself, before the interview — not just rehearse it silently in your head. Stories that feel complete internally often reveal gaps (missing Task, unclear Result) the moment you actually have to say them out loud in real time.</p>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>Clear individual ownership language throughout, not blurred into "we"</li>
+        <li>A real, specific failure and conflict story, prepared in advance, not constructed live</li>
+        <li>Concrete, quantified results wherever the story genuinely supports it</li>
+        <li>Natural, out-loud-practiced delivery, not a memorized script</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> prepare your failure and conflict stories first, quantify your results honestly, and practice out loud, not silently.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="block" id="interview">
+  <div class="wrap">
+    <p class="section-label">Section 11</p>
+    <h2 class="h">Interview Quick Reference</h2>
+
+    <h3 class="sub">Time Allocation</h3>
+    <p>Aim for 90 seconds to 2.5 minutes per story. Within that: roughly 15 seconds Situation and Task combined, a full minute or more on Action, and 20–30 seconds on Result.</p>
+
+    <h3 class="sub">Signal Words and Your Response</h3>
+    <table>
+      <tr><th>If the interviewer says</th><th>Your response</th></tr>
+      <tr><td>"Tell me about a failure" / "biggest mistake"</td><td>Your prepared failure story — full ownership, specific behavior change since</td></tr>
+      <tr><td>"Disagreed with someone" / "pushback"</td><td>Your conflict story — raised it once clearly, committed to the outcome either way</td></tr>
+      <tr><td>"Led a project" / "influenced without authority"</td><td>Your leadership story — explicit about your individual role, not "we"</td></tr>
+      <tr><td>"How do you use AI tools" / "AI gave you wrong code"</td><td>Section 08 — specific judgment process, one real example, verify-before-ship framing</td></tr>
+      <tr><td>"Tight deadline" / "competing priorities"</td><td>A story emphasizing prioritization and clear communication under pressure</td></tr>
+      <tr><td>"Why leave your current role"</td><td>Constructive, forward-looking framing — never bitter about the past employer</td></tr>
+    </table>
+
+    <div class="box rule">
+      <div class="box-title">Quick Decision Rule: The 2-Minute Behavioral Answer</div>
+      <ol>
+        <li><strong>Situation + Task (15s):</strong> two sentences, real specifics, no extra backstory.</li>
+        <li><strong>Action (60–90s):</strong> narrate decisions, not just activities — include one moment you chose between two real options.</li>
+        <li><strong>Result (20–30s):</strong> a concrete number or clear before/after, honestly stated.</li>
+        <li><strong>Optional close (10s):</strong> <em class="quote">"Since then I've made a point of..."</em> — ties it to a lasting behavior change.</li>
+      </ol>
+    </div>
+
+    <div class="box extra">
+      <div class="box-title">Extra Interview Tip</div>
+      <p>Have your failure story, conflict story, and one AI-judgment story fully ready before anything else in this guide — those three cover the highest fraction of what actually gets asked, and are the three categories most candidates arrive underprepared for.</p>
+    </div>
+
+    <div class="wtih">
+      <h4>What Interviewers Usually Want to Hear</h4>
+      <ul>
+        <li>Real, specific stories with clear individual ownership</li>
+        <li>Action taking up roughly half of every answer</li>
+        <li>A nuanced, current relationship with AI tools, illustrated with one real example</li>
+        <li>Natural, out-loud-practiced delivery that survives specific follow-up questions</li>
+      </ul>
+      <div class="good-default"><b>Good default:</b> Situation and Task in two sentences, most of your time in Action with a visible decision point, a quantified Result, and three specific stories — failure, conflict, AI judgment — ready before anything else.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>That's it.</strong> 11 sections, one cheat sheet. Bookmark it before your next behavioral round.</p>
+    <a class="back-link" href="#contents">↑ Back to Contents</a>
+    <p class="credit">Companion piece to "Everything you need to know about API," "...about Git," "...about Database Design," "...about Big-O," "...about Containers," and "...about SQL Queries" · Created with Claude</p>
+  </div>
+</footer>
+
+<script src="./script.js"></script>
+</body>
+</html>

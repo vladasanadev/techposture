@@ -31,6 +31,9 @@ import landJobGuideScript from '../../../public/blog-assets/land-a-job-2026-guid
 import reviewingAiCodeGuideHtml from '../../content/reviewing-ai-code-guide.html?raw';
 import reviewingAiCodeGuideStyles from '../../../public/blog-assets/reviewing-ai-code-guide/styles.css?raw';
 import reviewingAiCodeGuideScript from '../../../public/blog-assets/reviewing-ai-code-guide/script.js?raw';
+import behavioralGuideHtml from '../../content/behavioral-interviews-guide.html?raw';
+import behavioralGuideStyles from '../../../public/blog-assets/behavioral-interviews-guide/styles.css?raw';
+import behavioralGuideScript from '../../../public/blog-assets/behavioral-interviews-guide/script.js?raw';
 
 interface TrailPoint {
   x: number;
@@ -283,6 +286,7 @@ const reactRoadmapGuideUpdatedAt = 'August 17, 2026';
 const topClaudeSkillsGuideUpdatedAt = 'August 19, 2026';
 const landJobGuideUpdatedAt = 'August 24, 2026';
 const reviewingAiCodeGuideUpdatedAt = 'August 26, 2026';
+const behavioralGuideUpdatedAt = 'September 1, 2026';
 const embeddedGuidePaletteStyles = `
   :root {
     --bg: #3D3982;
@@ -669,6 +673,7 @@ const reactRoadmapGuideDocument = buildEmbeddedGuideDocument(reactRoadmapGuideHt
 const topClaudeSkillsGuideDocument = buildEmbeddedGuideDocument(topClaudeSkillsGuideHtml, topClaudeSkillsGuideStyles, topClaudeSkillsGuideScript, 'techinterview');
 const landJobGuideDocument = buildEmbeddedGuideDocument(landJobGuideHtml, landJobGuideStyles, landJobGuideScript, '');
 const reviewingAiCodeGuideDocument = buildEmbeddedGuideDocument(reviewingAiCodeGuideHtml, reviewingAiCodeGuideStyles, reviewingAiCodeGuideScript, '');
+const behavioralGuideDocument = buildEmbeddedGuideDocument(behavioralGuideHtml, behavioralGuideStyles, behavioralGuideScript, '');
 
 const blogPosts = [
   {
@@ -753,6 +758,13 @@ const blogPosts = [
     title: 'Reviewing AI-Generated Code',
     description: 'An engineer’s checklist for reviewing AI code across behavior, architecture, security, reliability, tests, and production readiness.',
     date: reviewingAiCodeGuideUpdatedAt,
+    tag: 'techinterview',
+  },
+  {
+    href: '/techblog/behavioral-interviews',
+    title: 'Behavioral Interviews',
+    description: 'STAR answers, story banks, conflict examples, leadership signal, and practical interview prep for 2026.',
+    date: behavioralGuideUpdatedAt,
     tag: 'techinterview',
   },
 ];
@@ -2778,6 +2790,15 @@ function ReviewingAiCodeGuidePostPage() {
   );
 }
 
+function BehavioralGuidePostPage() {
+  return (
+    <EmbeddedGuidePostPage
+      document={behavioralGuideDocument}
+      title="Behavioral Interviews"
+    />
+  );
+}
+
 function ClaudeMdPostPage({
   copied,
   onCopy,
@@ -2958,6 +2979,10 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/reviewing-ai-generated-code') {
     return <ReviewingAiCodeGuidePostPage />;
+  }
+
+  if (currentPath === '/techblog/behavioral-interviews') {
+    return <BehavioralGuidePostPage />;
   }
 
   if (currentPath === '/techblog') {
