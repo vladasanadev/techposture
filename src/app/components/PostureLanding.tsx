@@ -2335,7 +2335,7 @@ function AutomationsStyles() {
 
         .automations-guide-image {
           display: block;
-          width: min(100%, 430px);
+          width: min(100%, 540px);
           height: auto;
           border: 0;
           border-radius: 0;
@@ -2349,7 +2349,7 @@ function AutomationsStyles() {
           border: 1px solid rgba(255, 255, 255, 0.22);
           border-radius: 28px;
           background-color: rgba(95, 26, 35, 0.9);
-          background-image: url('/automations-assets/red-card-texture.jpg');
+          background-image: url('/automations-assets/card-bg-blue-red.png');
           background-position: center;
           background-size: cover;
           box-shadow: 0 24px 70px rgba(20, 12, 48, 0.22);
@@ -2898,8 +2898,8 @@ function AutomationsPage() {
           <div className="automations-hero-visual">
             <img
               className="automations-guide-image"
-              src="/automations-assets/busy-brain-guide.png"
-              alt="Busy Brain Automation guide preview"
+              src="/automations-assets/busy-brain-phones-red.png"
+              alt="Busy Brain Automation phone previews"
             />
           </div>
 
