@@ -89,7 +89,11 @@ export default async function handler(request, response) {
   let parsedBody;
 
   try {
-    const rawBody = request.body ? JSON.stringify(request.body) : await readBody(request);
+    const rawBody = typeof request.body === 'string'
+      ? request.body
+      : request.body
+        ? JSON.stringify(request.body)
+        : await readBody(request);
     parsedBody = typeof request.body === 'object' && request.body !== null ? request.body : JSON.parse(rawBody || '{}');
   } catch {
     return sendJson(response, 400, { success: false, error: 'Please enter a valid email address.' });

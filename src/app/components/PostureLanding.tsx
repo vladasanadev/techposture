@@ -2174,12 +2174,8 @@ function CopyablePrompt({ text, label }: { text: string; label: string }) {
 }
 
 const automationFreeArticleUrl = 'https://www.vladasana.com/techblog/3-simple-ai-agents-that-run-my-content';
-const automationStripeUrl = (
-  import.meta.env.VITE_AUTOMATION_VAULT_STRIPE_URL ||
-  import.meta.env.NEXT_PUBLIC_AUTOMATION_VAULT_STRIPE_URL ||
-  ''
-) as string;
 const automationSubscribeEndpoint = (import.meta.env.VITE_AUTOMATIONS_SUBSCRIBE_ENDPOINT || '/api/automations/subscribe') as string;
+const automationVaultWaitlistEndpoint = (import.meta.env.VITE_AUTOMATIONS_VAULT_WAITLIST_ENDPOINT || '/api/automations/vault-waitlist') as string;
 
 function getPreservedSearchParams() {
   if (typeof window === 'undefined') {
@@ -2646,6 +2642,32 @@ function AutomationsStyles() {
           min-height: auto;
         }
 
+        .automations-vault-image-card {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: visible;
+          padding: clamp(10px, 2vw, 18px);
+          background: transparent;
+          border: 0;
+          box-shadow: none;
+          backdrop-filter: none;
+        }
+
+        .automations-vault-image-card::before {
+          display: none;
+        }
+
+        .automations-vault-image {
+          display: block;
+          width: min(100%, 620px);
+          height: auto;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+          user-select: none;
+        }
+
         .automations-window {
           min-height: 108px;
         }
@@ -2694,6 +2716,57 @@ function AutomationsStyles() {
           color: rgba(255, 255, 255, 0.8);
           text-decoration-color: rgba(255, 255, 255, 0.36);
           text-underline-offset: 5px;
+        }
+
+        .automations-thank-you-shell {
+          display: grid;
+          min-height: calc(100vh - 128px);
+          place-items: center;
+          padding: clamp(28px, 5vw, 68px) 0;
+        }
+
+        .automations-thank-you-card {
+          width: min(100%, 760px);
+          padding: clamp(28px, 5vw, 58px);
+          box-shadow:
+            0 36px 110px rgba(38, 15, 49, 0.42),
+            0 18px 52px rgba(208, 46, 46, 0.28),
+            inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        }
+
+        .automations-thank-you-card .automations-title {
+          max-width: 680px;
+          font-size: clamp(3rem, 7vw, 5.8rem);
+        }
+
+        .automations-offer-card {
+          margin-top: 28px;
+          border: 1px solid rgba(255, 255, 255, 0.22);
+          border-radius: 24px;
+          background: rgba(61, 57, 130, 0.56);
+          padding: clamp(20px, 3vw, 28px);
+        }
+
+        .automations-offer-card h2 {
+          margin: 14px 0 12px;
+          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-size: clamp(1.72rem, 3.6vw, 2.7rem);
+          font-weight: 900;
+          line-height: 0.98;
+          letter-spacing: -0.04em;
+          text-transform: uppercase;
+        }
+
+        .automations-offer-actions {
+          display: grid;
+          gap: 12px;
+          margin-top: 22px;
+        }
+
+        .automations-vault-status {
+          min-height: 22px;
+          color: rgba(255, 255, 255, 0.78);
+          font-size: 0.9rem;
         }
 
         @media (max-width: 820px) {
@@ -2767,6 +2840,15 @@ function AutomationsStyles() {
             padding: 16px;
           }
 
+          .automations-vault-image-card {
+            order: -1;
+            padding: 0 10px;
+          }
+
+          .automations-vault-image {
+            width: min(100%, 520px);
+          }
+
           .automations-page {
             background:
               linear-gradient(rgba(61, 57, 130, 0.08), rgba(61, 57, 130, 0.24)),
@@ -2777,6 +2859,16 @@ function AutomationsStyles() {
             width: 100%;
             min-height: 58px;
             text-align: center;
+          }
+
+          .automations-thank-you-shell {
+            min-height: auto;
+            padding: 20px 0 32px;
+          }
+
+          .automations-thank-you-card {
+            border-radius: 24px;
+            padding: 24px 16px;
           }
         }
 
@@ -2842,7 +2934,8 @@ function AutomationsOptInForm({ compact = false }: { compact?: boolean }) {
       trackAutomationEvent('free_form_submitted', { email: cleanEmail });
 
       if (typeof window !== 'undefined') {
-        window.location.href = `/automations/vault${getPreservedSearchParams()}`;
+        window.sessionStorage.setItem('automationLeadEmail', cleanEmail);
+        window.location.href = `/automations/thank-you${getPreservedSearchParams()}`;
       }
     } catch (error) {
       setStatus('error');
@@ -2931,8 +3024,6 @@ function AutomationsPage() {
     trackAutomationEvent('automations_page_viewed');
   }, []);
 
-  const vaultHref = `/automations/vault${getPreservedSearchParams()}`;
-
   return (
     <main className="automations-page">
       <BlogStyles />
@@ -3013,7 +3104,7 @@ function AutomationsPage() {
             <div>
               <p className="automations-muted">Built for creators who need practical systems, not another dashboard to maintain.</p>
               <div className="automations-actions">
-                <a className="automations-button" href={vaultHref}>see the special offer</a>
+                <a className="automations-button" href="#free-guide">get the free guide first</a>
               </div>
             </div>
             <div className="automations-price-panel">
@@ -3069,6 +3160,142 @@ function AutomationsPage() {
   );
 }
 
+function AutomationsThankYouPage() {
+  const [status, setStatus] = useState<'idle' | 'loading' | 'joined' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    setAutomationsMetadata({
+      title: 'Check Your Inbox | Vlada Kandyba',
+      description: 'Your three Busy Brain automations are on the way. Join the Busy Brain Automation Vault waitlist for early access.',
+      path: '/automations/thank-you',
+    });
+    trackAutomationEvent('automations_thank_you_viewed');
+  }, []);
+
+  const handleWaitlistClick = async () => {
+    const storedEmail = typeof window !== 'undefined' ? window.sessionStorage.getItem('automationLeadEmail') || '' : '';
+    trackAutomationEvent('vault_waitlist_cta_clicked');
+
+    if (!storedEmail) {
+      setStatus('error');
+      setMessage('Add your email on the previous page first, then come back here.');
+      return;
+    }
+
+    setStatus('loading');
+    setMessage('Adding you to the presale list...');
+
+    try {
+      const response = await fetch(automationVaultWaitlistEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: storedEmail }),
+      });
+      const result = await response.json().catch(() => ({ success: false }));
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Waitlist endpoint failed');
+      }
+
+      setStatus('joined');
+      setMessage('you’re on the list 🍒');
+      trackAutomationEvent('vault_waitlist_joined');
+
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.setItem('automationVaultWaitlistJoined', 'true');
+        window.location.href = `/automations/early-access-thanks${getPreservedSearchParams()}`;
+      }
+    } catch (error) {
+      setStatus('error');
+      setMessage(error instanceof Error ? error.message : 'I couldn’t add you yet. Please try again.');
+      trackAutomationEvent('vault_waitlist_failed');
+    }
+  };
+
+  return (
+    <main className="automations-page">
+      <BlogStyles />
+      <AutomationsStyles />
+      <div className="automations-shell">
+        <header className="automations-nav">
+          <a className="automations-logo" href="/">vladasanadev</a>
+          <a className="automations-link" href="/automations">free guide</a>
+        </header>
+
+        <section className="automations-thank-you-shell">
+          <div className="automations-card automations-thank-you-card">
+            <h1 className="automations-title">check your inbox.</h1>
+            <p className="automations-copy">
+              Your 3 automations are on the way. Check spam in case the message got lost.
+            </p>
+
+            <div className="automations-offer-card">
+              <span className="automations-eyebrow">limited presale</span>
+              <h2>The Busy Brain Automation Vault</h2>
+              <p className="automations-copy">
+                Get every automation I actually use, including my prompts, templates, content systems, ADHD-friendly workflows, and a private setup walkthrough.
+              </p>
+              <div className="automations-offer-actions">
+                {status === 'joined' ? (
+                  <button className="automations-button is-disabled" type="button" disabled>
+                    you’re on the list 🍒
+                  </button>
+                ) : (
+                  <button className="automations-button" type="button" onClick={handleWaitlistClick} disabled={status === 'loading'}>
+                    {status === 'loading' ? 'adding you...' : 'I want early access'}
+                  </button>
+                )}
+                <p className="automations-vault-status" role={status === 'error' ? 'alert' : 'status'}>
+                  {message}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <AutomationsFooter supportEmail="support@vladasana.com" />
+      </div>
+    </main>
+  );
+}
+
+function AutomationsEarlyAccessThanksPage() {
+  useEffect(() => {
+    setAutomationsMetadata({
+      title: 'Early Access Confirmed | Vlada Kandyba',
+      description: 'You are on the Busy Brain Automation Vault early access list. Details are coming soon.',
+      path: '/automations/early-access-thanks',
+    });
+    trackAutomationEvent('vault_waitlist_thanks_viewed');
+  }, []);
+
+  return (
+    <main className="automations-page">
+      <BlogStyles />
+      <AutomationsStyles />
+      <div className="automations-shell">
+        <header className="automations-nav">
+          <a className="automations-logo" href="/">vladasanadev</a>
+          <a className="automations-link" href="/automations">free guide</a>
+        </header>
+
+        <section className="automations-thank-you-shell">
+          <div className="automations-card automations-thank-you-card">
+            <span className="automations-eyebrow">early access</span>
+            <h1 className="automations-title">thanks, you’re on the list.</h1>
+            <p className="automations-copy">
+              I’ll share the Vault details soon. For now, check your inbox for the 3 free automations and keep an eye on spam.
+            </p>
+          </div>
+        </section>
+
+        <AutomationsFooter supportEmail="support@vladasana.com" />
+      </div>
+    </main>
+  );
+}
+
 function AutomationVaultPage() {
   useEffect(() => {
     setAutomationsMetadata({
@@ -3079,17 +3306,12 @@ function AutomationVaultPage() {
     trackAutomationEvent('vault_offer_viewed');
   }, []);
 
-  const checkoutHref = automationStripeUrl ? withPreservedParams(automationStripeUrl) : '';
   const skipHref = withPreservedParams(automationFreeArticleUrl);
 
   const handleCheckoutClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!checkoutHref) {
-      event.preventDefault();
-      return;
-    }
-
-    trackAutomationEvent('vault_cta_clicked');
-    trackAutomationEvent('checkout_started');
+    event.preventDefault();
+    trackAutomationEvent('vault_presale_cta_clicked');
+    window.location.href = `/automations${getPreservedSearchParams()}#free-guide`;
   };
 
   const handleSkipClick = () => {
@@ -3110,25 +3332,32 @@ function AutomationVaultPage() {
         <section className="automations-vault-grid">
           <div className="automations-card automations-hero-card">
             <span className="automations-eyebrow">one more thing before you go</span>
-            <h1 className="automations-title is-offer">your brain is for ideas. not remembering where you put them.</h1>
+            <h1 className="automations-title is-offer">your brain is for ideas.</h1>
             <p className="automations-copy">
-              The free guide gives you three simple automations to start. The Vault gives you the complete system I use to manage content, ideas, research, and the repetitive work I do not want living in my brain.
+              The Vault is my full creator system for prompts, templates, content workflows, and the repetitive tasks I do not want to keep in my head.
             </p>
+            <div className="automations-visual">
+              <div className="automations-window">
+                <strong>private walkthrough video</strong>
+                <span>Placeholder for your walkthrough preview. Upload the real video screenshot when ready.</span>
+              </div>
+              <div className="automations-window">
+                <strong>workflow screenshots</strong>
+                <span>Placeholder for automation workflow screens, content-brain views, prompts, and templates.</span>
+              </div>
+              <div className="automations-window">
+                <strong>Automation Vault</strong>
+                <span>Everything grouped into one practical creator system, not another pile of tabs.</span>
+              </div>
+            </div>
           </div>
 
-          <aside className="automations-card is-dark automations-visual">
-            <div className="automations-window">
-              <strong>private walkthrough video</strong>
-              <span>Placeholder for your walkthrough preview. Upload the real video screenshot when ready.</span>
-            </div>
-            <div className="automations-window">
-              <strong>workflow screenshots</strong>
-              <span>Placeholder for automation workflow screens, content-brain views, prompts, and templates.</span>
-            </div>
-            <div className="automations-window">
-              <strong>Automation Vault</strong>
-              <span>Everything grouped into one practical creator system, not another pile of tabs.</span>
-            </div>
+          <aside className="automations-vault-image-card" aria-label="Busy Brain Automation Vault preview">
+            <img
+              className="automations-vault-image"
+              src="/automations-assets/busy-brain-vault-phones.png"
+              alt="Busy Brain Automation Vault phone previews"
+            />
           </aside>
         </section>
 
@@ -3140,47 +3369,19 @@ function AutomationVaultPage() {
             Get every automation I actually use, plus a private walkthrough video showing you how I set everything up.
           </p>
           <p className="automations-price">$19</p>
-          <p className="automations-muted">launch price. One payment. Immediate access.</p>
+          <p className="automations-muted">presale price. No payment is open yet.</p>
           <div className="automations-actions">
             <a
-              className={`automations-button${checkoutHref ? '' : ' is-disabled'}`}
-              href={checkoutHref || '#missing-stripe-link'}
+              className="automations-button"
+              href="/automations#free-guide"
               onClick={handleCheckoutClick}
-              aria-disabled={!checkoutHref}
             >
-              get the full Automation Vault for $19
+              get the free guide first
             </a>
           </div>
-          {!checkoutHref && (
-            <p id="missing-stripe-link" className="automations-status" role="alert">
-              Add VITE_AUTOMATION_VAULT_STRIPE_URL before checkout can open.
-            </p>
-          )}
           <a className="automations-skip" href={skipHref} onClick={handleSkipClick}>
             no thanks, take me to the 3 free automations
           </a>
-        </section>
-
-        <section className="automations-card automations-section">
-          <h2>stop collecting AI tools. build a system that works together.</h2>
-          <p className="automations-copy">
-            Random tools create more tabs. The Vault shows you how I connect everything into practical workflows I can actually use.
-          </p>
-          <p className="automations-muted">
-            The free guide gives you the starting point. The Vault gives you the prompts, templates, setup instructions, and complete walkthrough.
-          </p>
-          <ul className="automations-list">
-            <li>all the automations I use for content and everyday work</li>
-            <li>my complete Obsidian content-brain setup</li>
-            <li>ready-to-copy Claude instructions</li>
-            <li>idea capture and retrieval workflows</li>
-            <li>note-to-content workflows</li>
-            <li>ADHD-friendly reminders and closure systems</li>
-            <li>reusable prompts and templates</li>
-            <li>step-by-step setup notes</li>
-            <li>a private walkthrough video from me</li>
-            <li>lifetime access to this version</li>
-          </ul>
         </section>
 
         <AutomationsFooter supportEmail="support@vladasana.com" />
@@ -4071,6 +4272,14 @@ export function PostureLanding() {
 
   if (currentPath === '/automations/vault') {
     return <AutomationVaultPage />;
+  }
+
+  if (currentPath === '/automations/thank-you') {
+    return <AutomationsThankYouPage />;
+  }
+
+  if (currentPath === '/automations/early-access-thanks') {
+    return <AutomationsEarlyAccessThanksPage />;
   }
 
   if (currentPath === '/automations/success') {
