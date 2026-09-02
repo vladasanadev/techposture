@@ -1208,6 +1208,26 @@ function BlogStyles() {
           letter-spacing: 0.025em;
         }
 
+        .ai-agents-display-title {
+          justify-self: center;
+          max-width: 860px;
+          font-family: "Big Shoulders Display", "Space Grotesk", sans-serif;
+          font-size: clamp(3.2rem, 8vw, 7.4rem);
+          line-height: 0.86;
+          letter-spacing: 0.015em;
+          text-transform: uppercase;
+        }
+
+        .ai-agents-title-highlight {
+          display: inline-block;
+          padding: 0.01em 0.12em 0.08em;
+          border-radius: 16px;
+          background: #ffd15c;
+          color: #3D3982;
+          box-decoration-break: clone;
+          -webkit-box-decoration-break: clone;
+        }
+
         .blog-secondary-text {
           font-family: "Space Grotesk", "Inter", sans-serif;
           font-size: 0.6rem;
@@ -1786,6 +1806,12 @@ function BlogStyles() {
             overflow-wrap: anywhere;
           }
 
+          .ai-agents-display-title {
+            max-width: 92vw;
+            font-size: clamp(2.8rem, 13vw, 4.4rem);
+            line-height: 0.9;
+          }
+
           .article-prompt {
             font-size: 0.68rem;
             line-height: 1.55;
@@ -2153,7 +2179,7 @@ const automationStripeUrl = (
   import.meta.env.NEXT_PUBLIC_AUTOMATION_VAULT_STRIPE_URL ||
   ''
 ) as string;
-const automationSubscribeEndpoint = (import.meta.env.VITE_AUTOMATIONS_SUBSCRIBE_ENDPOINT || '') as string;
+const automationSubscribeEndpoint = (import.meta.env.VITE_AUTOMATIONS_SUBSCRIBE_ENDPOINT || '/api/automations/subscribe') as string;
 
 function getPreservedSearchParams() {
   if (typeof window === 'undefined') {
@@ -2371,7 +2397,13 @@ function AutomationsStyles() {
         }
 
         .automations-hero-card {
-          padding: clamp(26px, 3.4vw, 40px);
+          padding: clamp(26px, 3.4vw, 40px) clamp(34px, 4.8vw, 62px) clamp(26px, 3.4vw, 40px) clamp(26px, 3.4vw, 40px);
+        }
+
+        .automations-hero-card .automations-title {
+          max-width: 100%;
+          padding-right: 10px;
+          font-size: clamp(2.8rem, 4.5vw, 4.25rem);
         }
 
         .automations-card.is-dark {
@@ -2447,6 +2479,14 @@ function AutomationsStyles() {
           font-size: 0.68rem;
           letter-spacing: 0.16em;
           text-transform: uppercase;
+        }
+
+        .automations-honeypot {
+          position: absolute;
+          left: -10000px;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
         }
 
         .automations-input {
@@ -2701,7 +2741,7 @@ function AutomationsStyles() {
           }
 
           .automations-hero-card {
-            padding: 22px 16px 20px;
+            padding: 22px 22px 20px 16px;
           }
 
           .automations-card.is-dark {
@@ -2767,52 +2807,61 @@ function AutomationsOptInForm({ compact = false }: { compact?: boolean }) {
     event.preventDefault();
     const cleanEmail = email.trim();
     const cleanName = firstName.trim();
+    const formData = new FormData(event.currentTarget);
+    const website = String(formData.get('website') || '');
 
     if (!cleanName || !cleanEmail || !/^\\S+@\\S+\\.\\S+$/.test(cleanEmail)) {
       setStatus('error');
       setMessage('Add your first name and a valid email.');
+      trackAutomationEvent('free_form_failed');
       return;
     }
 
     setStatus('loading');
     setMessage('Sending you to the next step...');
-    trackAutomationEvent('free_form_submitted', { email: cleanEmail });
 
     const subscriber = {
-      firstName: cleanName,
+      name: cleanName,
       email: cleanEmail,
-      resourceUrl: automationFreeArticleUrl,
+      website,
       utm: Object.fromEntries(new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')),
-      createdAt: new Date().toISOString(),
     };
 
     try {
-      if (automationSubscribeEndpoint) {
-        const response = await fetch(automationSubscribeEndpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(subscriber),
-        });
+      const response = await fetch(automationSubscribeEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(subscriber),
+      });
+      const result = await response.json().catch(() => ({ success: false }));
 
-        if (!response.ok) {
-          throw new Error('Subscribe endpoint failed');
-        }
-      } else if (typeof window !== 'undefined') {
-        const saved = JSON.parse(window.localStorage.getItem('vladaAutomationSubscribers') || '[]');
-        window.localStorage.setItem('vladaAutomationSubscribers', JSON.stringify([...saved, subscriber]));
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Subscribe endpoint failed');
       }
+
+      trackAutomationEvent('free_form_submitted', { email: cleanEmail });
 
       if (typeof window !== 'undefined') {
         window.location.href = `/automations/vault${getPreservedSearchParams()}`;
       }
-    } catch {
+    } catch (error) {
       setStatus('error');
-      setMessage('Something did not save. Try again, or email hello@vladasana.com.');
+      setMessage(error instanceof Error ? error.message : 'I couldn’t send the guide yet. Please try again.');
+      trackAutomationEvent('free_form_failed');
     }
   };
 
   return (
     <form className="automations-form" onSubmit={handleSubmit}>
+      <div className="automations-honeypot" aria-hidden="true">
+        <label htmlFor={compact ? 'final-website' : 'website'}>website</label>
+        <input
+          id={compact ? 'final-website' : 'website'}
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
       <div className="automations-field">
         <label htmlFor={compact ? 'final-first-name' : 'first-name'}>first name</label>
         <input
@@ -2845,7 +2894,7 @@ function AutomationsOptInForm({ compact = false }: { compact?: boolean }) {
         {status === 'loading' ? 'loading...' : 'send me 3 automations'}
       </button>
       <p className="automations-status" role={status === 'error' ? 'alert' : 'status'}>
-        {message || 'No spam. Just the resource and occasional practical AI workflows.'}
+        {message || 'By signing up, you’ll receive the free resource and occasional practical AI emails. Unsubscribe anytime.'}
       </p>
     </form>
   );
@@ -3270,7 +3319,9 @@ function AiAgentsPostPage() {
           </div>
 
           <article className="article-shell">
-            <h1 className="blog-display-title">3 Simple AI Agents That Run My Content</h1>
+            <h1 className="blog-display-title ai-agents-display-title">
+              3 Simple AI Agents That Run My <span className="ai-agents-title-highlight">Content</span>
+            </h1>
             <div className="article-card">
               <section className="article-section">
                 <h2>A tiny AI content team</h2>

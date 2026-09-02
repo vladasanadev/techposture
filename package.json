@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "mailerlite:groups": "node scripts/find-mailerlite-group.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
