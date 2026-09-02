@@ -2902,9 +2902,9 @@ function AutomationsOptInForm({ compact = false }: { compact?: boolean }) {
     const formData = new FormData(event.currentTarget);
     const website = String(formData.get('website') || '');
 
-    if (!cleanName || !cleanEmail || !/^\\S+@\\S+\\.\\S+$/.test(cleanEmail)) {
+    if (!cleanName || !cleanEmail || !/^\S+@\S+\.\S+$/.test(cleanEmail)) {
       setStatus('error');
-      setMessage('Add your first name and a valid email.');
+      setMessage('Add your first name and a valid email address.');
       trackAutomationEvent('free_form_failed');
       return;
     }
