@@ -2769,6 +2769,169 @@ function AutomationsStyles() {
           font-size: 0.9rem;
         }
 
+        .job-bundle-page {
+          min-height: 100vh;
+          background:
+            radial-gradient(circle at 12% 10%, rgba(155, 220, 255, 0.34), transparent 28%),
+            radial-gradient(circle at 86% 24%, rgba(208, 46, 46, 0.36), transparent 30%),
+            #3d3982;
+          color: #fff;
+          font-family: "Space Grotesk", "Inter", sans-serif;
+          overflow-x: hidden;
+        }
+
+        .job-bundle-shell {
+          width: min(100% - 40px, 1080px);
+          margin: 0 auto;
+          padding: clamp(22px, 4vw, 46px) 0;
+        }
+
+        .job-bundle-hero {
+          display: grid;
+          grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.72fr);
+          gap: clamp(18px, 3vw, 34px);
+          align-items: stretch;
+          margin-top: clamp(30px, 6vw, 74px);
+        }
+
+        .job-bundle-card {
+          position: relative;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.24);
+          border-radius: 30px;
+          background:
+            linear-gradient(rgba(82, 20, 36, 0.76), rgba(82, 20, 36, 0.76)),
+            url('/automations-assets/card-bg-blue-red.png') center / cover;
+          box-shadow: 0 28px 90px rgba(21, 18, 68, 0.34);
+          padding: clamp(24px, 4vw, 48px);
+        }
+
+        .job-bundle-title {
+          margin: 16px 0;
+          max-width: 720px;
+          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-size: clamp(3.25rem, 7.6vw, 7.8rem);
+          font-weight: 900;
+          line-height: 0.88;
+          letter-spacing: -0.06em;
+          text-transform: uppercase;
+        }
+
+        .job-bundle-title span {
+          display: block;
+        }
+
+        .job-bundle-highlight {
+          display: inline-block;
+          width: fit-content;
+          margin-top: 4px;
+          border-radius: 18px;
+          background: #d02e2e;
+          padding: 2px 14px 7px;
+          color: #fff;
+        }
+
+        .job-bundle-copy {
+          max-width: 660px;
+          margin: 0;
+          color: rgba(255, 255, 255, 0.84);
+          font-size: clamp(1rem, 1.7vw, 1.16rem);
+          line-height: 1.65;
+        }
+
+        .job-bundle-price-card {
+          display: grid;
+          align-content: space-between;
+          gap: 24px;
+          background:
+            linear-gradient(rgba(61, 57, 130, 0.68), rgba(61, 57, 130, 0.68)),
+            url('/automations-assets/card-bg-blue-red.png') center / cover;
+        }
+
+        .job-bundle-price {
+          margin: 10px 0 0;
+          font-family: "Big Shoulders Display", "Space Grotesk", sans-serif;
+          font-size: clamp(5.5rem, 13vw, 10rem);
+          line-height: 0.78;
+        }
+
+        .job-bundle-resource-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 16px;
+          margin-top: 22px;
+        }
+
+        .job-bundle-resource {
+          min-height: 186px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 22px;
+          background: rgba(255, 255, 255, 0.11);
+          padding: 18px;
+        }
+
+        .job-bundle-resource small {
+          display: block;
+          margin-bottom: 12px;
+          color: #9bdcff;
+          font-size: 0.68rem;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+        }
+
+        .job-bundle-resource h3 {
+          margin: 0 0 10px;
+          color: #fff;
+          font-size: 1.06rem;
+          line-height: 1.18;
+        }
+
+        .job-bundle-resource p {
+          margin: 0;
+          color: rgba(255, 255, 255, 0.74);
+          line-height: 1.55;
+        }
+
+        .job-bundle-stack {
+          display: grid;
+          gap: 14px;
+          margin-top: 22px;
+        }
+
+        .job-bundle-stack-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+          padding: 14px 0;
+          color: rgba(255, 255, 255, 0.84);
+        }
+
+        .job-bundle-stack-item strong {
+          color: #fff;
+        }
+
+        .job-bundle-page .automations-footer {
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+        }
+
+        .job-bundle-page .automations-footer > div {
+          display: grid;
+          justify-items: center;
+        }
+
+        .job-bundle-page .automations-footer-legal {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .job-bundle-page .automations-footer-links {
+          justify-content: center;
+        }
+
         @media (max-width: 820px) {
           .automations-shell {
             width: min(100% - 20px, 620px);
@@ -2869,6 +3032,41 @@ function AutomationsStyles() {
           .automations-thank-you-card {
             border-radius: 24px;
             padding: 24px 16px;
+          }
+
+          .job-bundle-shell {
+            width: min(100% - 20px, 620px);
+            padding-top: 16px;
+          }
+
+          .job-bundle-hero,
+          .job-bundle-resource-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .job-bundle-hero {
+            margin-top: 20px;
+          }
+
+          .job-bundle-card {
+            border-radius: 24px;
+            padding: 22px 16px;
+          }
+
+          .job-bundle-title {
+            font-size: clamp(3rem, 15vw, 4.6rem);
+            letter-spacing: -0.075em;
+          }
+
+          .job-bundle-highlight {
+            border-radius: 14px;
+            padding: 1px 10px 5px;
+          }
+
+          .job-bundle-stack-item {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 6px;
           }
         }
 
@@ -3417,6 +3615,94 @@ function AutomationsSuccessPage() {
             <a className="automations-button is-secondary" href="/">back to portfolio</a>
           </div>
         </section>
+      </div>
+    </main>
+  );
+}
+
+function GetJobBundlePage() {
+  useEffect(() => {
+    setAutomationsMetadata({
+      title: 'Get A Job Bundle | Vlada Kandyba',
+      description: 'PDFs, prompts, and interview prep resources that helped Vlada prepare and land a 5-figure tech job in 2026.',
+      path: '/get-a-job-bundle',
+    });
+    trackAutomationEvent('job_bundle_page_viewed');
+  }, []);
+
+  const checkoutHref = 'mailto:hello.vladasana@gmail.com?subject=Get%20A%20Job%20Bundle%20%2419';
+
+  return (
+    <main className="job-bundle-page">
+      <AutomationsStyles />
+      <div className="job-bundle-shell">
+        <header className="automations-nav">
+          <a className="automations-logo" href="/">vladasanadev</a>
+          <span>2026 job prep bundle</span>
+        </header>
+
+        <section className="job-bundle-hero">
+          <div className="job-bundle-card">
+            <span className="automations-eyebrow">mockup bundle</span>
+            <h1 className="job-bundle-title">
+              <span>get a</span>
+              <span>job</span>
+              <span className="job-bundle-highlight">bundle</span>
+            </h1>
+            <p className="job-bundle-copy">
+              All the PDFs, templates, prompts, and prep resources I used to get serious about interviews and land that 5-figure tech job in 2026.
+            </p>
+          </div>
+
+          <aside className="job-bundle-card job-bundle-price-card">
+            <div>
+              <span className="automations-eyebrow">early price</span>
+              <p className="job-bundle-price">$19</p>
+              <p className="job-bundle-copy">Same presale price as the automation bundle for now.</p>
+            </div>
+            <a className="automations-button" href={checkoutHref} onClick={() => trackAutomationEvent('job_bundle_cta_clicked')}>
+              get it now
+            </a>
+          </aside>
+        </section>
+
+        <section className="job-bundle-card automations-section">
+          <h2>what is inside</h2>
+          <div className="job-bundle-resource-grid">
+            <div className="job-bundle-resource">
+              <small>01 PDF guide</small>
+              <h3>Land a job in 2026</h3>
+              <p>The exact system: find humans, tailor the CV, interview cleanly, and negotiate without sounding desperate.</p>
+            </div>
+            <div className="job-bundle-resource">
+              <small>02 interview prep</small>
+              <h3>Behavioral answers</h3>
+              <p>STAR stories, recruiter screens, hiring manager questions, and ways to make your examples sound specific.</p>
+            </div>
+            <div className="job-bundle-resource">
+              <small>03 technical prep</small>
+              <h3>Git, API, Docker, databases</h3>
+              <p>The practical technical notes I would review before interviews, take-homes, and system design chats.</p>
+            </div>
+            <div className="job-bundle-resource">
+              <small>04 AI prompts</small>
+              <h3>CV and outreach helpers</h3>
+              <p>Copy-ready prompts for role matching, resume edits, recruiter messages, and follow-up emails.</p>
+            </div>
+            <div className="job-bundle-resource">
+              <small>05 tracker</small>
+              <h3>Application pipeline</h3>
+              <p>A simple tracker for companies, warm intros, responses, interviews, offers, and next actions.</p>
+            </div>
+            <div className="job-bundle-resource">
+              <small>06 negotiation</small>
+              <h3>Salary scripts</h3>
+              <p>Short scripts for anchoring, counteroffers, recruiter calls, and choosing the offer that actually fits.</p>
+            </div>
+          </div>
+        </section>
+
+        <AutomationsFooter supportEmail="hello@vladasana.com" />
       </div>
     </main>
   );
@@ -4284,6 +4570,10 @@ export function PostureLanding() {
 
   if (currentPath === '/automations/success') {
     return <AutomationsSuccessPage />;
+  }
+
+  if (currentPath === '/get-a-job-bundle') {
+    return <GetJobBundlePage />;
   }
 
   const now = Date.now();
