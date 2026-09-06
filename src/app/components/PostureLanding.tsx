@@ -678,7 +678,7 @@ const topClaudeSkillsGuideDocument = buildEmbeddedGuideDocument(topClaudeSkillsG
 const landJobGuideDocument = buildEmbeddedGuideDocument(landJobGuideHtml, landJobGuideStyles, landJobGuideScript, '');
 const reviewingAiCodeGuideDocument = buildEmbeddedGuideDocument(reviewingAiCodeGuideHtml, reviewingAiCodeGuideStyles, reviewingAiCodeGuideScript, '');
 const behavioralGuideDocument = buildEmbeddedGuideDocument(behavioralGuideHtml, behavioralGuideStyles, behavioralGuideScript, '');
-const gptAstraGuideDocument = buildEmbeddedGuideDocument(gptAstraGuideHtml, gptAstraGuideStyles, gptAstraGuideScript, 'techinterview');
+const gptAstraGuideDocument = buildEmbeddedGuideDocument(gptAstraGuideHtml, gptAstraGuideStyles, gptAstraGuideScript, '');
 
 const blogPosts = [
   {
