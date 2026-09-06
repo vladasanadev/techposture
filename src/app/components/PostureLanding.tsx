@@ -34,6 +34,9 @@ import reviewingAiCodeGuideScript from '../../../public/blog-assets/reviewing-ai
 import behavioralGuideHtml from '../../content/behavioral-interviews-guide.html?raw';
 import behavioralGuideStyles from '../../../public/blog-assets/behavioral-interviews-guide/styles.css?raw';
 import behavioralGuideScript from '../../../public/blog-assets/behavioral-interviews-guide/script.js?raw';
+import gptAstraGuideHtml from '../../content/gpt-6-astra-guide.html?raw';
+import gptAstraGuideStyles from '../../../public/blog-assets/gpt-6-astra-guide/styles.css?raw';
+import gptAstraGuideScript from '../../../public/blog-assets/gpt-6-astra-guide/script.js?raw';
 
 interface TrailPoint {
   x: number;
@@ -287,6 +290,7 @@ const topClaudeSkillsGuideUpdatedAt = 'August 19, 2026';
 const landJobGuideUpdatedAt = 'August 24, 2026';
 const reviewingAiCodeGuideUpdatedAt = 'August 26, 2026';
 const behavioralGuideUpdatedAt = 'September 1, 2026';
+const gptAstraGuideUpdatedAt = 'September 6, 2026';
 const embeddedGuidePaletteStyles = `
   :root {
     --bg: #3D3982;
@@ -674,8 +678,16 @@ const topClaudeSkillsGuideDocument = buildEmbeddedGuideDocument(topClaudeSkillsG
 const landJobGuideDocument = buildEmbeddedGuideDocument(landJobGuideHtml, landJobGuideStyles, landJobGuideScript, '');
 const reviewingAiCodeGuideDocument = buildEmbeddedGuideDocument(reviewingAiCodeGuideHtml, reviewingAiCodeGuideStyles, reviewingAiCodeGuideScript, '');
 const behavioralGuideDocument = buildEmbeddedGuideDocument(behavioralGuideHtml, behavioralGuideStyles, behavioralGuideScript, '');
+const gptAstraGuideDocument = buildEmbeddedGuideDocument(gptAstraGuideHtml, gptAstraGuideStyles, gptAstraGuideScript, 'techinterview');
 
 const blogPosts = [
+  {
+    href: '/techblog/gpt-6-astra',
+    title: 'GPT-6 Astra',
+    description: 'A practical model-routing guide: when to use Astra, when Sol is enough, benchmark caveats, cost notes, and copy-ready prompts.',
+    date: gptAstraGuideUpdatedAt,
+    tag: 'techinterview',
+  },
   {
     href: '/techblog/claude-dot-md',
     title: 'Claude.md',
@@ -4362,6 +4374,15 @@ function BehavioralGuidePostPage() {
   );
 }
 
+function GptAstraGuidePostPage() {
+  return (
+    <EmbeddedGuidePostPage
+      document={gptAstraGuideDocument}
+      title="GPT-6 Astra"
+    />
+  );
+}
+
 function ClaudeMdPostPage({
   copied,
   onCopy,
@@ -4546,6 +4567,10 @@ export function PostureLanding() {
 
   if (currentPath === '/techblog/behavioral-interviews') {
     return <BehavioralGuidePostPage />;
+  }
+
+  if (currentPath === '/techblog/gpt-6-astra') {
+    return <GptAstraGuidePostPage />;
   }
 
   if (currentPath === '/techblog') {
