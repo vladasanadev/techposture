@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GPT-6 Astra, by @vlada.asana</title>
+<meta name="description" content="A practical GPT-6 Astra field guide by Vlada: when to use Astra, when to stay with Sol, benchmark caveats, cost notes, and copy-ready prompts." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="/techblog">@vlada.asana <span class="topbar__sep">·</span> GPT-6 Astra</a>
+    <a class="topbar__cta" href="#prompts">COPY PROMPTS</a>
+  </div>
+</header>
+
+<main class="page">
+  <section class="hero">
+    <p class="hero__byline">developer field notes · updated September 6, 2026</p>
+    <p class="eyebrow">Model routing</p>
+    <h1 class="hero__title">GPT-6 <span class="hero__title-accent">Astra</span></h1>
+    <p class="hero__lede">Astra is the model I would reach for when the job needs visual judgment, active verification, or aggressive bug hunting. Sol is still the daily workhorse.</p>
+  </section>
+
+  <section class="intro-block">
+    <p>Do not read this as “one model replaced everyone.” Read it as a routing guide: use the expensive model when it can close the loop itself, then stay boring when the task is already clear.</p>
+  </section>
+
+  <section class="toc" id="contents">
+    <p class="eyebrow">Contents</p>
+    <h2 class="toc__title">7 notes. Click to jump.</h2>
+    <ol class="toc__list">
+      <li><a href="#split"><span class="toc__num">01</span> My current model split</a></li>
+      <li><a href="#benchmarks"><span class="toc__num">02</span> The benchmark story is weird</a></li>
+      <li><a href="#spend"><span class="toc__num">03</span> Where I would spend Astra credits</a></li>
+      <li><a href="#skip"><span class="toc__num">04</span> Where I would not default to it</a></li>
+      <li><a href="#prompts"><span class="toc__num">05</span> Prompts that make Astra earn it</a></li>
+      <li><a href="#caveats"><span class="toc__num">06</span> Cost, context, caveats</a></li>
+      <li><a href="#sources"><span class="toc__num">07</span> Receipts</a></li>
+    </ol>
+  </section>
+
+  <article class="section" id="split">
+    <p class="section__eyebrow">01</p>
+    <h2 class="section__title">My current model split</h2>
+    <div class="section__body">
+      <div class="model-grid">
+        <div class="model-card">
+          <small>Astra</small>
+          <h3>frontend QA, bug hunts, tool-heavy agents</h3>
+          <p>Best when the model needs to build, run, inspect, click, compare, and correct. This is where the launch data shows the clearest jump.</p>
+        </div>
+        <div class="model-card">
+          <small>Sol</small>
+          <h3>daily coding, routine implementation</h3>
+          <p>My default for ordinary repo work where I am not seeing enough extra value from Astra to justify burning allowance faster.</p>
+        </div>
+        <div class="model-card">
+          <small>Fable 5.1</small>
+          <h3>long-horizon planning, architecture reviews</h3>
+          <p>I still like it for long planning sessions where the model needs to hold the whole architecture in its head. Workflow preference, not a universal benchmark win.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout__body">
+          <strong>The pricing caveat from my reel.</strong> My “8x subscription money” line refers to the subscription setup I personally compared. It is not API token pricing.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="section" id="benchmarks">
+    <p class="section__eyebrow">02</p>
+    <h2 class="section__title">The benchmark story is weird</h2>
+    <div class="section__body">
+      <p>Astra looks dramatically better on some agentic tasks, and only slightly better on some coding tasks. That difference matters more than the headline.</p>
+      <div class="metric-grid">
+        <div class="metric-card"><strong>57.9%</strong><span>Terminal-Bench 4.0, Astra vs 37.3% Sol and 55.8% Fable 5.1.</span></div>
+        <div class="metric-card"><strong>74.1%</strong><span>DeepSWE v1.1, Astra vs 72.7% Sol. Only +1.4 points.</span></div>
+        <div class="metric-card"><strong>95.9%</strong><span>BenchCAD, Astra vs 83.3% Sol and 84.3% Fable 5.1.</span></div>
+        <div class="metric-card"><strong>72.6%</strong><span>OSWorld 2.0, Astra vs 65.7% Sol, with less simulated task time reported.</span></div>
+      </div>
+      <p>My read: the bigger jump is not “writes code better in every situation.” It is “acts better while using tools, screens, terminals, and verification loops.”</p>
+      <p class="note">Benchmark numbers here come from the source links in the receipts section. Vendor benchmarks are useful signals, not a substitute for your own repo-level eval.</p>
+    </div>
+  </article>
+
+  <article class="section" id="spend">
+    <p class="section__eyebrow">03</p>
+    <h2 class="section__title">Where I would spend Astra credits</h2>
+    <div class="section__body">
+      <div class="use-grid">
+        <div><span>01</span><h3>Frontend one-shots</h3><p>Landing pages, dashboards, interactive prototypes, and design-heavy components.</p></div>
+        <div><span>02</span><h3>Visual debugging</h3><p>The “why does this look wrong?” jobs: spacing, overflow, responsive breakpoints, state mismatch, browser-only failures.</p></div>
+        <div><span>03</span><h3>Agentic debugging</h3><p>Tasks that require commands, logs, tests, browser checks, and repeated hypothesis updates.</p></div>
+        <div><span>04</span><h3>Unfamiliar tools</h3><p>New CLIs, GUIs, and workflows where the model has to infer how the environment works.</p></div>
+        <div><span>05</span><h3>Long-context investigations</h3><p>Astra has a 1.05M token context window, useful for sprawling debugging and research sessions.</p></div>
+        <div><span>06</span><h3>Science + code workflows</h3><p>Simulations, data analysis, fitting models, and checking whether implementation matches a stated method.</p></div>
+      </div>
+      <div class="callout callout--yellow">
+        <div class="callout__body">Cherry on top: use the expensive model where it can close the loop itself. If you manually check every step, you may be paying frontier prices for autocomplete with nicer manners.</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="section" id="skip">
+    <p class="section__eyebrow">04</p>
+    <h2 class="section__title">Where I would not default to it</h2>
+    <div class="section__body">
+      <div class="decision-list">
+        <div><strong>Small feature in a familiar repo</strong><span>Use Sol. Low novelty, easy to verify.</span></div>
+        <div><strong>Routine refactor</strong><span>Use Sol, especially when requirements and tests are clear.</span></div>
+        <div><strong>Boilerplate or CRUD</strong><span>Use Sol. Frontier reasoning is usually wasted here.</span></div>
+        <div><strong>Visual frontend from scratch</strong><span>Use Astra. Visual judgment and browser verification matter.</span></div>
+        <div><strong>Hard bug with unclear root cause</strong><span>Use Astra. Make it reproduce, inspect logs, form hypotheses, and verify the fix.</span></div>
+        <div><strong>Architecture plan across many systems</strong><span>Use Fable or Astra, depending on whether execution follows immediately.</span></div>
+      </div>
+      <p>OpenAI says Astra can use Work/Codex allowance faster than Sol. Route by expected value: will the extra capability change the outcome, or just make the same task more expensive?</p>
+    </div>
+  </article>
+
+  <article class="section" id="prompts">
+    <p class="section__eyebrow">05</p>
+    <h2 class="section__title">3 prompts that make Astra earn it</h2>
+    <div class="section__body">
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">Visual frontend build</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>Build this inside the existing app, not as a disconnected demo.
+Preserve the current architecture and component conventions.
+Run the app, inspect it in the browser, compare against the reference, and iterate until the visual differences are small.
+Do not rewrite unrelated code.
+Before finishing, verify responsive behavior, loading/error states, keyboard interaction, and console errors.</code></pre>
+      </div>
+
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">Bug hunt, not refactor cosplay</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>Investigate this as a bug, not a refactor request.
+First reproduce the failure.
+Then trace the symptom through state, network calls, logs, and relevant code paths.
+Maintain a short list of hypotheses and eliminate them with evidence.
+Do not patch until you can explain the root cause.
+After the minimal fix, add or update the test that would have caught it and rerun the relevant suite.</code></pre>
+      </div>
+
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">Paper vs implementation audit</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>Audit the paper against the implementation.
+For every methodological claim that affects results, find the corresponding code, config, constant, dataset, or runtime parameter.
+Return a table: CLAIM | IMPLEMENTATION EVIDENCE | MATCH / MISMATCH | SEVERITY | CONFIDENCE.
+Do not assume the paper is correct. Do not infer missing implementation details.
+Flag anything that could materially change the reported result.</code></pre>
+      </div>
+    </div>
+  </article>
+
+  <article class="section" id="caveats">
+    <p class="section__eyebrow">06</p>
+    <h2 class="section__title">Cost, context, and benchmark caveats</h2>
+    <div class="section__body">
+      <div class="metric-grid">
+        <div class="metric-card"><strong>1.05M</strong><span>Astra context window. Max output is listed as 128K.</span></div>
+        <div class="metric-card"><strong>$10 / $50</strong><span>Astra API input and output per 1M tokens in the referenced model page.</span></div>
+      </div>
+      <p>ARC Prize reports Astra at 62.7% on its Standard harness and 99.9% with OpenAI’s Provider Adapter harness. Both matter, but they are not interchangeable numbers.</p>
+      <p>Astra is also reported at a Critical cybersecurity capability level. Treat that as a capability and safety note, not permission for offensive work.</p>
+      <p>My rule: benchmark the workflow, not the screenshot. Same task, same repo, same tool access, same acceptance criteria, then record time-to-correct-solution plus tokens or credits consumed.</p>
+    </div>
+  </article>
+
+  <article class="section" id="sources">
+    <p class="section__eyebrow">07</p>
+    <h2 class="section__title">Receipts</h2>
+    <div class="section__body">
+      <p>Launch claims are separated from my own workflow opinions on purpose.</p>
+      <ol class="source-list">
+        <li><a href="https://openai.com/index/gpt-6-astra/" target="_blank" rel="noopener">OpenAI · GPT-6 Astra launch</a></li>
+        <li><a href="https://developers.openai.com/api/docs/models/gpt-6-astra" target="_blank" rel="noopener">OpenAI API · GPT-6 Astra model page</a></li>
+        <li><a href="https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex" target="_blank" rel="noopener">OpenAI Help · Work and Codex</a></li>
+        <li><a href="https://www.anthropic.com/claude/fable" target="_blank" rel="noopener">Anthropic · Claude Fable 5.1</a></li>
+        <li><a href="https://arcprize.org/blog/astra" target="_blank" rel="noopener">ARC Prize · OpenAI’s GPT-6 Astra on ARC-AGI-3</a></li>
+      </ol>
+      <p class="note">“Fable felt almost 4x slower,” my frontend winner, and my preferred routing are observations from my own testing. Your hardware, prompt, harness, reasoning level, and task can change the result.</p>
+    </div>
+  </article>
+
+  <footer class="article-footer">
+    <a href="/techblog">vladasanadev</a>
+    <span>September 6, 2026</span>
+  </footer>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="./script.js"></script>
+</body>
+</html>
