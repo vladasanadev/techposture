@@ -25,9 +25,9 @@ Use **Settings → Environment Variables → Production** in the storefront's Ve
 | Paddle secrets and IDs | `PADDLE_API_KEY`, `PADDLE_CLIENT_TOKEN`, `PADDLE_WEBHOOK_SECRET`, `PADDLE_PRODUCT_ID`, `PADDLE_PRICE_ID`, `PADDLE_DOMAIN_APPROVED=false` until approved |
 | Email | `RESEND_API_KEY`, `RESEND_WEBHOOK_SECRET`, `EMAIL_FROM=Vlada <delivery@vladasana.com>`; verify the sending domain and the separate support mailbox |
 | Delivery security | `DOWNLOAD_SIGNING_SECRET` and `CRON_SECRET`: independent random secrets, each at least 32 characters |
-| Prompt retries | `DELIVERY_RETRY_MODE=qstash`, `QSTASH_TOKEN`, `QSTASH_CURRENT_SIGNING_KEY`, `QSTASH_NEXT_SIGNING_KEY`, `QSTASH_URL=https://qstash.upstash.io` |
+| Prompt retries | Current Pro setup: `DELIVERY_RETRY_MODE=cron`, `COMMERCE_RETRY_SCHEDULE_APPROVED=true` after verified registration/execution, plus `CRON_SECRET` |
 
-The shipped daily Vercel cron is a recovery sweep. It is not a substitute for QStash's prompt retries. The alternative is a verified authenticated schedule at least every five minutes, then `DELIVERY_RETRY_MODE=cron` and `COMMERCE_RETRY_SCHEDULE_APPROVED=true`.
+The shipped Vercel cron runs every five minutes and requires Pro or Enterprise. The original project uses the existing Pro plan. Verify the schedule and authenticated execution again for a new project. QStash remains an alternative (`DELIVERY_RETRY_MODE=qstash`, token, current/next signing keys and URL). A Hobby deployment must change the Vercel schedule to daily and use QStash or another authenticated five-minute scheduler; a daily sweep alone is insufficient.
 
 ### NOWPayments dashboard
 
@@ -89,12 +89,13 @@ From `storefront/`, run `npm ci`. Link the CLI to the **storefront Vercel projec
 npx vercel link
 npx vercel env pull .env.vercel-check.local --environment=production
 node --env-file=.env.vercel-check.local --import tsx scripts/commerce-migrate.ts
+node --env-file=.env.vercel-check.local --import tsx scripts/commerce-check-database.ts
 node --env-file=.env.vercel-check.local --import tsx scripts/commerce-check-crypto.ts
 node --env-file=.env.vercel-check.local --import tsx scripts/commerce-check.ts --provider=crypto --verify-file
 node --env-file=.env.vercel-check.local --import tsx scripts/commerce-check.ts --provider=paddle
 ```
 
-The migration creates only this application's order tables in the configured database. The crypto probe performs **GET requests only** against the live merchant API, including when the storefront is in preview: it creates no invoice, charge, email or order. It reports each configured network's availability, estimate and minimum. NOWPayments offers a sandbox, but this application's crypto adapter is deliberately live-only; Paddle sandbox is supported separately.
+The migration creates only this application's order tables in the configured database. The database probe verifies schema, reads, a temporary rate-limit write and rollback; it never creates an order or sends email. Vercel Secret values may pull as `[SENSITIVE]`; never use those placeholders against a provider. Run checks within an authorized Vercel build when protected values are needed. The crypto probe performs **GET requests only** against the live merchant API, including when the storefront is in preview: it creates no invoice, charge, email or order. It reports each configured network's availability, estimate and minimum. NOWPayments offers a sandbox, but this application's crypto adapter is deliberately live-only; Paddle sandbox is supported separately.
 
 The configuration checker exits nonzero for missing shared services or the selected provider's missing settings. An exit failure while launch flags are closed is expected: it lists the remaining gates and must not be bypassed just to get a green result. `--verify-file` can verify private file hashes while checkout remains closed. Successful configuration and GET probes do not prove payment settlement, database connectivity, webhook delivery, retries or inbox delivery.
 

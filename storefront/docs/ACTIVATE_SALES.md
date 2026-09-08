@@ -2,7 +2,7 @@
 
 **New Vercel project or the `vladasanadev/techposture` handoff:** use [VERCEL_SETUP.md](VERCEL_SETUP.md) first. The configured storage and environment status below applies to the original Vercel project only; new projects do not inherit its credentials, paid files or service connections.
 
-Updated September 8, 2026. Production: https://vladasana-job-bundle.vercel.app. The final product files and seller details are supplied. The private Vercel Blob store is created and the PDF + ZIP uploaded, hash-verified and confirmed inaccessible anonymously (HTTP 403). Production file URLs, hashes, version, filenames, seller identity, support address and download secret are configured. Checkout remains closed. No actual payment or customer email has been sent by this work.
+Updated September 9, 2026. Production: https://vladasana-job-bundle.vercel.app. The final product files and seller details are supplied. Private Blob delivery files, seller settings and the dedicated Neon commerce database are configured; both SQL migrations and real database read/write/rollback checks passed. Vercel Pro runs the recovery endpoint every five minutes. Resend installation awaits the owner's marketplace terms acceptance, then sending-domain DNS verification, webhook setup and real inbox acceptance. Checkout remains closed. No actual payment or customer email has been sent by this work. See [delivery activation evidence](DELIVERY_ACTIVATION.md).
 
 ## 1. Paddle account and website approval
 
@@ -67,10 +67,11 @@ Paddle decides which methods appear based on buyer country, currency and device.
 
 ## 4. Database and final file delivery
 
-Create a separate TLS-enabled PostgreSQL database for this storefront, for example through the Vercel Neon integration. Add its connection string as `DATABASE_URL`. Do not reuse another project's database. Run both idempotent migrations:
+Already provisioned for the original Vercel project: **vladasana-commerce**, Neon Free, region `iad1`, resource `store_kp5KqLBis5rLtksu`. `DATABASE_URL` is connected to Production only. Both payment providers share these five commerce tables. Both migrations and a real read/write/rollback probe passed without creating any orders. For a new project, connect this authorized storefront database or provision another dedicated database, then run:
 
 ```sh
 node --env-file=.env.local --import tsx scripts/commerce-migrate.ts
+node --env-file=.env.local --import tsx scripts/commerce-check-database.ts
 ```
 
 The supplied paid files are already in the project-specific private Blob store **vladasana-playbook-private** (`store_GX6IXp65l4JDPX5O`). The loader uses the auto-injected `BLOB_READ_WRITE_TOKEN` (or explicit `BUNDLE_PDF_BEARER_TOKEN`). Both files require authenticated HTTPS and exact hashes. `docs/BUNDLE_MANIFEST.json` records every delivered file and page count. The delivery ZIP is 2,539,601 bytes; the PDF is 1,067,944 bytes. Public preview images expose only covers and contents.
@@ -81,13 +82,13 @@ The email attaches both the 281-page PDF and the entire ZIP. The backup download
 
 ## 5. Resend email and reliable retries
 
-1. Create a seller-owned [Resend](https://resend.com) account. Add **vladasana.com** as a sending domain and copy its required DNS records to the domain's DNS provider. Wait for Resend to verify the domain.
+1. Accept the [Resend marketplace terms](https://vercel.com/amirs-projects-d9680079/~/integrations/accept-terms/resend?source=cli). The selected resource is **vladasana-delivery**, Free plan, `us-east-1`, sending domain **vladasana.com**. Retry the installation after acceptance. Copy Resend's exact DNS records to Namecheap; preserve the existing inbound mail-forwarding MX records. Wait for Resend to verify the sending domain.
 2. Set `RESEND_API_KEY` and `EMAIL_FROM=Vlada <delivery@vladasana.com>`. `SUPPORT_EMAIL=support@vladasana.com` is configured; replies go to this actual mailbox. Verify receiving mail independently of Resend sending-domain verification.
 3. Add **https://vladasana-job-bundle.vercel.app/api/webhooks/resend** as a webhook. Set its secret as `RESEND_WEBHOOK_SECRET`. Subscribe to `email.delivered`, `email.bounced`, `email.complained`, `email.failed`, `email.suppressed` where available.
 4. Review the [on-brand email preview](https://vladasana-job-bundle.vercel.app/email-preview). Verify a real test delivery to Gmail and another inbox: both attachments open, all files are present, the private download works, reply-to reaches support, and SPF/DKIM/DMARC work as configured. A preview email is not an actual inbox test.
-5. Create an [Upstash QStash](https://upstash.com/docs/qstash/overall/getstarted) account, and set `DELIVERY_RETRY_MODE=qstash`, `QSTASH_TOKEN`, `QSTASH_CURRENT_SIGNING_KEY`, `QSTASH_NEXT_SIGNING_KEY`, and its `QSTASH_URL`. The app publishes signed jobs to **/api/queue/fulfill** with eight retries. Verify retry and dead-letter handling. The existing daily Vercel cron is a recovery sweep; `CRON_SECRET` is already configured.
+5. The selected retry service is the existing **Vercel Pro five-minute cron** at **/api/cron/commerce**. `DELIVERY_RETRY_MODE=cron` and `CRON_SECRET` are configured. The source schedule is `*/5 * * * *`. Set `COMMERCE_RETRY_SCHEDULE_APPROVED=true` only after registration and authenticated execution have been verified. A preview-mode execution proves scheduler/authentication, not a successful email retry; test real failure/recovery after Resend activation.
 
-Alternatively, use `DELIVERY_RETRY_MODE=cron` with an authenticated scheduler calling **/api/cron/commerce** at least every five minutes. Approve `COMMERCE_RETRY_SCHEDULE_APPROVED=true` only after that schedule exists and is verified. The current daily cron alone is insufficient for this mode.
+QStash remains an optional alternative. Set `DELIVERY_RETRY_MODE=qstash` with its token, current/next signing keys and URL, and verify signed delivery, retries and dead-letter handling before switching. If moving to Vercel Hobby, replace the five-minute Vercel schedule with a daily sweep and use QStash for prompt retries; Hobby cannot deploy the shipped five-minute schedule. No QStash account is needed on the current Pro setup. [Vercel cron limits](https://vercel.com/docs/cron-jobs/usage-and-pricing).
 
 Uncertain email requests reuse exactly the same payload and idempotency key. They stop for operator review after 23 hours or repeated failures. Do not clear leases or resend blindly after an ambiguous result. [Resend attachments](https://resend.com/docs/dashboard/emails/attachments), [Vercel private Blob](https://vercel.com/docs/vercel-blob/private-storage).
 

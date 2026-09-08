@@ -39,7 +39,7 @@ npm run build
 
 For the requested `vladasanadev/techposture` handoff and a new Vercel project, start with [VERCEL_SETUP.md](docs/VERCEL_SETUP.md). It covers the isolated `storefront/` directory, exact environment variables, storage migration, callbacks and the read-only NOWPayments readiness command.
 
-Read [the commerce guide](docs/COMMERCE.md) and [.env.example](.env.example). The remaining activation is Paddle account/domain approval and credentials; a separate Postgres database; verified Resend sending and a working support mailbox; QStash or an approved five-minute retry schedule; and real checkout-to-inbox testing. Seller identity, the final files and actual preview pages are now supplied and configured. Supply secrets through private environment settings, never Git or browser code.
+Read [the commerce guide](docs/COMMERCE.md) and [.env.example](.env.example). The dedicated Neon database is provisioned and migrated, and the current Vercel Pro project runs recovery every five minutes. Remaining activation is Paddle account/domain approval and credentials; Resend terms, sending DNS and webhook setup; a working support mailbox; and real checkout-to-inbox testing. Seller identity, final files and actual preview pages are supplied and configured. See [current delivery status](docs/DELIVERY_ACTIVATION.md). Supply secrets through private environment settings, never Git or browser code.
 
 Live availability is gated by configuration and explicit launch flags. Actual account eligibility, sandbox purchases, inbox delivery and a seller-approved crypto purchase still need acceptance testing before those flags are enabled. Publishing the site does not enable collection of money.
 

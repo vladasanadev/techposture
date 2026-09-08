@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "commerce:migrate": "node --env-file-if-exists=.env.local --import tsx scripts/commerce-migrate.ts",
+    "commerce:check-database": "node --env-file-if-exists=.env.local --import tsx scripts/commerce-check-database.ts",
     "commerce:check": "node --env-file-if-exists=.env.local --import tsx scripts/commerce-check.ts",
     "commerce:check-crypto": "node --env-file-if-exists=.env.local --import tsx scripts/commerce-check-crypto.ts"
   },
