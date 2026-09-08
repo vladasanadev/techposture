@@ -4,45 +4,58 @@ Project: `amirs-projects-d9680079/vladasana-job-bundle`.
 Production: https://vladasana-job-bundle.vercel.app.
 Checkout remains in preview with launch approval false.
 
-## Completed service setup
+## Database and automatic recovery
 
-- Dedicated Neon Free database **vladasana-commerce**, `iad1`, resource `store_kp5KqLBis5rLtksu`; connected only to this storefront's Production environment. Both Paddle and crypto use this database. No other project's database is reused.
-- Both idempotent SQL migrations applied. All five tables exist. Real database read/write/rollback passed; the probe left no rows. There are zero orders and deliveries.
-- `npm run commerce:check-database` now provides the same repeatable connection/schema probe, without creating a purchase or sending email.
-- Existing private Blob PDF/ZIP configuration retained. The sender is configured as `Vlada <delivery@vladasana.com>` with reply-to `support@vladasana.com`.
-- Existing Vercel team verified on Pro. Recovery changed from daily to every five minutes at `/api/cron/commerce`, with `DELIVERY_RETRY_MODE=cron` and the existing `CRON_SECRET`. No QStash account or Vercel plan upgrade was purchased.
-- Vercel project metadata confirmed the active `*/5 * * * *` definition. Its scheduled invocation at **2026-09-08 20:00:02 UTC** returned **HTTP 200** on deployment `dpl_7vXXvfweWNuRjoJe4gZM6cwP7ekE` (Bangkok: September 9, 03:00). An unauthenticated request returned **401**. `COMMERCE_RETRY_SCHEDULE_APPROVED=true` is now configured. Preview mode still pauses order processing and email sends.
-- All 148 automated tests, lint and TypeScript passed. Tests cover duplicate payment events, SQL outbox transactions, attachment integrity, retries with a stable idempotency key, refund handling and email event ordering. External payment/email transports in those tests are mocked; this is not purchase-to-inbox acceptance.
+- Dedicated Neon Free database **vladasana-commerce**, `iad1`, resource `store_kp5KqLBis5rLtksu`; connected only to this storefront's Production environment. Paddle and crypto share the five commerce tables. No other project's database is reused.
+- Both migrations applied. Actual database read/write/rollback passed locally and from Vercel. The repeatable operator command is `npm run commerce:check-database`; it never creates an order or sends email.
+- Existing Vercel Pro schedules `/api/cron/commerce` every five minutes. `DELIVERY_RETRY_MODE=cron`, `COMMERCE_RETRY_SCHEDULE_APPROVED=true` and the existing `CRON_SECRET` are configured. No plan upgrade or QStash account was purchased.
+- Project metadata verified the active schedule. A scheduled invocation at **2026-09-08 20:00:02 UTC** returned **200**; an unauthenticated request returned **401**. Preview mode still pauses fulfillment work. This establishes scheduler/authentication, not recovery of an actual paid order.
 
-## Resend account step required
+## Resend installation and callback complete
 
-Installation attempted using the Free plan for **vladasana-delivery**, domain **vladasana.com**, region **us-east-1**. Vercel returned `integration_terms_acceptance_required` and `userActionRequired: true`. No Resend resource or API key was provisioned.
+The owner accepted terms. **vladasana-delivery** is installed on Resend Free, region `us-east-1`, resource `ir_Tud4ikkPCtSNUYs5`, integration installation `icfg_Vk0ownzezT0lUI4WFVdA9hOs`. `RESEND_API_KEY` is connected to Production.
 
-The owner must accept [Resend marketplace terms](https://vercel.com/amirs-projects-d9680079/~/integrations/accept-terms/resend?source=cli). Then resume with:
+An enabled webhook was created at **https://vladasana-job-bundle.vercel.app/api/webhooks/resend**, ID `44b52bf2-a317-4452-806a-8b0933d624f8`. It subscribes to `email.delivered`, `email.bounced`, `email.complained`, `email.failed`, and `email.suppressed`. Its signing secret is stored in Vercel as `RESEND_WEBHOOK_SECRET`; it is not in Git.
 
-```sh
-npx vercel integration add resend/resend-email --name vladasana-delivery --plan free --metadata domain=vladasana.com --metadata region=us-east-1 --environment production --no-env-pull --no-claim
-```
+The planned production sender remains `Vlada <delivery@vladasana.com>`, with reply-to `support@vladasana.com`. **The custom domain is not verified yet.** Its DNS records are the remaining email activation step.
 
-Before retrying after an uncertain outcome, list installations/resources to avoid duplicates. Domain nameservers are `dns1.registrar-servers.com` / `dns2.registrar-servers.com` (Namecheap). Existing inbound MX records provide Namecheap forwarding. Add only Resend's actual returned sending-verification records; do not replace the existing inbound MX records. Receiving at the support address must be checked independently.
+## Real operator email test passed
 
-Once the domain is verified, configure the signed Resend webhook at `https://vladasana-job-bundle.vercel.app/api/webhooks/resend`, store `RESEND_WEBHOOK_SECRET`, and verify delivered/bounced/failed/complained/suppressed events. No DNS values or webhook secrets have been invented.
+The owner explicitly supplied a Gmail test recipient. One operator test sent the actual PDF and ZIP using Resend's available test sender `onboarding@resend.dev`. This was a clearly labeled delivery test with no paid claim, purchase record or private order link. The ordinary preview checkout still cannot send mail or mark orders paid.
+
+Evidence:
+
+- Resend email ID `02cd01c7-3bc2-421c-8266-28185db7de81`, final event **delivered**.
+- Gmail confirmed exactly one matching email in **INBOX**, with the PDF (**1,067,944 bytes**) and ZIP (**2,539,601 bytes**).
+- Gmail's PDF reader extracted the received document and identified **281 pages**. Sent attachment hashes matched the approved product hashes. Downloading the original received PDF through the connector's temporary URL returned 403, so a hash of the received Gmail bytes was not obtained. The Gmail connector does not support opening ZIPs; inbox ZIP metadata matches the sent size, but extraction from Gmail was not tested.
+- Resend's signed `email.delivered` event reached Production with **HTTP 200** and was stored in Neon as `msg_3J3oPkL6NLHeTfUpIyl9udARsqd`.
+- Replaying that actual event produced another **200** response while preserving exactly one database event.
+- Repeating the send request with the identical saved payload/idempotency key returned the **same email ID**. Gmail still contained one matching email.
+- Orders and fulfillment jobs remain **zero**. This verifies real email transport and callbacks, not a purchase-to-inbox result.
+
+The email renderer now has a separate operator-test variant that labels real attachments without claiming payment or promising an unissued recovery link. Purchase and public-preview behavior remains separate. All **149 automated tests**, lint and TypeScript passed after adding the test variant. Those automated provider/worker fixtures remain distinct from the real email results above.
+
+## Remaining domain access
+
+Domain `vladasana.com`, Resend ID `ba872bae-a056-4290-a9b7-aa3fa8b2c334`, is still `not_started`. Public DNS confirms the required records are absent. Add the three exact records in [RESEND_DNS.md](RESEND_DNS.md), also available as `output/resend-namecheap-dns.csv`.
+
+Namecheap is authoritative (`dns1.registrar-servers.com` / `dns2.registrar-servers.com`). Preserve existing website records and root inbound mail-forwarding MX records. The new sending records belong to `send` and `resend._domainkey`. No receiving service is being migrated.
+
+Computer access returned **Mac locked**. The owner was asked to unlock and sign in to Namecheap; DNS changes could not be made. After records are saved, POST `/domains/ba872bae-a056-4290-a9b7-aa3fa8b2c334/verify` through Resend and check for `status=verified`. Repeat the inbox test from `delivery@vladasana.com`, inspect SPF/DKIM/DMARC results, and verify replies actually reach support.
 
 ## Purchase-to-inbox acceptance still required
 
-The test recipient was requested and is not yet supplied. No email has been sent and no purchase has been created.
+Paddle credentials/product/price IDs are absent. Paddle sandbox acceptance needs those values in an isolated test deployment/database. NOWPayments uses live transfers and needs an owner-funded controlled test. No payment has been created or manually marked paid.
 
-Paddle credentials/product/price IDs are also absent. Real Paddle sandbox acceptance needs those values in an isolated test deployment/database. The NOWPayments adapter uses live transfers; a controlled test needs an owner-funded payment. Neither simulated provider events nor a manual database update can substitute for a verified purchase.
-
-After account access and the test recipient are available, verify:
+After domain verification and payment access, verify:
 
 1. Provider-confirmed purchase creates one paid order and one fulfillment.
-2. The actual combined PDF and complete ZIP arrive and open in the selected inbox.
-3. Resend's signed delivered event reaches the app and updates that fulfillment.
-4. A duplicate payment notification does not send another email.
-5. A temporary delivery failure recovers through the scheduled worker using the same email idempotency key and attachment bytes.
+2. The PDF and complete ZIP arrive from the verified branded sender and both open.
+3. The signed delivered event updates the matching fulfillment.
+4. Duplicate payment notifications do not send another email.
+5. A temporary delivery failure recovers through the scheduled worker with the same payload and idempotency key.
 6. The seven-day recovery link works; expired/refunded downloads are rejected and replies reach support.
 
-Keep public checkout closed until these results are recorded. A scheduler invocation while in preview proves its authentication and deployment, but does not prove email recovery.
+Keep public checkout closed until these results are recorded. The completed operator email test does not establish settlement, a paid-order worker retry, branded-domain deliverability, refund behavior, or signed download acceptance.
 
-Private evidence: `output/private/database-verification.json`, `output/private/project-retry-settings.json`, and `output/private/retry-runtime.jsonl`. These contain no committed credentials or paid files.
+Private evidence is under `output/private/`: `email-activation-receipt.json`, `email-activation-verification.json`, `resend-webhook-deduplication.json`, `resend-idempotency-verification.json`, `resend-activation-runtime.jsonl`, and `database-verification.json`. The saved email payload contains the paid attachments and stays outside Git. Never repeat a test with a new idempotency key after an uncertain response without reconciling its existing receipt first.

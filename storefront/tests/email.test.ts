@@ -3,6 +3,7 @@ import { test } from "vitest";
 import {
   renderBundleEmail,
   renderBundleEmailPreview,
+  renderBundleDeliveryTestEmail,
   type BundleEmailInput,
 } from "../lib/commerce/email";
 
@@ -79,4 +80,18 @@ test("public sample has no active private download link or customer details", ()
   assert.ok(!email.html.includes("https://example.invalid/sample-download"));
   assert.ok(email.text.includes("SAMPLE EMAIL"));
   assert.ok(email.text.includes("disabled"));
+});
+
+test("operator delivery test identifies actual attachments without claiming a purchase", () => {
+  const email = renderBundleDeliveryTestEmail(input);
+  assert.ok(email.subject.startsWith("[Delivery test]"));
+  assert.ok(email.text.includes("NO PURCHASE OR CHARGE"));
+  assert.ok(email.html.includes("are attached for this delivery test"));
+  assert.ok(email.html.includes("not a purchase receipt"));
+  for (const content of [email.html, email.text]) {
+    assert.ok(!content.includes("Payment confirmed."));
+    assert.ok(!content.includes("because you purchased"));
+    assert.ok(!content.includes(input.downloadUrl));
+    assert.ok(!content.includes("7 days"));
+  }
 });

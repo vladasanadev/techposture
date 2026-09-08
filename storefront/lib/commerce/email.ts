@@ -67,6 +67,7 @@ function render(
   input: BundleEmailInput,
   preview = false,
   previewImageUrl?: string,
+  deliveryTest = false,
 ): BundleEmail {
   const siteUrl = webUrl(input.siteUrl, "siteUrl");
   const downloadUrl = webUrl(input.downloadUrl, "downloadUrl");
@@ -89,15 +90,21 @@ function render(
     name: singleLine(file.name),
     description: file.description ? singleLine(file.description) : "",
   }));
-  const preheader = preview
+  const preheader = deliveryTest
+    ? "Delivery test: the actual bundle is attached. No purchase or charge."
+    : preview
     ? "Sample email design. No order has been placed."
     : "Your payment is confirmed. Your next chapter is ready to download.";
-  const attachmentCopy = input.hasAttachments
+  const attachmentCopy = deliveryTest
+    ? "Your complete PDF and guide archive are attached for this delivery test. Open both files to check them. No purchase was made, no payment was taken, and no order was created."
+    : input.hasAttachments
     ? input.files.length > 1
       ? "Your complete PDF and guide archive are attached. Start with 00-start-here.pdf inside the ZIP, and use the CSV worksheets to track your practice and applications. Your backup download link below works for 7 days; save the files to keep them."
       : "Your PDF is attached to this email. Your backup download link works for 7 days; save the file to keep it."
     : "Your bundle is ready. Use your secure download below to save the PDF and make it yours.";
-  const subject = `Your ${productName || "bundle"} is here`;
+  const subject = deliveryTest
+    ? `[Delivery test] ${productName || "Your bundle"}`
+    : `${productName || "Your bundle"} is here`;
   const fileRows = files
     .map(
       (file, index) => `<tr>
@@ -106,10 +113,14 @@ function render(
   </tr>`,
     )
     .join("");
-  const cta = preview
+  const cta = deliveryTest
+    ? `<p style="margin:0;color:#54151c;font-size:16px;line-height:24px;font-weight:700;">Open the PDF and ZIP attached to this email.</p>`
+    : preview
     ? `<span aria-disabled="true" style="display:inline-block;min-width:214px;padding:18px 28px;border-radius:0;background:#54151c;color:#fff8ef;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:700;line-height:24px;text-align:center;">Download your bundle &nbsp;↗</span>`
     : `<a href="${escapeHtml(downloadUrl)}" style="display:inline-block;min-width:214px;padding:18px 28px;border:1px solid #54151c;border-radius:0;background:#54151c;color:#fff8ef;font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:700;line-height:24px;text-align:center;text-decoration:none;mso-padding-alt:18px 28px;">Download your bundle &nbsp;↗</a>`;
-  const fallback = preview
+  const fallback = deliveryTest
+    ? ""
+    : preview
     ? `<p style="margin:0;color:#785b56;font-size:12px;line-height:19px;">Sample only. Your customer’s private download link will appear here.</p>`
     : `<p style="margin:0 0 7px;color:#785b56;font-size:12px;line-height:19px;">You can also copy this link into your browser:</p><a href="${escapeHtml(downloadUrl)}" style="color:#54151c;font-size:12px;line-height:20px;word-break:break-all;overflow-wrap:anywhere;text-decoration:underline;">${escapeHtml(downloadUrl)}</a>`;
   const support = preview
@@ -129,23 +140,25 @@ function render(
 ${preview ? `<tr><td style="padding:11px 24px;background:#54151c;color:#fff8ef;font-size:10px;line-height:17px;letter-spacing:1.8px;text-transform:uppercase;text-align:center;">Sample email &nbsp;·&nbsp; Design preview &nbsp;·&nbsp; No purchase</td></tr>` : ""}
 <tr><td class="email-pad" style="padding:28px 44px 25px;border-bottom:1px solid #dec7c1;"><table role="presentation" width="100%"><tr><td class="email-brand" style="font-family:Georgia,'Times New Roman',serif;font-size:32px;line-height:38px;letter-spacing:-1.4px;">${brand}</td><td align="right" style="color:#831018;font-size:10px;line-height:16px;letter-spacing:1.5px;text-transform:uppercase;">GET A JOB<br>BUNDLE</td></tr></table></td></tr>
 <tr><td style="background:#cee0e9;"><img class="email-hero" src="${escapeHtml(imageUrl)}" alt="The Get a Job Bundle in an oxblood folder on a powder blue surface." width="600" height="280" style="display:block;width:100%;max-width:600px;height:280px;object-fit:cover;background:#cee0e9;color:#711018;font-size:16px;line-height:26px;"></td></tr>
-<tr><td class="email-pad" style="padding:34px 44px 0;"><p style="margin:0 0 15px;color:#8a2530;font-size:10px;line-height:18px;letter-spacing:2.2px;text-transform:uppercase;">${preview ? "A peek inside your inbox" : "Payment confirmed."}</p><h1 class="email-title" style="margin:0;color:#502024;font-family:Georgia,serif;font-size:48px;line-height:51px;font-weight:400;letter-spacing:-2px;">Your bundle<br>is ready.</h1></td></tr>
+<tr><td class="email-pad" style="padding:34px 44px 0;"><p style="margin:0 0 15px;color:#8a2530;font-size:10px;line-height:18px;letter-spacing:2.2px;text-transform:uppercase;">${deliveryTest ? "Delivery test · No payment" : preview ? "A peek inside your inbox" : "Payment confirmed."}</p><h1 class="email-title" style="margin:0;color:#502024;font-family:Georgia,serif;font-size:48px;line-height:51px;font-weight:400;letter-spacing:-2px;">Your bundle<br>is ready.</h1></td></tr>
 <tr><td class="email-pad" style="padding:25px 44px 0;"><p style="margin:0 0 13px;font-size:16px;line-height:26px;color:#63111a;">${escapeHtml(greeting)}</p><p style="margin:0 0 13px;color:#654e48;font-size:15px;line-height:26px;">Thank you for choosing <strong style="color:#502024;">${escapeHtml(productName)}</strong> to support your next move in tech.</p><p style="margin:0;color:#654e48;font-size:15px;line-height:26px;">${escapeHtml(attachmentCopy)}</p></td></tr>
 <tr><td class="email-pad" style="padding:27px 44px 12px;">${cta}${preview ? `<p style="margin:10px 0 0;color:#785b56;font-size:11px;line-height:18px;">Preview button · downloading is disabled</p>` : ""}</td></tr>
 <tr><td class="email-pad" style="padding:5px 44px 29px;">${fallback}</td></tr>
 <tr><td class="email-pad" style="padding:0 44px;"><table role="presentation" width="100%" style="width:100%;"><tr><td colspan="2" style="padding:0 0 13px;color:#831018;font-size:10px;line-height:18px;letter-spacing:2px;text-transform:uppercase;">Inside your bundle</td></tr>${fileRows}</table></td></tr>
-<tr><td class="email-pad" style="padding:8px 44px 26px;"><table role="presentation" width="100%" style="width:100%;background:#e3edf0;"><tr><td style="padding:18px 20px;color:#785b56;font-size:11px;line-height:20px;">${preview ? "SAMPLE ORDER" : "ORDER"}<br><strong style="color:#63111a;font-weight:600;letter-spacing:.5px;">${escapeHtml(orderReference)}</strong></td><td align="right" style="padding:18px 20px;color:#785b56;font-size:11px;line-height:20px;">${preview ? "EXAMPLE AMOUNT" : "PAID"}<br><strong style="color:#63111a;font-size:14px;font-weight:600;">${escapeHtml(payment)}</strong></td></tr></table></td></tr>
+<tr><td class="email-pad" style="padding:8px 44px 26px;"><table role="presentation" width="100%" style="width:100%;background:#e3edf0;"><tr><td style="padding:18px 20px;color:#785b56;font-size:11px;line-height:20px;">${deliveryTest ? "TEST REFERENCE" : preview ? "SAMPLE ORDER" : "ORDER"}<br><strong style="color:#63111a;font-weight:600;letter-spacing:.5px;">${escapeHtml(orderReference)}</strong></td><td align="right" style="padding:18px 20px;color:#785b56;font-size:11px;line-height:20px;">${deliveryTest ? "PAYMENT" : preview ? "EXAMPLE AMOUNT" : "PAID"}<br><strong style="color:#63111a;font-size:14px;font-weight:600;">${escapeHtml(payment)}</strong></td></tr></table></td></tr>
 <tr><td class="email-pad" style="padding:0 44px 30px;"><p style="margin:0 0 9px;color:#654e48;font-size:15px;line-height:26px;">Start with the part you need most. You don’t have to have it all figured out today.</p><p style="margin:18px 0 2px;color:#54151c;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:34px;font-style:italic;">I’ve got you.</p><p style="margin:0;color:#54151c;font-family:Georgia,'Times New Roman',serif;font-size:21px;line-height:30px;">Vlada</p></td></tr>
-<tr><td class="email-footer" style="padding:25px 44px 29px;border-top:1px solid #dfc9c4;"><p style="margin:0 0 8px;color:#785b56;font-size:12px;line-height:20px;">Need a hand with your download? ${support} and include your order reference. I’ll help you find your next step.</p><p style="margin:0;color:#957f76;font-size:10px;line-height:18px;">${preview ? "This is a sample email, using fictional order details. No payment was made and no product is delivered from this preview." : `You’re receiving this email because you purchased ${escapeHtml(productName)}. This is your delivery confirmation; please keep it for your records.`}</p></td></tr>
+<tr><td class="email-footer" style="padding:25px 44px 29px;border-top:1px solid #dfc9c4;"><p style="margin:0 0 8px;color:#785b56;font-size:12px;line-height:20px;">Need a hand with your download? ${support} and include your order reference. I’ll help you find your next step.</p><p style="margin:0;color:#957f76;font-size:10px;line-height:18px;">${deliveryTest ? "This is an owner-requested delivery test with the actual bundle attachments. It is not a purchase receipt." : preview ? "This is a sample email, using fictional order details. No payment was made and no product is delivered from this preview." : `You’re receiving this email because you purchased ${escapeHtml(productName)}. This is your delivery confirmation; please keep it for your records.`}</p></td></tr>
 </table></td></tr></table></body></html>`;
 
   const text = [
-    preview ? "SAMPLE EMAIL — DESIGN PREVIEW — NO PURCHASE\n" : "",
+    deliveryTest ? "DELIVERY TEST — NO PURCHASE OR CHARGE\n" : preview ? "SAMPLE EMAIL — DESIGN PREVIEW — NO PURCHASE\n" : "",
     "YOUR BUNDLE IS READY.",
     greeting,
     `Thank you for choosing ${productName} to support your next move in tech.`,
     attachmentCopy,
-    preview
+    deliveryTest
+      ? "Open the PDF and ZIP attached to this email."
+      : preview
       ? "Download your bundle: disabled in this sample email."
       : `Download your bundle:\n${downloadUrl}`,
     "INSIDE YOUR BUNDLE",
@@ -153,13 +166,15 @@ ${preview ? `<tr><td style="padding:11px 24px;background:#54151c;color:#fff8ef;f
       (file) =>
         `• ${file.name}${file.description ? ` — ${file.description}` : ""}`,
     ),
-    `${preview ? "Sample order" : "Order"}: ${orderReference}\n${preview ? "Example amount" : "Paid"}: ${payment}`,
+    `${deliveryTest ? "Test reference" : preview ? "Sample order" : "Order"}: ${orderReference}\n${deliveryTest ? "Payment" : preview ? "Example amount" : "Paid"}: ${payment}`,
     "Start with the part you need most. You don’t have to have it all figured out today.",
     "I’ve got you.\nVlada",
     preview
       ? "This is a sample email with fictional order details. No payment was made, and no download is available."
       : `Need a hand with your download? Reply to ${supportEmail} and include your order reference.`,
-    preview
+    deliveryTest
+      ? "This is an owner-requested delivery test with the actual bundle attachments. It is not a purchase receipt."
+      : preview
       ? ""
       : `You’re receiving this email because you purchased ${productName}. This is your delivery confirmation; please keep it for your records.`,
   ]
@@ -205,4 +220,18 @@ export function renderBundleEmailPreview(siteUrl = ""): BundleEmail {
       ? new URL("/images/quiet/hero.webp", previewSiteUrl).href
       : "/images/quiet/hero.webp",
   );
+}
+
+/** Explicit operator test only: real attachments, no paid claim or private order link. */
+export function renderBundleDeliveryTestEmail(
+  input: Omit<BundleEmailInput, "downloadUrl" | "orderReference" | "amountDisplay" | "currency" | "hasAttachments">,
+): BundleEmail {
+  return render({
+    ...input,
+    downloadUrl: input.siteUrl,
+    orderReference: "DELIVERY-TEST",
+    amountDisplay: "No charge",
+    currency: "",
+    hasAttachments: true,
+  }, false, undefined, true);
 }
