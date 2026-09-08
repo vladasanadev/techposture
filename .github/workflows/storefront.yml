@@ -1,0 +1,36 @@
+name: Storefront checks
+
+on:
+  push:
+    branches: [main, codex/vladasana-storefront]
+    paths: ["storefront/**", ".github/workflows/storefront.yml"]
+  pull_request:
+    paths: ["storefront/**", ".github/workflows/storefront.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: storefront
+    env:
+      COMMERCE_MODE: preview
+      COMMERCE_LAUNCH_APPROVED: "false"
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: storefront/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build

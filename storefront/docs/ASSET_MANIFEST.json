@@ -1,0 +1,91 @@
+[
+  {
+    "name": "hero-scene",
+    "path": "public/images/hero-scene.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 118490,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders.",
+    "revision": "Printed cover added with image_gen; original composition preserved."
+  },
+  {
+    "name": "cherry-pair",
+    "path": "public/images/cherry-pair.webp",
+    "width": 400,
+    "height": 400,
+    "bytes": 39742,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders."
+  },
+  {
+    "name": "magazine-cover",
+    "path": "public/images/magazine-cover.webp",
+    "width": 1086,
+    "height": 1448,
+    "bytes": 145134,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders."
+  },
+  {
+    "name": "magazine-guide",
+    "path": "public/images/magazine-guide.webp",
+    "width": 1024,
+    "height": 1536,
+    "bytes": 133050,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders."
+  },
+  {
+    "name": "magazine-interview",
+    "path": "public/images/magazine-interview.webp",
+    "width": 1024,
+    "height": 1536,
+    "bytes": 121994,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders."
+  },
+  {
+    "name": "magazine-technical",
+    "path": "public/images/magazine-technical.webp",
+    "width": 1086,
+    "height": 1448,
+    "bytes": 109660,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders."
+  },
+  {
+    "name": "magazine-outreach",
+    "path": "public/images/magazine-outreach.webp",
+    "width": 1086,
+    "height": 1448,
+    "bytes": 136066,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders."
+  },
+  {
+    "name": "magazine-tracker",
+    "path": "public/images/magazine-tracker.webp",
+    "width": 1086,
+    "height": 1448,
+    "bytes": 100464,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders."
+  },
+  {
+    "name": "magazine-salary",
+    "path": "public/images/magazine-salary.webp",
+    "width": 1086,
+    "height": 1448,
+    "bytes": 113716,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders."
+  },
+  {
+    "name": "magazine-back",
+    "path": "public/images/magazine-back.webp",
+    "width": 1086,
+    "height": 1448,
+    "bytes": 72318,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders."
+  },
+  {
+    "name": "email-banner",
+    "path": "public/images/email-banner.webp",
+    "width": 1100,
+    "height": 550,
+    "bytes": 55770,
+    "provenance": "Original artwork generated with built-in image_gen; magazine pages are visual placeholders."
+  }
+]

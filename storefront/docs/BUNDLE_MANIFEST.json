@@ -1,0 +1,110 @@
+{
+  "version": "developer-playbook-2026-09-08",
+  "source": "User supplied developer-job-search-playbook.zip",
+  "files": [
+    {
+      "path": "00-start-here.pdf",
+      "bytes": 140875,
+      "sha256": "9e17831a9b13fd258056fb53c8859b5375068a2bc35b68155d34520a5311ff35",
+      "pages": 22
+    },
+    {
+      "path": "01-complete-playbook.pdf",
+      "bytes": 1067944,
+      "sha256": "d4638217bac98ebd075f0c8514ebb531a966a9e9a14951d370155476764b0328",
+      "pages": 281
+    },
+    {
+      "path": "START-HERE.txt",
+      "bytes": 1302,
+      "sha256": "af82df1c8e30f3a58f1b2fb4cc101937f6bde73b7407a901096d18046e73274c"
+    },
+    {
+      "path": "guides/01-cv-unrejectable.pdf",
+      "bytes": 126347,
+      "sha256": "295303e93a4e34b0c0195c3964672a7a33983dee1e9dd61e505db29f83dfceb0",
+      "pages": 10
+    },
+    {
+      "path": "guides/02-behavioral-guide.pdf",
+      "bytes": 170082,
+      "sha256": "cfb5e7dd075ee7178af9fa09df103078ff323dba38d754d417dd93a3c38f06aa",
+      "pages": 23
+    },
+    {
+      "path": "guides/03-questions-guide.pdf",
+      "bytes": 128700,
+      "sha256": "6bc3329f17066fbf371301d25580ef1e9b37eb6de978e683f2d439705ea820f1",
+      "pages": 15
+    },
+    {
+      "path": "guides/04-js-guide.pdf",
+      "bytes": 172913,
+      "sha256": "0216670dd6d1d607439c604044001919c81929dfc412bf7158be2cf111ef8dab",
+      "pages": 24
+    },
+    {
+      "path": "guides/05-react-guide.pdf",
+      "bytes": 173093,
+      "sha256": "62e8152a3090d011e99e73d29e19beb32d867bc6bc3dc49d0a4da86d2fc3db5a",
+      "pages": 24
+    },
+    {
+      "path": "guides/06-big-o-guide.pdf",
+      "bytes": 172113,
+      "sha256": "2d55ea53a3789b68c330fbdeb64c35b96d250cfb4383c35cb8a64f95d7ae4d93",
+      "pages": 23
+    },
+    {
+      "path": "guides/07-api-guide.pdf",
+      "bytes": 153457,
+      "sha256": "874cb5dc9a8245d347837dcd69ec69b0840283867410e2e599ddd9535ae25dcd",
+      "pages": 20
+    },
+    {
+      "path": "guides/08-db-guide.pdf",
+      "bytes": 175590,
+      "sha256": "36e44cfb7d205e855bacac93f96e2b6aab42a8075dacbb9deddca1f2b283f758",
+      "pages": 24
+    },
+    {
+      "path": "guides/09-sql-guide.pdf",
+      "bytes": 175371,
+      "sha256": "14ba7a5d185b92ae42ef2a564faa5e0451f6a2931cab93658f198c6c33bcd4c1",
+      "pages": 25
+    },
+    {
+      "path": "guides/10-git-guide.pdf",
+      "bytes": 174373,
+      "sha256": "9f25132e249ba8d2150067b999b89ccf099bcb2ca93b6cb0054c1d145c6b4a2f",
+      "pages": 25
+    },
+    {
+      "path": "guides/11-docker-guide.pdf",
+      "bytes": 174059,
+      "sha256": "3aca1cdd0bafbfedbb772383ff6f8f7c9d7a38f9adbb78fe7088a5ab8fb442ab",
+      "pages": 24
+    },
+    {
+      "path": "guides/12-system-design.pdf",
+      "bytes": 168719,
+      "sha256": "f8c417b4e9b7a16b4578e035c3161a40ff2ef0971c71bcf0969a029e2da17d04",
+      "pages": 22
+    },
+    {
+      "path": "worksheets/application-tracker.csv",
+      "bytes": 95,
+      "sha256": "41fa7211a928e2a17805c395281b59ade04fee6ced057bebfab1dbccbf8be3cb"
+    },
+    {
+      "path": "worksheets/practice-log.csv",
+      "bytes": 86,
+      "sha256": "aba5f33f87cbbed20f9e7b7681e8b3152f69b18c2f9631953f987398d0e42d03"
+    }
+  ],
+  "archive": {
+    "filename": "developer-job-search-playbook-delivery.zip",
+    "bytes": 2539601,
+    "sha256": "b2eb9e732fb8c19801f849ea780c744e15496560773fcc1fed7cfd7584225f46"
+  }
+}

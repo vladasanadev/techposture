@@ -1,0 +1,49 @@
+{
+  "name": "vladasana-job-bundle",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "commerce:migrate": "node --env-file-if-exists=.env.local --import tsx scripts/commerce-migrate.ts",
+    "commerce:check": "node --env-file-if-exists=.env.local --import tsx scripts/commerce-check.ts",
+    "commerce:check-crypto": "node --env-file-if-exists=.env.local --import tsx scripts/commerce-check-crypto.ts"
+  },
+  "dependencies": {
+    "@fontsource-variable/dm-sans": "^5.3.0",
+    "@fontsource/bodoni-moda": "^5.3.0",
+    "@fontsource/caveat": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
+    "@paddle/paddle-js": "^1.6.5",
+    "@react-three/drei": "^10.7.0",
+    "@react-three/fiber": "^9.5.0",
+    "@upstash/qstash": "^2.11.3",
+    "@vercel/blob": "^2.8.0",
+    "lucide-react": "^0.577.0",
+    "maath": "^0.10.8",
+    "motion": "^12.23.0",
+    "next": "^16.1.0",
+    "postgres": "^3.4.8",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "stripe": "^20.0.0",
+    "three": "^0.183.0",
+    "zod": "^4.3.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.183.0",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "^16.1.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.0"
+  }
+}

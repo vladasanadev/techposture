@@ -1,0 +1,11 @@
+.git
+.env*
+.vercel
+.playwright-cli
+.playwright
+docs
+tests
+output
+scripts/prepare-assets.mjs
+README.md
+HANDOVER.md
