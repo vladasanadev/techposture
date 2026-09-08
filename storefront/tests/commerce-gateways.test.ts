@@ -138,9 +138,9 @@ describe("PayPal HTTP contract fixtures", () => {
 describe("NOWPayments HTTP contract fixtures", () => {
   it("checks merchant currency, estimate and minimum before creating a fixed-network invoice", async () => {
     const responses = [
-      { selectedCurrencies: ["usdttrc20"] },
+      { selectedCurrencies: ["USDTTRC20"] },
       { estimated_amount: 19.1 },
-      { min_amount: 1 },
+      { min_amount: 1, fiat_equivalent: 1.01, currency_to: "USDTBSC" },
       { id: "123", invoice_url: "https://nowpayments.io/payment/?iid=123" },
     ];
     const fetcher = vi
@@ -154,7 +154,7 @@ describe("NOWPayments HTTP contract fixtures", () => {
     expect(fetcher.mock.calls.map((call) => call[0])).toEqual([
       "https://api.nowpayments.io/v1/merchant/coins",
       "https://api.nowpayments.io/v1/estimate?amount=19&currency_from=usd&currency_to=usdttrc20",
-      "https://api.nowpayments.io/v1/min-amount?currency_from=usdttrc20&fiat_equivalent=usd",
+      "https://api.nowpayments.io/v1/min-amount?currency_from=usdttrc20&fiat_equivalent=usd&is_fixed_rate=true&is_fee_paid_by_user=false",
       "https://api.nowpayments.io/v1/invoice",
     ]);
     expect(JSON.parse(fetcher.mock.calls[3][1].body)).toMatchObject({
@@ -246,7 +246,7 @@ describe("NOWPayments HTTP contract fixtures", () => {
           payment_status: "waiting",
           price_amount: 19,
           price_currency: "usd",
-          pay_currency: "usdttrc20",
+          pay_currency: "USDTTRC20",
           pay_amount: 19,
           actually_paid: 0,
         }),

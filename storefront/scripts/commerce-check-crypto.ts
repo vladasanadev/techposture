@@ -1,5 +1,7 @@
 import { config, TOKEN_LABELS, CommerceError } from "../lib/commerce/config";
 import { checkCryptoNetwork } from "../lib/commerce/providers/crypto";
+import { gatewayFetch } from "../lib/commerce/providers/http";
+import { z } from "zod";
 
 // Explicit operator command. Uses live merchant GETs only, even in preview mode.
 // Does not create invoices, transfer funds, write orders or send emails.
@@ -17,6 +19,25 @@ async function main() {
     throw new CommerceError(
       "Set NOWPAYMENTS_API_KEY and supported exact NOWPAYMENTS_TOKENS before running this probe.",
     );
+  const merchant = z
+    .object({ selectedCurrencies: z.array(z.string()) })
+    .parse(
+      await gatewayFetch("https://api.nowpayments.io/v1/merchant/coins", {
+        headers: { "x-api-key": c.cryptoKey },
+      }),
+    );
+  console.log(
+    JSON.stringify({
+      merchantSelectedCount: merchant.selectedCurrencies.length,
+      configuredMerchantMatches: tokens.filter((token) =>
+        merchant.selectedCurrencies.some(
+          (selected) => selected.toLowerCase() === token,
+        ),
+      ),
+      ipnSecretConfigured: Boolean(c.cryptoSecret),
+      readOnly: true,
+    }),
+  );
   const results = [];
   for (const token of [...new Set(tokens)]) {
     try {

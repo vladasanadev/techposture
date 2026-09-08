@@ -33,7 +33,11 @@ export async function checkCryptoNetwork(
   const coins = z
     .object({ selectedCurrencies: z.array(z.string()) })
     .parse(await api("/merchant/coins", c));
-  if (!coins.selectedCurrencies.includes(token))
+  if (
+    !coins.selectedCurrencies.some(
+      (currency) => currency.toLowerCase() === token,
+    )
+  )
     throw new CommerceError(
       "This stablecoin network is not currently available.",
       503,
@@ -47,9 +51,16 @@ export async function checkCryptoNetwork(
       ),
     );
   const minimum = z
-    .object({ min_amount: scalar })
+    .object({
+      min_amount: scalar,
+      fiat_equivalent: scalar.optional(),
+      currency_to: z.string().optional(),
+    })
     .parse(
-      await api(`/min-amount?currency_from=${token}&fiat_equivalent=usd`, c),
+      await api(
+        `/min-amount?currency_from=${token}&fiat_equivalent=usd&is_fixed_rate=true&is_fee_paid_by_user=false`,
+        c,
+      ),
     );
   if (
     minorUnits(estimate.estimated_amount, 18) === 0n ||
@@ -64,6 +75,12 @@ export async function checkCryptoNetwork(
     token,
     estimatedAmount: String(estimate.estimated_amount),
     minimumAmount: String(minimum.min_amount),
+    ...(minimum.fiat_equivalent === undefined
+      ? {}
+      : { minimumUsd: String(minimum.fiat_equivalent) }),
+    ...(minimum.currency_to === undefined
+      ? {}
+      : { outcomeCurrency: minimum.currency_to.toLowerCase() }),
   };
 }
 export async function createCrypto(order: Order, c: CommerceConfig) {
@@ -101,7 +118,7 @@ export function validateCryptoPayment(
     payment.order_id !== order.id ||
     payment.price_currency.toUpperCase() !== order.currency ||
     minorUnits(payment.price_amount) !== BigInt(order.amount) ||
-    payment.pay_currency !== order.crypto_token ||
+    payment.pay_currency.toLowerCase() !== order.crypto_token ||
     minorUnits(payment.pay_amount, 18) === 0n ||
     minorUnits(payment.actually_paid, 18) < minorUnits(payment.pay_amount, 18)
   )
@@ -134,7 +151,7 @@ export async function retrieveCrypto(
     payment.order_id !== order.id ||
     payment.price_currency.toUpperCase() !== order.currency ||
     minorUnits(payment.price_amount) !== BigInt(order.amount) ||
-    payment.pay_currency !== order.crypto_token
+    payment.pay_currency.toLowerCase() !== order.crypto_token
   )
     throw new CommerceError("Payment identity mismatch.", 422);
   return validateCryptoPayment(payment, order, eventId);

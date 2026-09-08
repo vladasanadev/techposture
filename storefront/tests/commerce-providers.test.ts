@@ -173,6 +173,22 @@ const payment: CryptoPayment = {
   actually_paid: "19.120000",
 };
 describe("stablecoin verification", () => {
+  it("accepts uppercase provider codes while retaining the exact purchased network", () => {
+    expect(
+      validateCryptoPayment(
+        { ...payment, pay_currency: "USDTTRC20" },
+        cryptoOrder,
+        "e",
+      )?.paymentId,
+    ).toBe("123");
+    expect(() =>
+      validateCryptoPayment(
+        { ...payment, pay_currency: "USDTERC20" },
+        cryptoOrder,
+        "e",
+      ),
+    ).toThrow();
+  });
   it("accepts finished payments on the purchased token/network", () =>
     expect(validateCryptoPayment(payment, cryptoOrder, "e")?.paymentId).toBe(
       "123",

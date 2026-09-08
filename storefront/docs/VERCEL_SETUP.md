@@ -46,7 +46,7 @@ Configure receiving wallets and enable the chosen token/network pairs. Current a
 | `usdcbsc` | USDC / BNB Smart Chain |
 | `usdtmatic` | USDT / Polygon |
 
-The September 9 seller screenshot selects all ten pairs above. They are now prefilled in `.env.example`. See [NOWPAYMENTS_NETWORK_REVIEW.md](NOWPAYMENTS_NETWORK_REVIEW.md) for the verified public fee schedule and the remaining merchant-specific checks; selection does not mean settlement/minimum approval.
+The September 9 screenshot selected ten pairs, but the authenticated merchant API enabled nine: `usdcmatic` was absent. `.env.example` now prefills only the nine that passed the live fixed-rate minimum check. See [NOWPAYMENTS_NETWORK_REVIEW.md](NOWPAYMENTS_NETWORK_REVIEW.md) for the results and fee schedule. Recheck for a new merchant or payout configuration; this does not establish actual settlement or inbox delivery.
 
 Select only networks currently enabled for this merchant whose minimums and fees suit a $19 product. The code does not choose a payout wallet or network for the seller. It checks merchant availability, the estimate and the minimum before creating an invoice. The callback is supplied automatically as **`${SITE_URL}/api/webhooks/crypto`**. If configuring a dashboard callback, use that same URL and matching IPN secret. No fixed payment-link ID is needed. [NOWPayments API](https://nowpayments.io/api).
 
