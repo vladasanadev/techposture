@@ -10,6 +10,10 @@ export const TOKEN_LABELS: Record<string, string> = {
   usdc: "USDC · Ethereum",
   usdcmatic: "USDC · Polygon",
   usdcsol: "USDC · Solana",
+  usdcarb: "USDC · Arbitrum One",
+  usdtarb: "USDT · Arbitrum One",
+  usdcbsc: "USDC · BNB Smart Chain",
+  usdtmatic: "USDT · Polygon",
 };
 export function config(env: Record<string, string | undefined> = process.env) {
   const mode: CommerceMode =

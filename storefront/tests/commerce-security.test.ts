@@ -132,6 +132,21 @@ describe("fail-closed storefront activation", () => {
       ),
     ).toBe(false);
   });
+  it("retains all ten seller-selected stablecoin networks while approval keeps checkout closed", () => {
+    const tokens =
+      "usdttrc20,usdterc20,usdc,usdtbsc,usdcmatic,usdcsol,usdcarb,usdtarb,usdcbsc,usdtmatic";
+    const c = config({
+      ...liveEnv,
+      NOWPAYMENTS_TOKENS: tokens,
+      NOWPAYMENTS_NETWORKS_APPROVED: "false",
+    });
+    expect(c.cryptoTokens).toEqual(tokens.split(","));
+    expect(storefront(c).cryptoTokens).toHaveLength(10);
+    expect(providerAvailable("crypto", c)).toBe(false);
+    expect(providerAvailable("crypto", { ...c, cryptoApproved: true })).toBe(
+      true,
+    );
+  });
   it("reports missing crypto keys even when all shared delivery services are configured", () => {
     const c = config({
       ...liveEnv,
