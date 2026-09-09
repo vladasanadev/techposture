@@ -1,6 +1,6 @@
 # Commerce and delivery handoff
 
-This storefront ships with **checkout disabled** until account activation and real acceptance. New non-crypto checkout uses **Paddle Billing**; crypto remains NOWPayments. The owner's final guides are uploaded to a dedicated private Vercel Blob store, verified by SHA-256 and denied anonymously (403). Seller identity and a 7-day refund policy are published. Paddle accounts, production database, verified email delivery and reliable retry configuration still need activation. No actual payment or customer email was created during development.
+This storefront ships with **checkout disabled** until account activation and real acceptance. New non-crypto checkout uses **Paddle Billing**; crypto uses NOWPayments. The original deployment has private product storage, a dedicated Neon database, five-minute recovery and verified Resend callbacks. Its real email-only test used the Resend test sender; branded-domain verification and purchase-to-inbox acceptance remain. For a fresh owner account, provision those services again using [PARTNER_HANDOVER.md](../../PARTNER_HANDOVER.md). The original deployment's service connections do not migrate with Git.
 
 For account-by-account setup and the exact launch sequence, start with [Activate sales and PDF delivery](ACTIVATE_SALES.md). This document covers the technical contracts and operational recovery.
 

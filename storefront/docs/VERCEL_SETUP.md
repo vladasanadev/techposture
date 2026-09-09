@@ -6,7 +6,7 @@ Prepared September 9, 2026. New purchases use **Paddle Billing + NOWPayments API
 
 Destination requested: `vladasanadev/techposture`. Its existing root app is a separate Vite portfolio. The handoff adds this Next.js application under **`storefront/`** on **`codex/vladasana-storefront`**, preserving the existing app and repository history. Import that branch in a **separate Vercel project**, with **Root Directory = `storefront`**, **Framework Preset = Next.js**, **Install Command = `npm ci`**, **Build Command = `npm run build`**, and the default Next.js output directory. Do not use the portfolio's Vite framework preset, `dist` output or root-level rewrites.
 
-The repository must be private before uploading the adapted magazine source, per this project's `AGENTS.md` and [component attribution](MAGAZINE.md). The handoff is prepared locally while that condition is unmet; a prepared branch is not a completed push.
+For the owner-account migration, start with [PARTNER_HANDOVER.md](../../PARTNER_HANDOVER.md). The user explicitly requested the complete integrated storefront be pushed to this destination. Preserve the [magazine attribution and restrictions on standalone redistribution](MAGAZINE.md); private source hosting remains the recommended owner configuration. A branch push does not activate payments or migrate service accounts.
 
 An existing Vercel project does not acquire the new GitHub repository automatically. Git connection, deployment branch, environment variables and storage connections are separate settings. This work does not change the portfolio's production deployment. A push to the handoff branch alone does not move production traffic.
 
