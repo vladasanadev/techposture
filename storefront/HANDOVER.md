@@ -1,3 +1,9 @@
+# Live crypto checkout — September 12, 2026
+
+**Crypto checkout is now publicly open at https://vladasana.com/Job-bundle for the owner’s real $19 test, by explicit request. Paddle remains unavailable.** Production is `COMMERCE_MODE=live`, `COMMERCE_LAUNCH_APPROVED=true`. Configuration/file checks passed and the live form was verified. Real purchase settlement and purchase-triggered delivery await the owner’s test. See [PUBLIC_CRYPTO_TEST.md](docs/PUBLIC_CRYPTO_TEST.md). This current state overrides the closed-checkout snapshots below.
+
+---
+
 # Current handover — September 12, 2026
 
 The landing is live at **https://vladasana.com/Job-bundle** on **Amir’s Vercel**, with the existing portfolio preserved at the homepage. The sender is **Vlada <Support@Vladasana.com>**. Namecheap and Resend DNS are verified; the real Gmail test passed SPF, DKIM and DMARC, and both received attachment hashes match the original PDF/ZIP. The new signed delivery callback and five-minute cron work. Sales remain closed pending payment acceptance.

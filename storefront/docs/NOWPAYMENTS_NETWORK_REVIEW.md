@@ -1,3 +1,5 @@
+> **13:19 UTC update:** The owner explicitly requested public checkout for an IRL test. Crypto is now open; Paddle remains disabled. See [PUBLIC_CRYPTO_TEST.md](PUBLIC_CRYPTO_TEST.md). The readiness snapshot below was taken before activation.
+
 # Current crypto readiness — September 12, 2026
 
 Fresh authenticated GET-only checks ran inside an unpromoted Vercel deployment at **13:12 UTC**. The production URL and active cron deployment were independently confirmed unchanged. All nine configured networks are still selected by the merchant and their fixed-rate, seller-paid-fee minimums support the $19 bundle. API/IPN configuration is present. The private PDF and ZIP were downloaded through authenticated storage and their configured hashes verified (1,067,944 and 2,539,601 bytes).

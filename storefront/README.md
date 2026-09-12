@@ -4,7 +4,7 @@ A standalone Next.js storefront in the approved **E — Quiet Ambition** directi
 
 [Open the Production preview](https://vladasana.com/Job-bundle) · [Delivery email preview](https://vladasana.com/Job-bundle/email-preview)
 
-**Current state: public review preview.** The landing, magazine, payment chooser and delivery-email preview work. Checkout is intentionally unavailable until Paddle and seller services are activated and tested. No real payment has been accepted. The owner-requested branded email test passed actual inbox, authentication and attachment-integrity checks.
+**Current state: crypto checkout is live for the owner’s real $19 test.** Paddle remains unavailable. The branded email, support inbox and product attachment checks passed; real payment settlement and purchase-triggered delivery await testing. See [the live-checkout handover](docs/PUBLIC_CRYPTO_TEST.md).
 
 ## Experience
 

@@ -18,7 +18,7 @@ Production Git tracking is **`codex/vladasana-domain-email`** in the private sou
 | `SUPPORT_EMAIL` | `Support@Vladasana.com` |
 | `DELIVERY_RETRY_MODE` | `cron` |
 | Vercel cron | `/Job-bundle/api/cron/commerce`, every five minutes on Amir's Pro team |
-| Public sales | Closed: `COMMERCE_MODE=preview`, launch approval false |
+| Public sales | Crypto open for the owner’s real test: `COMMERCE_MODE=live`, launch approval true; Paddle unavailable |
 
 The existing dedicated Neon database, private Blob product storage, Resend key, signed email callback secret, NOWPayments keys, download secret and cron secret remain connected. These resources stay in Amir's account; source-code copies do not transfer them.
 
@@ -85,4 +85,4 @@ Private test payload, MIME message and receipts live only in ignored `output/pri
 2. **Paddle activation:** seller/domain approval, matching product/price/keys and notification destination, then isolated sandbox and controlled live acceptance.
 3. **Purchase-triggered delivery acceptance:** real provider-confirmed order, one fulfillment, signed download, duplicate callback handling, actual failed-send recovery and refund behavior. Crypto needs owner-funded controlled transfers. The successful operator email test does not establish these payment results.
 
-Keep public sales closed until payment acceptance is recorded. Follow [ACTIVATE_SALES.md](ACTIVATE_SALES.md) for provider requirements, substituting the exact URLs above for historical root-path examples.
+The owner subsequently explicitly requested public crypto checkout for an IRL test; it is now open. See [PUBLIC_CRYPTO_TEST.md](PUBLIC_CRYPTO_TEST.md). Payment acceptance is still to be recorded. Follow [ACTIVATE_SALES.md](ACTIVATE_SALES.md) for provider requirements, substituting the exact URLs above for historical root-path examples.
