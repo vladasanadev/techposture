@@ -1,3 +1,5 @@
+
+import { storefrontPath } from "@/lib/site-path";
 import { GUIDES } from "@/lib/product";
 export type MagazinePage = { src: string; title: string; alt: string };
 export const RESOURCES = [
@@ -11,7 +13,7 @@ export const RESOURCES = [
   ...GUIDES,
 ] as const;
 const makePage = (slug: string, title: string): MagazinePage => ({
-  src: `/images/guides/${slug}.webp`,
+  src: storefrontPath(`/images/guides/${slug}.webp`),
   title,
   alt: `${title}. Actual page from The Developer Job Search Playbook.`,
 });

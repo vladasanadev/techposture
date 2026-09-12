@@ -1,18 +1,26 @@
-# Current handover — database, retries and email activation, September 9, 2026
+# Current handover — September 12, 2026
+
+The landing is live at **https://vladasana.com/Job-bundle** on **Amir’s Vercel**, with the existing portfolio preserved at the homepage. The sender is **Vlada <Support@Vladasana.com>**. Namecheap and Resend DNS are verified; the real Gmail test passed SPF, DKIM and DMARC, and both received attachment hashes match the original PDF/ZIP. The new signed delivery callback and five-minute cron work. Sales remain closed pending payment acceptance.
+
+**Start with [the current domain and email handover](docs/DOMAIN_EMAIL_LAUNCH.md).** It replaces older domain, sender, callback and ownership instructions below. Production tracks `codex/vladasana-domain-email` in the private original repository. The partner mirror remains separate. Support mailbox login is still needed for direct incoming-reply inspection.
+
+Everything below is historical evidence; it does not override the current setup above.
+
+---
+
+# Historical handover — September 9, 2026
 
 **Latest delivery setup:** dedicated Neon and verified five-minute Vercel recovery remain configured. Resend Free **vladasana-delivery** is now installed, and its signed webhook is enabled and deployed. One owner-authorized email with the actual PDF/ZIP reached the supplied Gmail inbox via `onboarding@resend.dev`; Gmail opened the PDF as 281 pages, both attachment sizes matched, the delivery event was stored, replay deduplicated, and a repeated API send returned the same email ID. No order or fulfillment was created. The remaining email blocker is Namecheap DNS verification for `delivery@vladasana.com`; Mac access is locked. See [docs/DELIVERY_ACTIVATION.md](docs/DELIVERY_ACTIVATION.md) and [exact DNS records](docs/RESEND_DNS.md). Real purchase-to-inbox testing still requires payment access and verified branded sending.
 
 **Latest network approval:** the seller has added API/IPN secrets to Vercel. Authenticated checks inside Vercel approved nine stablecoin networks at the $19 price with explicit fixed-rate/seller-paid-fee minimums. `NOWPAYMENTS_NETWORKS_APPROVED=true`; `usdcmatic` is excluded because it is not selected for this key. Provider-selected symbols are uppercase and now normalized. See [the recorded results](docs/NOWPAYMENTS_NETWORK_REVIEW.md). Storewide launch remains closed pending email activation and actual acceptance; no payment or customer email was sent.
 
-**Partner-account handover:** start with [PARTNER_HANDOVER.md](../PARTNER_HANDOVER.md), prepared for the owner's Vercel, Namecheap and service accounts. The latest user request authorizes pushing the complete integrated storefront to `vladasanadev/techposture`, under `storefront/` on `codex/vladasana-storefront`, preserving the existing portfolio and history. GitHub source does not migrate provider credentials, databases, private files or production traffic. The repository owner controls visibility; preserve magazine attribution and do not offer it as a standalone asset.
+The user confirmed NOWPayments API for crypto and requested a push to `vladasanadev/techposture`; they will add Vercel keys. The destination already has a Vite portfolio. Prepare the storefront in `storefront/` on `codex/vladasana-storefront`, based on the destination's existing history, preserving all root application files. The destination is currently public and the authenticated account has push permission but no admin permission. Do not publish the adapted magazine source until the destination meets this project's private-repository instruction. No push or deployment is claimed by this local preparation.
 
 Read [docs/VERCEL_SETUP.md](docs/VERCEL_SETUP.md) for the new-project handoff: separate Vercel project, `storefront` root, environment values, private-storage connection, callbacks and acceptance. The existing Vercel project and private Blob data do not transfer automatically with GitHub source. Keep existing Production unchanged and payments closed while setup is incomplete.
 
 The operator checker now includes provider-specific missing configuration and supports `--provider=crypto` or `--provider=paddle`. `npm run commerce:check-crypto` makes only live merchant GET requests (network selection, estimate and minimum); it can run while the store is closed and cannot create invoices or send emails. The payment path shares that network check and still requires live mode, the common delivery services and explicit launch approval. Vercel Secret values cannot be pulled locally; run the read-only probe inside a staged Vercel build when needed. Payment-to-inbox acceptance has not been performed.
 
-## Historical deployed release — September 8, 2026
-
-The account status below is a dated record. Use the partner handover and latest delivery evidence for current setup.
+## Previous deployed release — September 8, 2026
 
 Repository: `/Users/amir/Codex-Vladasana-Bundle`, private GitHub `TheDudeCommits/vladasana-job-bundle`. Canonical Production: https://vladasana-job-bundle.vercel.app.
 

@@ -1,5 +1,7 @@
 "use client";
 
+import { storefrontPath } from "@/lib/site-path";
+
 import { useEffect, type PointerEvent } from "react";
 import Link from "next/link";
 import { ArrowDown } from "lucide-react";
@@ -60,7 +62,7 @@ export default function QuietLanding({ price }: { price: number }) {
         >
           <motion.div className="quiet-art" aria-hidden="true" style={{ x, y }}>
             <img
-              src="/images/quiet/hero.webp"
+              src={storefrontPath("/images/quiet/hero.webp")}
               alt=""
               width="1866"
               height="843"

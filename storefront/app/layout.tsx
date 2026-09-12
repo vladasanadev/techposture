@@ -1,8 +1,10 @@
+
+import { storefrontPath } from "@/lib/site-path";
 import type { Metadata } from "next";
 import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.SITE_URL || "https://vladasana-job-bundle.vercel.app",
+    new URL(process.env.SITE_URL || "https://vladasana-job-bundle.vercel.app").origin,
   ),
   title: "The Developer Job Search Playbook — Vladasana",
   description:
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/quiet/hero.webp",
+        url: storefrontPath("/images/quiet/hero.webp"),
         width: 1866,
         height: 843,
         alt: "The Get a Job Bundle in an oxblood folder, by Vladasana",
@@ -23,7 +25,7 @@ export const metadata: Metadata = {
     ],
   },
   twitter: { card: "summary_large_image" },
-  icons: { icon: "/favicon.svg" },
+  icons: { icon: storefrontPath("/favicon.svg") },
 };
 export default function RootLayout({
   children,

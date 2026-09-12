@@ -1,3 +1,4 @@
+import { storefrontPath, storefrontUrl } from "../site-path";
 export type BundleEmailInput = {
   siteUrl: string;
   downloadUrl: string;
@@ -73,7 +74,7 @@ function render(
   const downloadUrl = webUrl(input.downloadUrl, "downloadUrl");
   const supportEmail = emailAddress(input.supportEmail);
   const imageUrl =
-    previewImageUrl ?? new URL("/images/quiet/hero.webp", siteUrl).href;
+    previewImageUrl ?? storefrontUrl(siteUrl, "/images/quiet/hero.webp");
   const productName = singleLine(input.productName);
   const firstName = input.firstName
     ? singleLine(input.firstName).slice(0, 60)
@@ -217,8 +218,8 @@ export function renderBundleEmailPreview(siteUrl = ""): BundleEmail {
     },
     true,
     siteUrl
-      ? new URL("/images/quiet/hero.webp", previewSiteUrl).href
-      : "/images/quiet/hero.webp",
+      ? storefrontUrl(previewSiteUrl, "/images/quiet/hero.webp")
+      : storefrontPath("/images/quiet/hero.webp"),
   );
 }
 

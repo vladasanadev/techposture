@@ -1,5 +1,7 @@
 "use client";
 
+import { storefrontPath } from "@/lib/site-path";
+
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowUpRight,
@@ -39,7 +41,7 @@ export default function CheckoutPanel() {
   const requestFields = useRef("");
   useEffect(() => {
     const controller = new AbortController();
-    fetch("/api/storefront", { signal: controller.signal })
+    fetch(storefrontPath("/api/storefront"), { signal: controller.signal })
       .then((r) => {
         if (!r.ok) throw new Error("Store unavailable");
         return r.json();
@@ -75,7 +77,7 @@ export default function CheckoutPanel() {
       requestFields.current = fields;
     }
     try {
-      const response = await fetch("/api/checkout", {
+      const response = await fetch(storefrontPath("/api/checkout"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -265,9 +267,9 @@ export default function CheckoutPanel() {
           </p>
         )}
         <p className="checkout-terms">
-          By purchasing, you accept our <a href="/terms">terms</a>. Read our{" "}
-          <a href="/privacy">privacy policy</a> and{" "}
-          <a href="/refunds">7-day refund policy</a>.
+          By purchasing, you accept our <a href={storefrontPath("/terms")}>terms</a>. Read our{" "}
+          <a href={storefrontPath("/privacy")}>privacy policy</a> and{" "}
+          <a href={storefrontPath("/refunds")}>7-day refund policy</a>.
         </p>
       </form>
     </div>

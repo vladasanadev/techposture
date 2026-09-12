@@ -75,7 +75,7 @@ test("attachment claims only appear when the fulfillment worker includes attachm
 test("public sample has no active private download link or customer details", () => {
   const email = renderBundleEmailPreview();
   assert.ok(email.html.includes('aria-disabled="true"'));
-  assert.ok(email.html.includes('src="/images/quiet/hero.webp"'));
+  assert.ok(email.html.includes('src="/Job-bundle/images/quiet/hero.webp"'));
   assert.ok(!email.html.includes('href="'));
   assert.ok(!email.html.includes("https://example.invalid/sample-download"));
   assert.ok(email.text.includes("SAMPLE EMAIL"));
@@ -94,4 +94,18 @@ test("operator delivery test identifies actual attachments without claiming a pu
     assert.ok(!content.includes(input.downloadUrl));
     assert.ok(!content.includes("7 days"));
   }
+});
+
+
+test("receipt images and links stay inside the deployed Job-bundle path", () => {
+  const email = renderBundleEmail({
+    ...input,
+    siteUrl: "https://vladasana.com/Job-bundle",
+    downloadUrl: "https://vladasana.com/Job-bundle/api/download/signed-test-token",
+    supportEmail: "Support@Vladasana.com",
+  });
+  assert.ok(email.html.includes('src="https://vladasana.com/Job-bundle/images/quiet/hero.webp"'));
+  assert.ok(email.html.includes('href="https://vladasana.com/Job-bundle/api/download/signed-test-token"'));
+  assert.ok(!email.html.includes('src="https://vladasana.com/images/'));
+  assert.ok(email.text.includes("Support@Vladasana.com"));
 });

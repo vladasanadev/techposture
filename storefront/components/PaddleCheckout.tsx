@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { initializePaddle, type Paddle } from "@paddle/paddle-js";
+import { storefrontPath } from "@/lib/site-path";
 export default function PaddleCheckout({
   transactionId,
   orderToken,
@@ -23,7 +24,7 @@ export default function PaddleCheckout({
   useEffect(() => {
     let active = true;
     // The explicit, server-resolved transaction takes precedence over Paddle's automatic _ptxn launcher.
-    window.history.replaceState(null, "", `/pay?order=${orderToken}`);
+    window.history.replaceState(null, "", storefrontPath(`/pay?order=${orderToken}`));
     initializePaddle({
       token,
       environment,
@@ -51,7 +52,7 @@ export default function PaddleCheckout({
             allowLogout: false,
             showAddDiscounts: false,
             allowDiscountRemoval: false,
-            successUrl: `${window.location.origin}/success?order=${orderToken}`,
+            successUrl: `${window.location.origin}${storefrontPath(`/success?order=${orderToken}`)}`,
           },
         });
       })

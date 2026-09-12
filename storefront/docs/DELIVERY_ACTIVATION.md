@@ -1,3 +1,5 @@
+> **September 12 update:** The branded support sender and domain are now verified. Actual Gmail attachment hashes, SPF/DKIM/DMARC and the new `/Job-bundle` callback passed. See [DOMAIN_EMAIL_LAUNCH.md](DOMAIN_EMAIL_LAUNCH.md) for current settings and remaining payment acceptance. The September 9 evidence below is historical.
+
 # Delivery activation — September 9, 2026
 
 Project: `amirs-projects-d9680079/vladasana-job-bundle`.

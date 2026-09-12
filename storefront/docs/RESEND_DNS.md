@@ -1,6 +1,6 @@
 # Resend sending records for vladasana.com
 
-Add these records at Namecheap. Preserve the existing website records and inbound email-forwarding MX records. These records apply to the `send` subdomain and `resend._domainkey`, not the root inbound mail service.
+These records are saved at Namecheap and verified as of September 12, 2026. Preserve the Private Email root MX records and the other settings in [DOMAIN_EMAIL_LAUNCH.md](DOMAIN_EMAIL_LAUNCH.md). These records apply to the `send` subdomain and `resend._domainkey`, not the root inbound mail service.
 
 | Type | Host | Value | Priority | TTL |
 | --- | --- | --- | --- | --- |
@@ -8,6 +8,6 @@ Add these records at Namecheap. Preserve the existing website records and inboun
 | MX | `send` | `feedback-smtp.us-east-1.amazonses.com` | 10 | Automatic |
 | TXT | `send` | `v=spf1 include:amazonses.com ~all` | — | Automatic |
 
-After saving, run domain verification for Resend domain `ba872bae-a056-4290-a9b7-aa3fa8b2c334`. The required result is `status=verified` before sending as `delivery@vladasana.com`.
+After saving, run domain verification for Resend domain `ba872bae-a056-4290-a9b7-aa3fa8b2c334`. The required result is `status=verified` before sending as `Support@Vladasana.com`.
 
 These are public DNS values, not API keys. Source: the authenticated Resend domain API, September 9, 2026.

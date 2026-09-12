@@ -1,6 +1,6 @@
 # Vladasana storefront — partner handover
 
-Prepared September 9, 2026. This is the starting guide for Vladyslava to run the storefront in **her own accounts**. The existing portfolio remains at the repository root; the new store is a separate Next.js application in `storefront/`.
+Updated September 12, 2026. **The live storefront now runs on Amir’s Vercel at https://vladasana.com/Job-bundle.** Namecheap remains in Vlada’s account. The next sections also explain a future migration to Vlada’s own service accounts; a migration is optional and has not been performed. The existing portfolio remains at the repository root; the new store is a separate Next.js application in `storefront/`.
 
 ## 1. What you are receiving
 
@@ -11,17 +11,17 @@ Prepared September 9, 2026. This is the starting guide for Vladyslava to run the
 - Shared PostgreSQL order database, verified payment callbacks, durable delivery jobs, duplicate protection, delivery-status callbacks and five-minute recovery.
 - Seller: **Vladyslava Kandyba, Ukraine**. Support: **support@vladasana.com**. Published voluntary refund window: **7 days**, without limiting mandatory consumer rights.
 
-**Current launch status:** sales are closed. The original project has private files, a database, a working scheduler and a signed Resend webhook. One real email-only test reached Gmail with the actual PDF and ZIP using Resend's test sender; the PDF was readable. This did not involve a purchase. Branded sender verification, the received ZIP's contents, real payment settlement, purchase-triggered delivery, failure/retry and refund/download acceptance remain to be completed. Those existing connections belong to the original deployment and do not appear automatically in your new project.
+**Current launch status:** sales remain closed pending payment acceptance. The custom domain is live, Resend is verified, and automated mail sends as **Vlada <Support@Vladasana.com>**. A real email test reached the owner's Gmail inbox with SPF, DKIM and DMARC passing. The received PDF and ZIP match the approved hashes; ZIP integrity passed. The signed callback and five-minute cron are working on Amir's project. Namecheap's support mailbox is enabled; its inbox still needs login to inspect the reply test. No payment was made or marked paid.
 
-The earlier reference deployment is [vladasana-job-bundle.vercel.app](https://vladasana-job-bundle.vercel.app). Your new project will have its own URL. Older documents describe that original account's setup; **use this guide for your account migration**.
+**Read [the current domain and email setup](storefront/docs/DOMAIN_EMAIL_LAUNCH.md) first.** That document identifies the running accounts, exact saved DNS, callback URLs and verification evidence. Do not recreate services or replace those DNS records simply to follow the optional migration steps below. Amir's project tracks `codex/vladasana-domain-email` in the original private source repository; this partner repository remains the mirror for handover and future deployment.
 
 ## 2. Accounts and files to have ready
 
 | Account / material | What you need to own or control |
 | --- | --- |
 | GitHub | Access to `vladasanadev/techposture`; permission to install the Vercel GitHub integration for it |
-| Vercel | Your team, billing, storefront project and private Blob store; use Pro for the shipped five-minute cron |
-| Namecheap | DNS management for `vladasana.com`, plus the existing inbound email/forwarding configuration |
+| Vercel | Your team, billing, storefront project and private Blob store; Amir’s Pro project runs five-minute recovery; the mirror’s daily cron is preview-only |
+| Namecheap | DNS management for `vladasana.com`, plus the existing Namecheap Private Email mailbox and DNS configuration |
 | Neon | A dedicated PostgreSQL database connected to your storefront, owned through your account or your Vercel marketplace installation |
 | Resend | Your sending account, verified domain, API key and webhook |
 | Paddle Billing | Your verified seller account, payout details, approved website, product and price; separate sandbox account for testing |
@@ -41,19 +41,22 @@ The magazine contains an adaptation of David McBacon's Framer component. Preserv
 4. Add the initial variables below to **Production**, especially `COMMERCE_MODE=preview` and `COMMERCE_LAUNCH_APPROVED=false`. Deploy and verify the build is **Ready**. A page that says checkout is being prepared is expected at this stage.
 5. Keep live credentials and the production database out of general Preview deployments. Create a separate test project/database for sandbox acceptance.
 
-Your account must support the cron in `storefront/vercel.json`: every five minutes. **Pro is the straightforward setup for this guide.** Hobby permits only daily cron jobs and cannot deploy this schedule unchanged. QStash is an optional engineered alternative, described in [COMMERCE.md](storefront/docs/COMMERCE.md), and still requires changing that cron configuration. Check current service prices and usage caps before enabling billing. [Vercel cron limits](https://vercel.com/docs/cron-jobs/usage-and-pricing).
+The partner mirror preserves Vlada’s Hobby-compatible **daily** preview cron in `storefront/vercel.json`. That schedule is suitable for preview but is not the five-minute production recovery described here. On a future Pro deployment, change it to `*/5 * * * *` and verify scheduled execution before approving retries. Amir’s current production already uses the verified five-minute schedule. QStash is an optional engineered alternative described in [COMMERCE.md](storefront/docs/COMMERCE.md). Check current service prices and usage caps before enabling billing. [Vercel cron limits](https://vercel.com/docs/cron-jobs/usage-and-pricing).
 
-## 4. Connect Namecheap without replacing your existing site
+## 4. Domain routing: current deployment and future migration
 
-Recommended new store address: **`https://bundle.vladasana.com`**. This is a suggested hostname, not an already configured domain. It leaves your existing `vladasana.com` website in place.
+**Current address: `https://vladasana.com/Job-bundle`.** Both apex and www are verified on Amir's Vercel project; www redirects to apex. The Next.js application has a fixed `/Job-bundle` base path. The homepage and other portfolio routes are proxied to `https://techposture.vercel.app`, preserving the existing portfolio and its APIs. Keep that portfolio origin public and online.
 
-1. In your new Vercel project, open **Settings → Domains** and add `bundle.vladasana.com`.
-2. Copy the **exact CNAME target Vercel gives this project**.
-3. In Namecheap, open **Domain List → Manage → Advanced DNS**. Add a CNAME with **Host `bundle`**, the Vercel target as Value, and automatic TTL. Resolve any conflicting record for this same hostname only.
-4. Keep existing nameservers, `@` / `www` website records and inbound mail MX records. If DNS is actually delegated elsewhere, edit the authoritative DNS provider instead of Namecheap's inactive zone.
-5. Wait for Vercel to show valid configuration and HTTPS. Set `SITE_URL=https://bundle.vladasana.com` and redeploy.
+The exact live DNS records are in [DOMAIN_EMAIL_LAUNCH.md](storefront/docs/DOMAIN_EMAIL_LAUNCH.md). No DNS work remains for the current deployment. Production requires:
 
-Use that same origin for all callbacks and Paddle's default payment link. If choosing a different hostname, replace it throughout this guide. The old `/get-a-job-bundle` path cannot be redirected using DNS alone: after acceptance, add a redirect in the existing site's hosting platform and update social links. [Vercel custom-domain instructions](https://vercel.com/docs/domains/working-with-domains/add-a-domain).
+```env
+SITE_URL=https://vladasana.com/Job-bundle
+PORTFOLIO_ORIGIN=https://techposture.vercel.app
+```
+
+For a future account migration, first deploy and test the new project with its own service connections. Use `SITE_URL=https://your-project.vercel.app/Job-bundle` while testing. Then add both custom domains to the new project, complete Vercel's ownership verification, use the exact DNS targets provided for that project, and move traffic only after acceptance. Preserve all email DNS records. Restore `SITE_URL=https://vladasana.com/Job-bundle` and redeploy before cutover.
+
+Do not point `PORTFOLIO_ORIGIN` at the custom domain itself: that creates a proxy loop. All application, callback and payment-return URLs include `/Job-bundle`; changing DNS alone cannot create a path-based route. If using a separate subdomain instead, its application URL still includes `/Job-bundle` until a developer deliberately changes the Next.js base path.
 
 ## 5. Create your database and private file storage
 
@@ -88,19 +91,19 @@ Copy the new private file URLs into `BUNDLE_PDF_URL` and `BUNDLE_ARCHIVE_URL`. U
 3. In Namecheap Advanced DNS, add the generated records. Usually these are TXT at `resend._domainkey`, plus MX and SPF TXT at `send`; use Resend's exact hosts, values and MX priority. Namecheap's Host field uses the relative hostname rather than appending the domain twice.
 4. Preserve root-domain MX records and existing support forwarding. The sending subdomain's MX record is separate from your inbound support mailbox. If Namecheap asks to change mail settings to Custom MX, preserve/re-create the existing inbound records as needed and verify incoming mail afterwards.
 5. Click Verify in Resend and wait for the required records to pass. If Resend reports the domain belongs to another account, resolve ownership/transfer with the provider and the existing account owner before changing active records.
-6. Set `EMAIL_FROM=Vlada <delivery@vladasana.com>` and `SUPPORT_EMAIL=support@vladasana.com`. Test inbound support email and replies separately; Resend domain verification does not create a mailbox.
-7. Add a Resend webhook at **`https://bundle.vladasana.com/api/webhooks/resend`** for `email.delivered`, `email.bounced`, `email.complained`, `email.failed`, `email.suppressed`. Set the new endpoint's signing secret as `RESEND_WEBHOOK_SECRET`.
+6. Set `EMAIL_FROM=Vlada <Support@Vladasana.com>` and `SUPPORT_EMAIL=support@vladasana.com`. Test inbound support email and replies separately; Resend domain verification does not create a mailbox.
+7. Add a Resend webhook at **`https://vladasana.com/Job-bundle/api/webhooks/resend`** for `email.delivered`, `email.bounced`, `email.complained`, `email.failed`, `email.suppressed`. Set the new endpoint's signing secret as `RESEND_WEBHOOK_SECRET`.
 8. Redeploy. During sandbox acceptance, inspect the actual received email, both attachments and sender authentication. Review existing DMARC policy before altering it; confirm legitimate website/support senders continue to pass.
 
-The preview at `/email-preview` shows the template but sends nothing. The previous `onboarding@resend.dev` test sender is not a production sender. [Resend's Namecheap guide](https://resend.com/docs/knowledge-base/namecheap).
+The preview at `/Job-bundle/email-preview` shows the template but sends nothing. The previous `onboarding@resend.dev` test sender is not a production sender. [Resend's Namecheap guide](https://resend.com/docs/knowledge-base/namecheap).
 
 ## 7. Activate Paddle: cards, PayPal, Apple Pay and Google Pay
 
 1. Open your **Paddle Billing** seller account, complete requested identity/business checks and payout setup. Submit the final storefront domain for website approval. Review the public product, contact, terms, privacy and refund pages, and provide ownership evidence if Paddle requests it. Approval is Paddle's decision.
-2. Set the **default payment link** to `https://bundle.vladasana.com/pay`.
+2. Set the **default payment link** to `https://vladasana.com/Job-bundle/pay`.
 3. Create an active product named **The Developer Job Search Playbook**, using the appropriate digital-content tax category confirmed with Paddle. Create one active price with **amount `1900`, currency `USD`, tax mode `internal`, quantity minimum/maximum `1`**. Billing cycle and trial must be null; country overrides must be empty. This integration expects one fixed, tax-inclusive $19 purchase. Do not add discounts, subscriptions or price overrides without changing and testing the code contract.
 4. Create an API key with the required price-read and transaction-read/write permissions, plus a client-side token. Set `PADDLE_API_KEY`, `PADDLE_CLIENT_TOKEN`, `PADDLE_PRODUCT_ID` and `PADDLE_PRICE_ID` from that same environment.
-5. Add a notification destination at **`https://bundle.vladasana.com/api/webhooks/paddle`**. Subscribe to `transaction.completed`, `transaction.canceled`, `adjustment.created`, `adjustment.updated`. Save its endpoint secret as `PADDLE_WEBHOOK_SECRET`. Live destination events must come from the real platform, not only the simulator.
+5. Add a notification destination at **`https://vladasana.com/Job-bundle/api/webhooks/paddle`**. Subscribe to `transaction.completed`, `transaction.canceled`, `adjustment.created`, `adjustment.updated`. Save its endpoint secret as `PADDLE_WEBHOOK_SECRET`. Live destination events must come from the real platform, not only the simulator.
 6. Set `PADDLE_DOMAIN_APPROVED=true` only once Paddle approves that production origin. Sandbox uses its own account, IDs, tokens, notifications and test database; sandbox client tokens begin `test_`, live tokens `live_`.
 
 | Method | What you must do |
@@ -135,7 +138,7 @@ Set `NOWPAYMENTS_API_KEY`, `NOWPAYMENTS_IPN_SECRET`, and `NOWPAYMENTS_TOKENS` to
 
 Run `npm run commerce:check-crypto` with your operator environment. It makes read-only merchant availability, estimate and minimum queries, even while checkout is closed. Review current fixed-rate service fees, network fees and expected net payout against a $19 order, and confirm actual receiving wallets in the dashboard. Enable only suitable networks, then set `NOWPAYMENTS_NETWORKS_APPROVED=true`. [Historical network review](storefront/docs/NOWPAYMENTS_NETWORK_REVIEW.md); [NOWPayments API](https://nowpayments.io/api).
 
-Each new order automatically supplies **`https://bundle.vladasana.com/api/webhooks/crypto`** as its IPN callback using `SITE_URL`. Do not use the old fixed payment button/invoice: it bypasses the application's order-to-email association. The app's crypto adapter is live-only. Controlled settlement tests spend real funds and incur fees; complete them on each advertised network before promoting it. Crypto tax/refund accounting is separate from Paddle's merchant-of-record service.
+Each new order automatically supplies **`https://vladasana.com/Job-bundle/api/webhooks/crypto`** as its IPN callback using `SITE_URL`. Do not use the old fixed payment button/invoice: it bypasses the application's order-to-email association. The app's crypto adapter is live-only. Controlled settlement tests spend real funds and incur fees; complete them on each advertised network before promoting it. Crypto tax/refund accounting is separate from Paddle's merchant-of-record service.
 
 ## 9. Complete environment-variable checklist
 
@@ -146,9 +149,10 @@ Set these in the **new project's Production environment**. The defaults below ke
 | `COMMERCE_MODE` | `preview` initially; `sandbox` only in the separate test project; `live` for controlled production acceptance |
 | `COMMERCE_LAUNCH_APPROVED` | `false` initially; `true` only for the acceptance/launch step below |
 | `BUNDLE_FINAL_APPROVED` | `true` for the supplied, hash-verified final files |
-| `SITE_URL` | Your final HTTPS origin, e.g. `https://bundle.vladasana.com`, without a path/trailing slash |
+| `SITE_URL` | The full storefront URL, `https://vladasana.com/Job-bundle`, including its path and without a trailing slash |
 | `SELLER_COUNTRY`, `SELLER_LEGAL_NAME` | `UA`, `Vladyslava Kandyba` |
-| `SUPPORT_EMAIL` | `support@vladasana.com` |
+| `PORTFOLIO_ORIGIN` | `https://techposture.vercel.app` to preserve the existing homepage |
+| `SUPPORT_EMAIL` | `Support@Vladasana.com` |
 | `DATABASE_URL` | Your dedicated Neon connection string |
 | `BLOB_READ_WRITE_TOKEN` | Your connected private Blob store token |
 | `BUNDLE_PDF_URL`, `BUNDLE_ARCHIVE_URL` | The two private HTTPS URLs from your store |
@@ -159,7 +163,7 @@ Set these in the **new project's Production environment**. The defaults below ke
 | `DOWNLOAD_SIGNING_SECRET` | New independent random secret, at least 32 characters |
 | `CRON_SECRET` | A different random secret, at least 32 characters |
 | `RESEND_API_KEY`, `RESEND_WEBHOOK_SECRET` | Your Resend sending key and this site's endpoint secret |
-| `EMAIL_FROM` | `Vlada <delivery@vladasana.com>` after domain verification |
+| `EMAIL_FROM` | `Vlada <Support@Vladasana.com>` after domain verification |
 | `PADDLE_API_KEY`, `PADDLE_CLIENT_TOKEN` | Matching live or sandbox credentials |
 | `PADDLE_PRODUCT_ID`, `PADDLE_PRICE_ID` | Your matching `pro_…` and `pri_…` IDs |
 | `PADDLE_WEBHOOK_SECRET` | Secret for the matching site/environment notification destination |
@@ -176,7 +180,7 @@ A password manager can generate the two application secrets independently. Once 
 
 ## 10. Verify retries and service configuration
 
-In Vercel's Cron Jobs view, verify `/api/cron/commerce` is registered every five minutes. Vercel sends `Authorization: Bearer <CRON_SECRET>` automatically when that environment value is set. Verify a scheduled request returns 200 in runtime logs and an unsigned request returns 401. Then set `COMMERCE_RETRY_SCHEDULE_APPROVED=true` and redeploy. A successful preview-mode run proves scheduling/authentication; it does not prove a paid email retry.
+In Vercel's Cron Jobs view, verify `/Job-bundle/api/cron/commerce` is registered every five minutes. Vercel sends `Authorization: Bearer <CRON_SECRET>` automatically when that environment value is set. Verify a scheduled request returns 200 in runtime logs and an unsigned request returns 401. Then set `COMMERCE_RETRY_SCHEDULE_APPROVED=true` and redeploy. A successful preview-mode run proves scheduling/authentication; it does not prove a paid email retry.
 
 Use Node 22 and run from `storefront/`, with your private `.env.local`:
 
@@ -217,7 +221,7 @@ Have your developer complete and record these acceptance tests:
 
 Once the services and sandbox tests pass, use live credentials on Production. Enable only the providers that are ready, set `COMMERCE_MODE=live` and `COMMERCE_LAUNCH_APPROVED=true`, and redeploy. This opens the configured checkout, so perform this step during your controlled acceptance window before advertising it. Paddle can launch with crypto still disabled.
 
-Check the final domain and `/api/storefront` report the intended live methods. Complete an owner-approved real purchase, settlement, email/file inspection and refund test for the advertised payment routes. Test each crypto network before offering it broadly. If any acceptance step fails, return to `COMMERCE_MODE=preview` and `COMMERCE_LAUNCH_APPROVED=false`, redeploy, and investigate while preserving order history.
+Check the final domain and `/Job-bundle/api/storefront` report the intended live methods. Complete an owner-approved real purchase, settlement, email/file inspection and refund test for the advertised payment routes. Test each crypto network before offering it broadly. If any acceptance step fails, return to `COMMERCE_MODE=preview` and `COMMERCE_LAUNCH_APPROVED=false`, redeploy, and investigate while preserving order history.
 
 Only after acceptance should you update Instagram/X links, redirect the old product page and send customer traffic. Record the final domain, deployed commit, service ownership, test dates and results privately.
 

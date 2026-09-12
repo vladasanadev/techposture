@@ -1,5 +1,23 @@
 import type { NextConfig } from "next";
+import { STOREFRONT_BASE_PATH } from "./lib/site-path";
 const config: NextConfig = {
+  basePath: STOREFRONT_BASE_PATH,
+  async rewrites() {
+    const origin = process.env.PORTFOLIO_ORIGIN;
+    if (!origin) return [];
+    const url = new URL(origin);
+    if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/")
+      throw new Error("PORTFOLIO_ORIGIN must be an HTTPS origin.");
+    return {
+      beforeFiles: [],
+      afterFiles: [],
+      fallback: [{
+        source: "/:path((?!Job-bundle(?:/|$)).*)",
+        destination: `${url.origin}/:path`,
+        basePath: false,
+      }],
+    };
+  },
   poweredByHeader: false,
   devIndicators: false,
   async headers() {

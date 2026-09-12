@@ -1,4 +1,6 @@
 "use client";
+
+import { storefrontPath } from "@/lib/site-path";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -18,7 +20,7 @@ export default function OrderStatus() {
     async function update() {
       try {
         const result = await fetch(
-          `/api/orders/${encodeURIComponent(token!)}`,
+          storefrontPath(`/api/orders/${encodeURIComponent(token!)}`),
           { signal: controller.signal, cache: "no-store" },
         );
         const value = await result.json();
@@ -61,7 +63,7 @@ export default function OrderStatus() {
       <section className="order-card">
         <img
           className="order-banner"
-          src="/images/quiet/hero.webp"
+          src={storefrontPath("/images/quiet/hero.webp")}
           alt="The Get a Job Bundle in an oxblood folder"
           width="900"
           height="300"
@@ -110,7 +112,7 @@ export default function OrderStatus() {
           )}
           <p className="order-help">
             Need a hand?{" "}
-            <a href="mailto:hello.vladasana@gmail.com">Say hello to Vlada.</a>
+            <a href="mailto:Support@Vladasana.com">Say hello to Vlada.</a>
           </p>
           <Link href="/" className="text-link">
             <ArrowLeft size={16} /> Back to the bundle
