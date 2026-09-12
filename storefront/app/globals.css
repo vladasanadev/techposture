@@ -511,13 +511,14 @@ html.landing-scroll {
   backdrop-filter: blur(7px);
 }
 .dialog-close {
-  position: absolute;
+  position: sticky;
+  float: right;
   z-index: 2;
-  right: 10px;
+  margin: 10px 10px -46px 0;
   top: 10px;
   width: 36px;
   height: 36px;
-  background: transparent;
+  background: var(--paper);
   display: grid;
   place-items: center;
 }
@@ -565,6 +566,143 @@ html.landing-scroll {
   font-size: 14px;
   border-radius: 0;
   padding: 15px 5px;
+}
+.payment-methods > div {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.vlink-method-icon {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 25px;
+  line-height: 19px;
+}
+.vlink-checkout {
+  margin-top: 22px;
+  animation: vlink-reveal 220ms ease-out both;
+}
+.vlink-intro {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.vlink-monogram {
+  flex: 0 0 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  color: var(--paper);
+  background: var(--cherry);
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 42px;
+  line-height: 1;
+}
+.vlink-intro h4 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+.vlink-intro p,
+.vlink-provider-note {
+  margin-top: 6px;
+  color: #756268;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.vlink-delivery {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-left: 2px solid var(--cherry);
+  background: #f2e9e3;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.vlink-delivery strong {
+  display: block;
+  font-weight: 600;
+}
+.vlink-delivery a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.vlink-frame-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 9px;
+  font-size: 14px;
+}
+.vlink-frame-heading a,
+.vlink-receipt {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-underline-offset: 4px;
+}
+.vlink-frame-heading a {
+  text-decoration: underline;
+}
+.vlink-frame-wrap {
+  position: relative;
+  border: 1px solid #c5b3ad;
+  background: #0a0a0a;
+  overflow: hidden;
+}
+.vlink-frame {
+  position: relative;
+  display: block;
+  border: 0;
+  width: 100%;
+  height: 510px;
+}
+.vlink-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 14px;
+}
+.vlink-receipt {
+  justify-content: center;
+  border: 1px solid var(--cherry);
+  padding: 16px 12px;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 550;
+}
+.vlink-receipt:hover {
+  background: #f2e5e4;
+}
+@keyframes vlink-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 430px) {
+  .checkout-dialog .checkout-card {
+    padding-inline: 20px;
+  }
+  .payment-methods button {
+    flex-direction: column;
+    gap: 5px;
+    min-height: 65px;
+  }
+  .vlink-intro h4 {
+    font-size: 23px;
+  }
 }
 .wallet-note {
   margin: 10px 0 5px;

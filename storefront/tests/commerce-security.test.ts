@@ -57,8 +57,30 @@ describe("fail-closed storefront activation", () => {
     const result = storefront(config({}));
     expect(result.mode).toBe("preview");
     expect(result.methods.every((x) => !x.available)).toBe(true);
+    expect(result.vlink.available).toBe(false);
     expect(result.price).toBe(19);
     expect(JSON.stringify(result)).not.toContain("sk_");
+  });
+  it("only opens the external vLink in a fully approved live storefront", () => {
+    expect(storefront(config(liveEnv)).vlink.available).toBe(true);
+    for (const mode of ["preview", "sandbox"]) {
+      expect(
+        storefront(config({ ...liveEnv, COMMERCE_MODE: mode })).vlink.available,
+      ).toBe(false);
+    }
+    for (const key of [
+      "COMMERCE_LAUNCH_APPROVED",
+      "BUNDLE_FINAL_APPROVED",
+      "RESEND_API_KEY",
+    ]) {
+      expect(
+        storefront(config({ ...liveEnv, [key]: "" })).vlink.available,
+      ).toBe(false);
+    }
+    // vLink never enters the automatically settled provider list.
+    expect(
+      storefront(config(liveEnv)).methods.map((method) => method.id),
+    ).toEqual(["paddle", "crypto"]);
   });
   it("enables each fully configured provider and disables absent providers independently", () => {
     const c = config(liveEnv);

@@ -1,6 +1,7 @@
 import { SELLER } from "../product";
 export { PRODUCT } from "../product";
 import { PRODUCT } from "../product";
+import { VLINK } from "../vlink";
 export type Provider = "paddle" | "stripe" | "paypal" | "crypto";
 export type CommerceMode = "preview" | "sandbox" | "live";
 export const TOKEN_LABELS: Record<string, string> = {
@@ -203,6 +204,15 @@ export function storefront(c = config()) {
         : {}),
     })),
     cryptoTokens: c.cryptoTokens.map((id) => ({ id, label: TOKEN_LABELS[id] })),
+    // Hosted, manually fulfilled channel. Never accept it through /api/checkout
+    // or interpret iframe activity as payment confirmation.
+    vlink: {
+      available:
+        c.mode === "live" &&
+        activationIssues(c).length === 0 &&
+        Number(PRODUCT.price) === VLINK.amount &&
+        PRODUCT.currency === "USD",
+    },
   };
 }
 export function requireProvider(provider: Provider) {

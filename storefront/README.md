@@ -1,3 +1,5 @@
+vLink is available as a hosted USDC payment option with manual receipt-based email delivery. See [vLink operations](docs/VLINK_PAYMENT.md). NOWPayments retains automatic delivery.
+
 # Vladasana · The Developer Job Search Playbook
 
 A standalone Next.js storefront in the approved **E — Quiet Ambition** direction: powder blue, oxblood, a sunlit folder, restrained editorial typography, and a functional 3D publication. Two landing sections, matched to the selected visual benchmark.

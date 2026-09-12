@@ -4,7 +4,7 @@ export default function Refunds() {
   return (
     <PolicyPage
       title="Refund policy"
-      intro="A 7-day refund window. Effective 8 September 2026."
+      intro="A 7-day refund window. Effective 12 September 2026."
     >
       <h2>Request within 7 days</h2>
       <p>
@@ -28,11 +28,12 @@ export default function Refunds() {
       <h2>Crypto payments</h2>
       <p>
         The same 7-day request window applies to a confirmed crypto purchase.
-        Contact us with your order reference and transaction hash. We will
-        verify the purchase and agree the return token, network, address and any
-        network cost with you before sending a refund. Crypto refunds are
-        handled manually, separately from Paddle. Never send another payment to
-        “unlock” a refund, and never share a seed phrase or private key.
+        This includes NOWPayments and vLink. Contact us with your order
+        reference or vLink receipt and transaction hash. We will verify the
+        purchase and agree the return token, network, address and any network
+        cost with you before sending a refund. Crypto refunds are handled
+        manually, separately from Paddle. Never send another payment to “unlock”
+        a refund, and never share a seed phrase or private key.
       </p>
       <h2>Missing or faulty downloads</h2>
       <p>

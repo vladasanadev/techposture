@@ -5,7 +5,7 @@ export default function Terms() {
   return (
     <PolicyPage
       title="Terms & conditions"
-      intro="Effective 8 September 2026. These terms cover the use of the Vladasana website and the Developer Job Search Playbook."
+      intro="Effective 12 September 2026. These terms cover the use of the Vladasana website and the Developer Job Search Playbook."
     >
       <h2>Who supplies the product</h2>
       <p>
@@ -47,12 +47,23 @@ export default function Terms() {
       </p>
       <h2>Delivery and access</h2>
       <p>
-        After the payment provider confirms successful payment, we automatically
-        email the complete PDF and the ZIP archive to the delivery address you
-        provide. Confirmation may take longer for crypto. Please check spam and
-        promotions folders. If delivery fails or you enter an incorrect address,
-        contact support with your order reference so we can verify the order and
-        help.
+        For Paddle and NOWPayments, after the payment provider confirms
+        successful payment, we automatically email the complete PDF and the ZIP
+        archive to the delivery address you provide. Confirmation may take
+        longer for crypto. Please check spam and promotions folders. If delivery
+        fails or you enter an incorrect address, contact support with your order
+        reference so we can verify the order and help.
+      </p>
+      <p>
+        vLink is an alternative hosted USDC payment through vPay, separate from
+        Paddle and NOWPayments. Review the recipient, amount, network and any
+        fees in vLink before authorising payment. vLink purchases require manual
+        verification: after paying, email your receipt or transaction reference
+        and preferred delivery email to{" "}
+        <a href="mailto:Support@Vladasana.com">Support@Vladasana.com</a>. We
+        verify the received payment and email your files. Delivery through vLink
+        is not instant; opening or returning from its checkout does not confirm
+        payment. The same product and 7-day refund policy apply.
       </p>
       <p>
         The backup download link expires after 7 days. Download and keep your

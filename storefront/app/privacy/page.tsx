@@ -4,7 +4,7 @@ export default function Privacy() {
   return (
     <PolicyPage
       title="Privacy policy"
-      intro="Effective 8 September 2026. How information is used when you browse, buy or ask for help."
+      intro="Effective 12 September 2026. How information is used when you browse, buy or ask for help."
     >
       <h2>Who is responsible</h2>
       <p>
@@ -59,6 +59,16 @@ export default function Privacy() {
         ours. We do not sell personal information.
       </p>
       <h2>Cookies and international processing</h2>
+      <p>
+        If you choose vLink and open its checkout, your browser connects to vPay
+        and its wallet services inside an embedded payment page or a new tab.
+        They process the connection and payment information you provide. We do
+        not send them your delivery email or access your wallet keys. For vLink
+        delivery, we use the receipt and email you send to support to verify
+        payment and provide your bundle. See the{" "}
+        <a href="https://vlink.id/vladasanadev/kQX9ME">vLink checkout</a> for
+        the provider’s payment interface.
+      </p>
       <p>
         This storefront does not set advertising or analytics cookies. Necessary
         browser features and payment-provider cookies or similar technologies

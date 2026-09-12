@@ -1,3 +1,7 @@
+## vLink payment added — September 12, 2026
+
+The storefront offers the owner-supplied vLink at 19 USDC in an embedded checkout. **vLink requires manual receipt verification and email delivery**: monitor Support@Vladasana.com, confirm the receipt in vPay, and deliver the actual private files. NOWPayments retains automatic fulfillment. No new vLink API keys are required for this hosted link. Read [the operating guide](storefront/docs/VLINK_PAYMENT.md) before accepting orders through this channel. The partner cron remains daily; the owner’s Pro deployment remains every five minutes.
+
 # Vladasana storefront — partner handover
 
 Updated September 12, 2026. **The live storefront now runs on Amir’s Vercel at https://vladasana.com/Job-bundle.** Namecheap remains in Vlada’s account. The next sections also explain a future migration to Vlada’s own service accounts; a migration is optional and has not been performed. The existing portfolio remains at the repository root; the new store is a separate Next.js application in `storefront/`.

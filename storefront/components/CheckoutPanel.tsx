@@ -1,6 +1,7 @@
 "use client";
 
 import { storefrontPath } from "@/lib/site-path";
+import VLinkCheckout from "./VLinkCheckout";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
@@ -12,7 +13,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-type Provider = "paddle" | "crypto";
+type Provider = "paddle" | "crypto" | "vlink";
 type Storefront = {
   mode: "preview" | "sandbox" | "live";
   price: number;
@@ -24,6 +25,7 @@ type Storefront = {
     reason?: string;
   }[];
   cryptoTokens?: { id: string; label: string }[];
+  vlink?: { available: boolean };
 };
 const defaultMethods = [
   { id: "paddle" as const, label: "Card / PayPal", available: false },
@@ -59,12 +61,21 @@ export default function CheckoutPanel() {
   }, []);
   const preview = !store || store.mode === "preview";
   const available =
-    store?.methods.find((m) => m.id === provider)?.available === true;
-  const methods = store?.methods ?? defaultMethods;
+    provider === "vlink"
+      ? store?.vlink?.available === true
+      : store?.methods.find((m) => m.id === provider)?.available === true;
+  const methods = [
+    ...(store?.methods ?? defaultMethods),
+    {
+      id: "vlink" as const,
+      label: "vLink",
+      available: store?.vlink?.available === true,
+    },
+  ];
   const amount = store?.price ?? 19;
   async function checkout(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!available || sending) return;
+    if (!available || sending || provider === "vlink") return;
     setSending(true);
     setError("");
     const fields = JSON.stringify({
@@ -162,13 +173,21 @@ export default function CheckoutPanel() {
                 }}
                 className={provider === method.id ? "payment-selected" : ""}
               >
-                {method.id === "paddle" ? (
+                {method.id === "vlink" ? (
+                  <span className="vlink-method-icon" aria-hidden="true">
+                    v
+                  </span>
+                ) : method.id === "paddle" ? (
                   <CreditCard size={19} />
                 ) : (
                   <Wallet size={19} />
                 )}
                 <span>
-                  {method.id === "paddle" ? "Card / PayPal" : "Crypto"}
+                  {method.id === "vlink"
+                    ? "vLink"
+                    : method.id === "paddle"
+                      ? "Card / PayPal"
+                      : "Crypto"}
                 </span>
                 {provider === method.id && (
                   <Check size={12} className="method-check" />
@@ -177,97 +196,104 @@ export default function CheckoutPanel() {
             ))}
           </div>
         </fieldset>
-        <p className="wallet-note">
-          {provider === "paddle"
-            ? "Secure checkout by Paddle. PayPal, Apple Pay and Google Pay appear when available."
-            : "USDT & USDC · select the exact token and network."}
-        </p>
-        {provider === "crypto" && (
-          <label className="field-label">
-            Token & network
-            <select
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              disabled={!available}
-            >
-              <option value="">
-                {preview
-                  ? "Available networks will appear at launch"
-                  : "Choose a token & network"}
-              </option>
-              {store?.cryptoTokens?.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
-        <label className="field-label" htmlFor="delivery-email">
-          Where should we send your bundle?
-          <input
-            id="delivery-email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Your email address"
-            disabled={!available || sending}
-            maxLength={254}
-          />
-        </label>
-        <button
-          className="checkout-submit"
-          type="submit"
-          disabled={!available || sending}
-        >
-          {sending ? (
-            <>
-              <LoaderCircle className="spin" size={18} />
-              Opening secure checkout…
-            </>
-          ) : available ? (
-            <>
-              Get my bundle · ${amount}
-              <ArrowUpRight size={20} />
-            </>
-          ) : (
-            <>
-              {store ? "Checkout opens soon" : "Preparing checkout…"}
-              <ArrowUpRight size={20} />
-            </>
-          )}
-        </button>
-        {preview && store ? (
-          <div className="launch-note">
-            <span className="launch-dot" />
-            <p>
-              You’re viewing a preview.
-              <br />
-              <span>
-                The playbook is ready. Purchases open after payment setup.
-              </span>
-            </p>
-          </div>
-        ) : !available && store ? (
-          <p className="form-note">
-            This payment method isn’t available yet. Please choose another.
-          </p>
+        {provider === "vlink" ? (
+          <VLinkCheckout available={available} />
         ) : (
-          <p className="secure-note">
-            <LockKeyhole size={12} /> Secure payment. Your bundle follows by
-            email.
-          </p>
-        )}
-        {error && (
-          <p className="checkout-error" role="alert">
-            {error}
-          </p>
+          <>
+            <p className="wallet-note">
+              {provider === "paddle"
+                ? "Secure checkout by Paddle. PayPal, Apple Pay and Google Pay appear when available."
+                : "USDT & USDC · select the exact token and network."}
+            </p>
+            {provider === "crypto" && (
+              <label className="field-label">
+                Token & network
+                <select
+                  value={token}
+                  onChange={(e) => setToken(e.target.value)}
+                  disabled={!available}
+                >
+                  <option value="">
+                    {preview
+                      ? "Available networks will appear at launch"
+                      : "Choose a token & network"}
+                  </option>
+                  {store?.cryptoTokens?.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            <label className="field-label" htmlFor="delivery-email">
+              Where should we send your bundle?
+              <input
+                id="delivery-email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email address"
+                disabled={!available || sending}
+                maxLength={254}
+              />
+            </label>
+            <button
+              className="checkout-submit"
+              type="submit"
+              disabled={!available || sending}
+            >
+              {sending ? (
+                <>
+                  <LoaderCircle className="spin" size={18} />
+                  Opening secure checkout…
+                </>
+              ) : available ? (
+                <>
+                  Get my bundle · ${amount}
+                  <ArrowUpRight size={20} />
+                </>
+              ) : (
+                <>
+                  {store ? "Checkout opens soon" : "Preparing checkout…"}
+                  <ArrowUpRight size={20} />
+                </>
+              )}
+            </button>
+            {preview && store ? (
+              <div className="launch-note">
+                <span className="launch-dot" />
+                <p>
+                  You’re viewing a preview.
+                  <br />
+                  <span>
+                    The playbook is ready. Purchases open after payment setup.
+                  </span>
+                </p>
+              </div>
+            ) : !available && store ? (
+              <p className="form-note">
+                This payment method isn’t available yet. Please choose another.
+              </p>
+            ) : (
+              <p className="secure-note">
+                <LockKeyhole size={12} /> Secure payment. Your bundle follows by
+                email.
+              </p>
+            )}
+            {error && (
+              <p className="checkout-error" role="alert">
+                {error}
+              </p>
+            )}
+          </>
         )}
         <p className="checkout-terms">
-          By purchasing, you accept our <a href={storefrontPath("/terms")}>terms</a>. Read our{" "}
+          By purchasing, you accept our{" "}
+          <a href={storefrontPath("/terms")}>terms</a>. Read our{" "}
           <a href={storefrontPath("/privacy")}>privacy policy</a> and{" "}
           <a href={storefrontPath("/refunds")}>7-day refund policy</a>.
         </p>

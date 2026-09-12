@@ -1,3 +1,7 @@
+# vLink addition — September 12, 2026
+
+Checkout now includes the owner-supplied **vLink (19 USDC)** as an embedded, on-brand alternative. It has **manual receipt verification and email delivery**, clearly explained before payment. Buyers email **Support@Vladasana.com**; the seller checks settlement in vPay and delivers the actual files. No automatic settlement callback is claimed. NOWPayments remains publicly live with automatic delivery; Paddle remains unavailable. See [vLink operations and verification](docs/VLINK_PAYMENT.md).
+
 # Live crypto checkout — September 12, 2026
 
 **Crypto checkout is now publicly open at https://vladasana.com/Job-bundle for the owner’s real $19 test, by explicit request. Paddle remains unavailable.** Production is `COMMERCE_MODE=live`, `COMMERCE_LAUNCH_APPROVED=true`. Configuration/file checks passed and the live form was verified. Real purchase settlement and purchase-triggered delivery await the owner’s test. See [PUBLIC_CRYPTO_TEST.md](docs/PUBLIC_CRYPTO_TEST.md). This current state overrides the closed-checkout snapshots below.
