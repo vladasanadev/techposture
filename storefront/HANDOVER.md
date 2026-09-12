@@ -2,7 +2,7 @@
 
 The landing is live at **https://vladasana.com/Job-bundle** on **Amir’s Vercel**, with the existing portfolio preserved at the homepage. The sender is **Vlada <Support@Vladasana.com>**. Namecheap and Resend DNS are verified; the real Gmail test passed SPF, DKIM and DMARC, and both received attachment hashes match the original PDF/ZIP. The new signed delivery callback and five-minute cron work. Sales remain closed pending payment acceptance.
 
-**Start with [the current domain and email handover](docs/DOMAIN_EMAIL_LAUNCH.md).** It replaces older domain, sender, callback and ownership instructions below. Production tracks `codex/vladasana-domain-email` in the private original repository. The partner mirror remains separate. Support mailbox login is still needed for direct incoming-reply inspection.
+**Start with [the current domain and email handover](docs/DOMAIN_EMAIL_LAUNCH.md).** It replaces older domain, sender, callback and ownership instructions below. Production tracks `codex/vladasana-domain-email` in the private original repository. The partner mirror remains separate. The owner confirmed the support reply arrived, and the signed-in Private Email inbox was independently inspected on September 12. Incoming support replies are verified.
 
 Everything below is historical evidence; it does not override the current setup above.
 

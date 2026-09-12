@@ -1,3 +1,33 @@
+# Current crypto readiness — September 12, 2026
+
+Fresh authenticated GET-only checks ran inside an unpromoted Vercel deployment at **13:12 UTC**. The production URL and active cron deployment were independently confirmed unchanged. All nine configured networks are still selected by the merchant and their fixed-rate, seller-paid-fee minimums support the $19 bundle. API/IPN configuration is present. The private PDF and ZIP were downloaded through authenticated storage and their configured hashes verified (1,067,944 and 2,539,601 bytes).
+
+| Network | Estimated payment for $19 | Minimum in payment token | Minimum USD equivalent |
+| --- | ---: | ---: | ---: |
+| `usdtbsc` | 18.99056252 | 8.36863993 | 8.3568278 |
+| `usdcbsc` | 18.97256846 | 8.36403354 | 8.34605623 |
+| `usdtmatic` | 18.99755081 | 8.397423 | 8.38843821 |
+| `usdcarb` | 18.99140599 | 8.487129 | 8.47745808 |
+| `usdtarb` | 18.99958989 | 8.487994 | 8.47891231 |
+| `usdcsol` | 18.99559672 | 8.579635 | 8.57043066 |
+| `usdterc20` | 18.98849288 | 8.843268 | 8.82960586 |
+| `usdc` | 18.98561412 | 8.850172 | 8.83604234 |
+| `usdttrc20` | 18.972458 | 14.110855 | 14.07970744 |
+
+These are current estimates and minimums, not locked payment quotes or exact net-payout promises. The provider returned `currency_to: "false"` for these minimum responses; this is not evidence of a verified payout wallet. Confirm the merchant's intended receiving wallet/custody configuration before the first transfer.
+
+The configuration checker reports the intentional preview/launch gates for crypto, with no missing crypto or shared delivery service settings. Paddle remains unconfigured and can stay disabled when crypto launches. The signed-in Private Email inbox was inspected and the reply test addressed to Support@Vladasana.com is present; incoming support replies are now verified.
+
+The current fixed-rate service-fee schedule is **1.5% plus applicable network fees**, approximately $0.285 service fee on $19. Account-specific pricing and final net payout can differ. [Official fee explanation](https://nowpayments.io/help/about-nowpayments/about/what-are-your-fees).
+
+**Public crypto checkout has not been enabled. No invoice, payment, order or customer delivery was created by this review.** The next acceptance step is an owner-funded $19 purchase on a selected network, confirming intended payout, a verified `finished` payment, one paid order and fulfillment, actual email/attachments and signed download. Then verify duplicate callbacks, a controlled delivery retry and refund/recovery behavior before broad launch. Start public availability with networks whose actual settlement has been checked; API availability alone is not settlement evidence. Never manually mark an order paid.
+
+Private read-only evidence: `output/private/crypto-readiness-2026-09-12-build.log`; diagnostic deployment `dpl_89KZkAJ2ApPXJNgwuCWUjrH1PNK7`. No credentials were exported or printed. The existing public deployment and cron remained `dpl_HMPU2L6eKosXw6pdSVCcZufSDfNY` during the check. An initial diagnostic attempt was rejected before deployment because its build command exceeded Vercel's length limit; the shorter command completed.
+
+---
+
+The September 9 record below is historical; the current results above take precedence.
+
 # NOWPayments network approval — September 9, 2026
 
 The seller's API and IPN keys are stored as Vercel Production secrets. Authenticated read-only checks ran inside Vercel so those keys were never exported, printed or placed in Git. Nine selected stablecoin networks passed the merchant selection and **fixed-rate, seller-paid-fee** minimum checks for the $19 bundle. USDC/Polygon (`usdcmatic`) was not enabled for this API key and is excluded.

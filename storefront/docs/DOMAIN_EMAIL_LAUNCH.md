@@ -81,7 +81,7 @@ Private test payload, MIME message and receipts live only in ignored `output/pri
 
 ## Still required
 
-1. **Support inbox inspection:** a reply test was sent from the owner Gmail account to Support@Vladasana.com. Signing into Private Email is still needed to inspect its arrival and send a reply back. The password is not available in the current browser. DNS and mailbox existence are verified; inbox receipt has not yet been observed.
+1. **Support inbox verified:** the owner confirmed receipt, and the signed-in Private Email inbox was independently inspected on September 12. The reply from the owner Gmail account addressed to Support@Vladasana.com is present. Automated sending and incoming customer replies are verified; no further mailbox login is needed for this check.
 2. **Paddle activation:** seller/domain approval, matching product/price/keys and notification destination, then isolated sandbox and controlled live acceptance.
 3. **Purchase-triggered delivery acceptance:** real provider-confirmed order, one fulfillment, signed download, duplicate callback handling, actual failed-send recovery and refund behavior. Crypto needs owner-funded controlled transfers. The successful operator email test does not establish these payment results.
 
