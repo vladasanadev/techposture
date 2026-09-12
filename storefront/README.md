@@ -2,9 +2,9 @@
 
 A standalone Next.js storefront in the approved **E — Quiet Ambition** direction: powder blue, oxblood, a sunlit folder, restrained editorial typography, and a functional 3D publication. Two landing sections, matched to the selected visual benchmark.
 
-[Open the Production preview](https://vladasana-job-bundle.vercel.app) · [Delivery email preview](https://vladasana-job-bundle.vercel.app/email-preview)
+[Open the Production preview](https://vladasana.com/Job-bundle) · [Delivery email preview](https://vladasana.com/Job-bundle/email-preview)
 
-**Current state: public review preview.** The landing, magazine, payment chooser and delivery-email preview work. Checkout is intentionally unavailable until Paddle and seller services are activated and tested. No real payment or customer email was created during development.
+**Current state: public review preview.** The landing, magazine, payment chooser and delivery-email preview work. Checkout is intentionally unavailable until Paddle and seller services are activated and tested. No real payment has been accepted. The owner-requested branded email test passed actual inbox, authentication and attachment-integrity checks.
 
 ## Experience
 
@@ -26,7 +26,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:3000`. No credentials are needed for the preview. The rendered email is at `/email-preview`.
+Open `http://localhost:3000/Job-bundle`. No credentials are needed for the preview. The rendered email is at `/Job-bundle/email-preview`.
 
 ```sh
 npm run lint
@@ -37,9 +37,9 @@ npm run build
 
 ## Launch setup
 
-For the requested `vladasanadev/techposture` handoff and a new Vercel project, start with [VERCEL_SETUP.md](docs/VERCEL_SETUP.md). It covers the isolated `storefront/` directory, exact environment variables, storage migration, callbacks and the read-only NOWPayments readiness command.
+For the running domain, ownership and email evidence, start with [DOMAIN_EMAIL_LAUNCH.md](docs/DOMAIN_EMAIL_LAUNCH.md). For a future `vladasanadev/techposture` deployment in a new account, also read [VERCEL_SETUP.md](docs/VERCEL_SETUP.md). It covers the isolated `storefront/` directory, exact environment variables, storage migration, callbacks and the read-only NOWPayments readiness command.
 
-Read [the commerce guide](docs/COMMERCE.md) and [.env.example](.env.example). The dedicated Neon database is provisioned and migrated, and the current Vercel Pro project runs recovery every five minutes. Remaining activation is Paddle account/domain approval and credentials; Resend sending-domain DNS verification; a working support mailbox; and real checkout-to-inbox testing. Seller identity, final files and actual preview pages are supplied and configured. See [current delivery status](docs/DELIVERY_ACTIVATION.md). Supply secrets through private environment settings, never Git or browser code.
+Read [the commerce guide](docs/COMMERCE.md) and [.env.example](.env.example). The dedicated Neon database is provisioned and migrated, and the current Vercel Pro project runs recovery every five minutes. The custom domain and Support@Vladasana.com sender are verified. Remaining activation is Paddle account/domain approval and credentials, support-inbox reply inspection after login, and real purchase-to-inbox testing. Seller identity, final files and actual preview pages are supplied and configured. See [current delivery status](docs/DELIVERY_ACTIVATION.md). Supply secrets through private environment settings, never Git or browser code.
 
 Live availability is gated by configuration and explicit launch flags. Actual account eligibility, sandbox purchases, inbox delivery and a seller-approved crypto purchase still need acceptance testing before those flags are enabled. Publishing the site does not enable collection of money.
 
