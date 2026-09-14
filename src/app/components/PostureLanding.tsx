@@ -5072,6 +5072,65 @@ export function PostureLanding() {
             animation: titleShine 6s linear infinite;
           }
 
+          .portfolio-footer {
+            position: relative;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px 32px;
+            padding: 24px 32px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+            background: #08050e;
+            color: rgba(255,255,255,0.72);
+            font-family: "Space Grotesk", "Inter", sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+          }
+
+          .portfolio-footer p {
+            margin: 0;
+          }
+
+          .portfolio-footer nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 24px;
+          }
+
+          .portfolio-footer a {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+            color: rgba(255,255,255,0.88);
+            text-decoration: underline;
+            text-decoration-color: rgba(255,255,255,0.32);
+            text-underline-offset: 4px;
+          }
+
+          .portfolio-footer a:hover {
+            color: #f5ff72;
+            text-decoration-color: currentColor;
+          }
+
+          .portfolio-footer a:focus-visible {
+            outline: 2px solid #f5ff72;
+            outline-offset: 5px;
+          }
+
+          @media (max-width: 600px) {
+            .portfolio-footer {
+              justify-content: center;
+              padding: 20px 24px;
+              text-align: center;
+            }
+
+            .portfolio-footer nav {
+              justify-content: center;
+            }
+          }
+
           .contact-script {
             font-family: "Brush Script MT", "Snell Roundhand", "Apple Chancery", cursive;
             color: rgba(255,255,255,0.86);
@@ -6150,6 +6209,14 @@ image in broken on my main side          }
           </a>
         </div>
       </section>
+      <footer className="portfolio-footer">
+        <p>© 2026 Vladasana. All rights reserved.</p>
+        <nav aria-label="Website policies">
+          <a href="https://vladasana.com/Job-bundle/terms">Terms of service</a>
+          <a href="https://vladasana.com/Job-bundle/privacy">Privacy notice</a>
+          <a href="https://vladasana.com/Job-bundle/refunds">Refund policy</a>
+        </nav>
+      </footer>
     </main>
   );
 }
