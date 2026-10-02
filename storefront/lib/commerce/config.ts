@@ -2,6 +2,7 @@ import { SELLER } from "../product";
 export { PRODUCT } from "../product";
 import { PRODUCT } from "../product";
 import { VLINK } from "../vlink";
+import { PAYPAL_HOSTED } from "../paypal-hosted";
 export type Provider = "paddle" | "stripe" | "paypal" | "crypto";
 export type CommerceMode = "preview" | "sandbox" | "live";
 export const TOKEN_LABELS: Record<string, string> = {
@@ -192,7 +193,7 @@ export function storefront(c = config()) {
     currency: PRODUCT.currency,
     methods: (
       [
-        ["paddle", "Card / PayPal"],
+        ["paddle", "Card"],
         ["crypto", "USDT / USDC"],
       ] as const
     ).map(([id, label]) => ({
@@ -204,6 +205,15 @@ export function storefront(c = config()) {
         : {}),
     })),
     cryptoTokens: c.cryptoTokens.map((id) => ({ id, label: TOKEN_LABELS[id] })),
+    // The seller's hosted PayPal button is manually fulfilled. Its public
+    // client ID must never satisfy the REST API verification requirements.
+    paypalHosted: {
+      available:
+        c.mode === "live" &&
+        activationIssues(c).length === 0 &&
+        Number(PRODUCT.price) === PAYPAL_HOSTED.amount &&
+        PRODUCT.currency === PAYPAL_HOSTED.currency,
+    },
     // Hosted, manually fulfilled channel. Never accept it through /api/checkout
     // or interpret iframe activity as payment confirmation.
     vlink: {

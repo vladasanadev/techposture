@@ -58,6 +58,7 @@ describe("fail-closed storefront activation", () => {
     expect(result.mode).toBe("preview");
     expect(result.methods.every((x) => !x.available)).toBe(true);
     expect(result.vlink.available).toBe(false);
+    expect(result.paypalHosted.available).toBe(false);
     expect(result.price).toBe(19);
     expect(JSON.stringify(result)).not.toContain("sk_");
   });
@@ -81,6 +82,17 @@ describe("fail-closed storefront activation", () => {
     expect(
       storefront(config(liveEnv)).methods.map((method) => method.id),
     ).toEqual(["paddle", "crypto"]);
+  });
+  it("keeps hosted PayPal live-only and separate from automatic verification", () => {
+    const withoutRestKeys = { ...liveEnv, PAYPAL_CLIENT_ID: "", PAYPAL_CLIENT_SECRET: "", PAYPAL_WEBHOOK_ID: "", PAYPAL_MERCHANT_ID: "" };
+    expect(storefront(config(withoutRestKeys)).paypalHosted.available).toBe(true);
+    expect(providerAvailable("paypal", config(withoutRestKeys))).toBe(false);
+    for (const mode of ["preview", "sandbox"]) {
+      expect(storefront(config({ ...liveEnv, COMMERCE_MODE: mode })).paypalHosted.available).toBe(false);
+    }
+    for (const key of ["COMMERCE_LAUNCH_APPROVED", "BUNDLE_FINAL_APPROVED", "DATABASE_URL", "RESEND_API_KEY"]) {
+      expect(storefront(config({ ...liveEnv, [key]: "" })).paypalHosted.available).toBe(false);
+    }
   });
   it("enables each fully configured provider and disables absent providers independently", () => {
     const c = config(liveEnv);

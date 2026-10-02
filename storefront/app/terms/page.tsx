@@ -5,7 +5,7 @@ export default function Terms() {
   return (
     <PolicyPage
       title="Terms & conditions"
-      intro="Effective 12 September 2026. These terms cover the use of the Vladasana website and the Developer Job Search Playbook."
+      intro="Effective 2 October 2026. These terms cover the use of the Vladasana website and the Developer Job Search Playbook."
     >
       <h2>Who supplies the product</h2>
       <p>
@@ -30,7 +30,7 @@ export default function Terms() {
       </p>
       <h2>Payment</h2>
       <p>
-        When you choose a non-crypto method, Paddle is the merchant of record
+        When you choose Paddle checkout, Paddle is the merchant of record
         and authorised reseller handling payment, applicable sales tax and
         payment support. Its{" "}
         <a href="https://www.paddle.com/legal/buyer-terms">Buyer Terms</a> also
@@ -46,6 +46,15 @@ export default function Terms() {
         payment needs review.
       </p>
       <h2>Delivery and access</h2>
+      <p>
+        Direct PayPal checkout uses our hosted PayPal button, separately from
+        Paddle. Review the final amount and payment options on PayPal before
+        paying. After payment, send your PayPal receipt and preferred delivery
+        email to <a href="mailto:Support@Vladasana.com">Support@Vladasana.com</a>.
+        We verify the received payment and email your files personally; this
+        delivery is not instant. A return to our Success page is not itself
+        payment confirmation. The same product and 7-day refund policy apply.
+      </p>
       <p>
         For Paddle and NOWPayments, after the payment provider confirms
         successful payment, we automatically email the complete PDF and the ZIP

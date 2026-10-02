@@ -248,8 +248,8 @@
 }
 
 .order-page {
-  min-height: 100vh;
-  background: #dce7e9;
+  min-height: 100svh;
+  background: #f3ede5;
   padding: 30px 25px 80px;
 }
 .order-page > .wordmark {
@@ -313,4 +313,29 @@
 .order-help a {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.paypal-checkout { margin-top: 20px; }
+.hosted-delivery { font-size: 14px; line-height: 1.65; padding: 16px; background: #efe5dc; margin: 16px 0 20px; }
+.hosted-delivery strong { display: block; margin-bottom: 4px; }
+.hosted-delivery a { text-decoration: underline; overflow-wrap: anywhere; }
+.paypal-button-container { min-width: 0; }
+.paypal-loading { display: flex; align-items: center; justify-content: center; gap: 9px; font-size: 14px; padding: 12px 0; }
+.paypal-fallback { display: flex; justify-content: center; align-items: center; gap: 7px; text-decoration: underline; text-underline-offset: 4px; font-size: 14px; padding: 16px 0 2px; }
+.paypal-pay-button { display: flex; justify-content: center; align-items: center; gap: 12px; min-height: 54px; padding: 16px; background: #ffc439; color: #003087; font-size: 17px; font-weight: 700; border-radius: 4px; transition: background 150ms ease; }
+.paypal-pay-button:hover { background: #f0b72c; }
+.order-next-step { margin-top: 28px; padding: 24px; background: #eee4d9; }
+.order-next-step h2 { font-family: var(--serif); font-size: 28px; font-weight: 400; margin-bottom: 12px; }
+.order-next-step p { font-size: 15px; line-height: 1.7; }
+.order-next-step p a { text-decoration: underline; overflow-wrap: anywhere; }
+.order-receipt-button { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 17px 12px; margin: 20px 0; color: #fffaf3; background: var(--cherry); font-size: 15px; }
+.order-receipt-button:hover { background: #551126; }
+.order-next-step p.order-verification-note { font-size: 13px; color: #725a56; margin-top: 12px; }
+@media (max-width: 600px) {
+  .order-page { padding: 24px 14px 45px; }
+  .order-banner { height: 160px; }
+  .order-body { padding: 28px 22px; }
+  .order-body h1 { font-size: clamp(38px, 10vw, 58px); letter-spacing: -2px; }
+  .order-body .eyebrow { font-size: 11px; letter-spacing: 1.3px; }
+  .order-next-step { padding: 19px; }
 }

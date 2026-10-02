@@ -163,7 +163,7 @@ describe("NOWPayments HTTP contract fixtures", () => {
       pay_currency: "usdttrc20",
       order_id: o.id,
       ipn_callback_url: "https://store.example/api/webhooks/crypto",
-      success_url: "https://store.example/success?order=opaque",
+      success_url: "https://store.example/Success?order=opaque",
       cancel_url: "https://store.example/?checkout=cancelled#buy",
       is_fixed_rate: true,
       is_fee_paid_by_user: false,

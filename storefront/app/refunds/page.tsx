@@ -4,7 +4,7 @@ export default function Refunds() {
   return (
     <PolicyPage
       title="Refund policy"
-      intro="A 7-day refund window. Effective 12 September 2026."
+      intro="A 7-day refund window. Effective 2 October 2026."
     >
       <h2>Request within 7 days</h2>
       <p>
@@ -17,13 +17,21 @@ export default function Refunds() {
       </p>
       <h2>Payments through Paddle</h2>
       <p>
-        Paddle is the merchant of record for non-crypto purchases. You can also
+        Paddle is the merchant of record for purchases made through Paddle. You can also
         request payment help or a refund through{" "}
         <a href="https://www.paddle.net">Paddle buyer support</a>, using your
         receipt. We will assist with qualifying requests; Paddle processes the
         refund to the original payment method, subject to its processing and
         approval procedures. The time for funds to appear depends on Paddle, the
         payment method and your bank.
+      </p>
+      <h2>Direct PayPal payments</h2>
+      <p>
+        The same 7-day request window applies. Email support with your PayPal
+        transaction reference. We will verify the purchase and process eligible
+        refunds through PayPal to the original payment method. PayPal and your
+        bank determine when the funds appear. Applicable PayPal buyer
+        protections and mandatory consumer rights are unaffected.
       </p>
       <h2>Crypto payments</h2>
       <p>

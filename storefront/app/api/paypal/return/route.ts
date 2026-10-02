@@ -34,7 +34,7 @@ export async function GET(request: Request) {
     if (verified) {
       await confirmPaymentAndDispatch(verified, after);
     }
-    return Response.redirect(`${c.siteUrl}/success?order=${token}`, 303);
+    return Response.redirect(`${c.siteUrl}/Success?order=${token}`, 303);
   } catch (error) {
     return apiError(error);
   }

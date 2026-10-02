@@ -60,7 +60,7 @@ export default async function PayPage({
         ) : order?.status === "paid" ? (
           <Link
             className="policy-button"
-            href={`/success?order=${order.public_token}`}
+            href={`/Success?order=${order.public_token}`}
           >
             Check your delivery →
           </Link>

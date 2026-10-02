@@ -34,7 +34,7 @@ export async function createStripe(order: Order, c: CommerceConfig) {
       ],
       metadata: { order_id: order.id, bundle_version: order.bundle_version },
       payment_intent_data: { metadata: { order_id: order.id } },
-      success_url: `${c.siteUrl}/success?order=${order.public_token}`,
+      success_url: `${c.siteUrl}/Success?order=${order.public_token}`,
       cancel_url: `${c.siteUrl}/?checkout=cancelled#buy`,
       expires_at:
         Math.floor(new Date(order.created_at).getTime() / 1000) + 60 * 60,

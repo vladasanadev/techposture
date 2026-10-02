@@ -1,4 +1,4 @@
-vLink is available as a hosted USDC payment option with manual receipt-based email delivery. See [vLink operations](docs/VLINK_PAYMENT.md). NOWPayments retains automatic delivery.
+Direct PayPal checkout now uses the seller's hosted payment link, with manual receipt-based delivery and a branded `/Job-bundle/Success` return page. See [PayPal setup and delivery](docs/PAYPAL_CHECKOUT.md). vLink also uses manual receipt-based delivery; NOWPayments retains automatic delivery.
 
 # Vladasana · The Developer Job Search Playbook
 

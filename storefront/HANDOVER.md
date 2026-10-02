@@ -1,3 +1,7 @@
+# PayPal checkout and Success page — October 2, 2026
+
+Added a prominent PayPal option opening the seller's $19 USD hosted checkout. Optional embedded buttons await the exact Part 1 client ID as text; the screenshot transcription failed SDK validation. **Direct PayPal delivery is manual:** customers email their receipt to Support@Vladasana.com, Vlada checks settlement in PayPal and emails the actual files. This is disclosed before payment. The return page is **https://vladasana.com/Job-bundle/Success**; the owner confirmed PayPal Auto-return is already set. Existing lowercase order links still work. Automatic NOWPayments delivery is unchanged. No real PayPal payment or PayPal-to-inbox test was performed. See [PayPal operations, limitations and future automation](docs/PAYPAL_CHECKOUT.md).
+
 # vLink addition — September 12, 2026
 
 Checkout now includes the owner-supplied **vLink (19 USDC)** as an embedded, on-brand alternative. It has **manual receipt verification and email delivery**, clearly explained before payment. Buyers email **Support@Vladasana.com**; the seller checks settlement in vPay and delivers the actual files. No automatic settlement callback is claimed. NOWPayments remains publicly live with automatic delivery; Paddle remains unavailable. See [vLink operations and verification](docs/VLINK_PAYMENT.md).

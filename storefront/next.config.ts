@@ -4,12 +4,15 @@ const config: NextConfig = {
   basePath: STOREFRONT_BASE_PATH,
   async rewrites() {
     const origin = process.env.PORTFOLIO_ORIGIN;
-    if (!origin) return [];
+    // Preserve existing lowercase order links while exposing the requested
+    // /Job-bundle/Success URL. A rewrite avoids case-insensitive redirect loops.
+    const beforeFiles = [{ source: "/Success", destination: "/success" }];
+    if (!origin) return { beforeFiles, afterFiles: [], fallback: [] };
     const url = new URL(origin);
     if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/")
       throw new Error("PORTFOLIO_ORIGIN must be an HTTPS origin.");
     return {
-      beforeFiles: [],
+      beforeFiles,
       afterFiles: [],
       fallback: [{
         source: "/:path((?!Job-bundle(?:/|$)).*)",

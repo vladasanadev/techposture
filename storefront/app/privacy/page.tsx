@@ -4,7 +4,7 @@ export default function Privacy() {
   return (
     <PolicyPage
       title="Privacy policy"
-      intro="Effective 12 September 2026. How information is used when you browse, buy or ask for help."
+      intro="Effective 2 October 2026. How information is used when you browse, buy or ask for help."
     >
       <h2>Who is responsible</h2>
       <p>
@@ -48,7 +48,7 @@ export default function Privacy() {
         These providers process information needed to provide those services.
       </p>
       <p>
-        Paddle handles non-crypto checkout as merchant of record, including
+        Paddle handles purchases made through Paddle as merchant of record, including
         payment, tax, receipts and payment disputes, under its{" "}
         <a href="https://www.paddle.com/legal/privacy">Privacy Notice</a>.
         NOWPayments handles crypto invoices and settlement under its{" "}
@@ -59,6 +59,14 @@ export default function Privacy() {
         ours. We do not sell personal information.
       </p>
       <h2>Cookies and international processing</h2>
+      <p>
+        Selecting direct PayPal checkout loads PayPal’s payment buttons. PayPal
+        processes the connection, device and payment information needed for
+        checkout under its <a href="https://www.paypal.com/webapps/mpp/ua/privacy-full">Privacy Statement</a>.
+        We do not receive your card or account login details. We use the receipt
+        and delivery email you send to support to verify your PayPal payment
+        and deliver your bundle.
+      </p>
       <p>
         If you choose vLink and open its checkout, your browser connects to vPay
         and its wallet services inside an embedded payment page or a new tab.
@@ -73,7 +81,7 @@ export default function Privacy() {
         This storefront does not set advertising or analytics cookies. Necessary
         browser features and payment-provider cookies or similar technologies
         may be used when you open checkout. Third-party payment scripts load
-        only on the payment page for a valid checkout. Service providers may
+        when you select their payment option or open their checkout. Service providers may
         process information outside Ukraine or your country; applicable
         safeguards and provider terms govern those transfers.
       </p>

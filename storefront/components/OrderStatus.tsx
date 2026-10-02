@@ -4,13 +4,16 @@ import { storefrontPath } from "@/lib/site-path";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Check, Mail } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Check, Mail } from "lucide-react";
+import { PAYPAL_RECEIPT_EMAIL } from "@/lib/paypal-hosted";
 type Status = { status: string; delivery: string; message: string };
 export default function OrderStatus() {
   const params = useSearchParams();
   const token = params.get("order");
-  const [status, setStatus] = useState<Status | null>(null);
-  const [error, setError] = useState("");
+  const [result, setResult] = useState<{ token: string; value: Status } | null>(null);
+  const [failure, setFailure] = useState<{ token: string; message: string } | null>(null);
+  const status = result?.token === token ? result.value : null;
+  const error = failure?.token === token ? failure.message : "";
   useEffect(() => {
     if (!token) return;
     let stopped = false;
@@ -30,7 +33,7 @@ export default function OrderStatus() {
               "We couldn’t find that order. Please check the link in your email.",
           );
         if (stopped) return;
-        setStatus(value);
+        setResult({ token: token!, value });
         attempts++;
         if (
           !["sent", "attention", "expired"].includes(value.status) &&
@@ -39,11 +42,10 @@ export default function OrderStatus() {
           timer = setTimeout(update, 5000);
       } catch (e) {
         if (!stopped)
-          setError(
-            e instanceof Error
+          setFailure({ token: token!, message: e instanceof Error
               ? e.message
-              : "We couldn’t Check your order. Please try again.",
-          );
+              : "We couldn’t check your order. Please try again.",
+          });
       }
     }
     update();
@@ -64,14 +66,16 @@ export default function OrderStatus() {
         <img
           className="order-banner"
           src={storefrontPath("/images/quiet/hero.webp")}
-          alt="The Get a Job Bundle in an oxblood folder"
+          alt="The Developer Job Search Playbook in an oxblood folder"
           width="900"
           height="300"
         />
         <div className="order-body">
-          <p className="eyebrow">YOUR GET A JOB BUNDLE</p>
+          <p className="eyebrow">YOUR NEXT MOVE IN TECH</p>
           <h1>
-            {delivered ? (
+            {!token ? (
+              <>Your next chapter.<br /><em>Let’s begin.</em></>
+            ) : delivered ? (
               <>
                 Check your
                 <br />
@@ -83,6 +87,8 @@ export default function OrderStatus() {
                 <br />
                 <em>On its way.</em>
               </>
+            ) : error || ["attention", "expired"].includes(status?.status ?? "") ? (
+              <>Let’s find<br /><em>your order.</em></>
             ) : (
               <>
                 One
@@ -93,11 +99,22 @@ export default function OrderStatus() {
           </h1>
           <p role="status">
             {!token
-              ? "This page needs your private order link. You’ll receive one when you check out."
+              ? "Finished your PayPal checkout? Your payment receipt is your order reference. One more step gets your playbook to the right inbox."
               : error ||
                 status?.message ||
                 "We’re checking your payment securely. You don’t need to pay again."}
           </p>
+          {!token && (
+            <div className="order-next-step">
+              <h2>Get your bundle by email</h2>
+              <p>Send your PayPal receipt and preferred delivery email to <a href="mailto:Support@Vladasana.com">Support@Vladasana.com</a>. Vlada will check the payment and send your complete playbook, guides and worksheets.</p>
+              <a className="order-receipt-button" href={PAYPAL_RECEIPT_EMAIL}>
+                <Mail size={19} /> Send my PayPal receipt <ArrowUpRight size={18} />
+              </a>
+              <p className="order-verification-note">PayPal delivery is personally verified and isn’t instant. Returning to this page alone does not confirm payment.</p>
+              <p className="order-verification-note">Paid with crypto? Use the private order link from your checkout to follow automatic delivery. For vLink, email your receipt to support.</p>
+            </div>
+          )}
           {status && (
             <div className="order-progress">
               <span className={paid ? "complete" : ""}>
@@ -110,6 +127,7 @@ export default function OrderStatus() {
               </span>
             </div>
           )}
+          {delivered && <p>Look for an email from Support@Vladasana.com with your PDF and worksheets. Check spam or promotions if it hasn’t appeared yet.</p>}
           <p className="order-help">
             Need a hand?{" "}
             <a href="mailto:Support@Vladasana.com">Say hello to Vlada.</a>

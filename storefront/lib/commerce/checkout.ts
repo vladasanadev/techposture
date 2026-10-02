@@ -71,7 +71,7 @@ export async function createCheckout(raw: unknown, key: string, ip: string) {
       409,
     );
   if (order.status === "paid")
-    return { url: `${c.siteUrl}/success?order=${order.public_token}` };
+    return { url: `${c.siteUrl}/Success?order=${order.public_token}` };
   if (order.risk_status || order.status === "expired")
     throw new CommerceError(
       "This checkout is no longer available. Please contact support if you made a payment.",

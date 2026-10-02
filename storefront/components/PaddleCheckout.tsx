@@ -31,7 +31,7 @@ export default function PaddleCheckout({
       eventCallback(event) {
         if (!active) return;
         if (event.name === "checkout.completed")
-          router.push(`/success?order=${orderToken}`);
+          router.push(`/Success?order=${orderToken}`);
         if (event.name === "checkout.error")
           setError(
             "Checkout could not load. Please try again or contact support.",
@@ -52,7 +52,7 @@ export default function PaddleCheckout({
             allowLogout: false,
             showAddDiscounts: false,
             allowDiscountRemoval: false,
-            successUrl: `${window.location.origin}${storefrontPath(`/success?order=${orderToken}`)}`,
+            successUrl: `${window.location.origin}${storefrontPath(`/Success?order=${orderToken}`)}`,
           },
         });
       })

@@ -95,7 +95,7 @@ export async function createCrypto(order: Order, c: CommerceConfig) {
       order_id: order.id,
       order_description: PRODUCT.name,
       ipn_callback_url: `${c.siteUrl}/api/webhooks/crypto`,
-      success_url: `${c.siteUrl}/success?order=${order.public_token}`,
+      success_url: `${c.siteUrl}/Success?order=${order.public_token}`,
       cancel_url: `${c.siteUrl}/?checkout=cancelled#buy`,
       is_fixed_rate: true,
       is_fee_paid_by_user: false,

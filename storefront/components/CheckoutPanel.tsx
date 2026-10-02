@@ -2,6 +2,7 @@
 
 import { storefrontPath } from "@/lib/site-path";
 import VLinkCheckout from "./VLinkCheckout";
+import PayPalHostedCheckout from "./PayPalHostedCheckout";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
@@ -13,7 +14,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-type Provider = "paddle" | "crypto" | "vlink";
+type Provider = "paddle" | "crypto" | "vlink" | "paypal";
 type Storefront = {
   mode: "preview" | "sandbox" | "live";
   price: number;
@@ -26,9 +27,10 @@ type Storefront = {
   }[];
   cryptoTokens?: { id: string; label: string }[];
   vlink?: { available: boolean };
+  paypalHosted?: { available: boolean };
 };
 const defaultMethods = [
-  { id: "paddle" as const, label: "Card / PayPal", available: false },
+  { id: "paddle" as const, label: "Card", available: false },
   { id: "crypto" as const, label: "Crypto", available: false },
 ];
 
@@ -50,7 +52,7 @@ export default function CheckoutPanel() {
       })
       .then((value: Storefront) => {
         setStore(value);
-        setProvider(value.methods.find((m) => m.available)?.id ?? "paddle");
+        setProvider(value.paypalHosted?.available ? "paypal" : value.methods.find((m) => m.available)?.id ?? "paddle");
         setToken(value.cryptoTokens?.[0]?.id ?? "");
       })
       .catch((e) => {
@@ -61,21 +63,24 @@ export default function CheckoutPanel() {
   }, []);
   const preview = !store || store.mode === "preview";
   const available =
-    provider === "vlink"
+    provider === "paypal"
+      ? store?.paypalHosted?.available === true
+      : provider === "vlink"
       ? store?.vlink?.available === true
       : store?.methods.find((m) => m.id === provider)?.available === true;
   const methods = [
+    { id: "paypal" as const, label: "PayPal", available: store?.paypalHosted?.available === true },
     ...(store?.methods ?? defaultMethods),
     {
       id: "vlink" as const,
       label: "vLink",
       available: store?.vlink?.available === true,
     },
-  ];
+  ].filter((method) => method.available || preview);
   const amount = store?.price ?? 19;
   async function checkout(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!available || sending || provider === "vlink") return;
+    if (!available || sending || provider === "vlink" || provider === "paypal") return;
     setSending(true);
     setError("");
     const fields = JSON.stringify({
@@ -137,7 +142,11 @@ export default function CheckoutPanel() {
         )}
         <fieldset disabled={sending} className="payment-methods">
           <legend>Choose your way to pay</legend>
-          <div role="radiogroup" aria-label="Payment method">
+          <div
+            role="radiogroup"
+            aria-label="Payment method"
+            style={{ gridTemplateColumns: `repeat(${methods.length > 3 ? 2 : methods.length}, minmax(0, 1fr))` }}
+          >
             {methods.map((method) => (
               <button
                 key={method.id}
@@ -173,7 +182,9 @@ export default function CheckoutPanel() {
                 }}
                 className={provider === method.id ? "payment-selected" : ""}
               >
-                {method.id === "vlink" ? (
+                {method.id === "paypal" ? (
+                  <span className="paypal-symbol" aria-hidden="true">P</span>
+                ) : method.id === "vlink" ? (
                   <span className="vlink-method-icon" aria-hidden="true">
                     v
                   </span>
@@ -183,11 +194,7 @@ export default function CheckoutPanel() {
                   <Wallet size={19} />
                 )}
                 <span>
-                  {method.id === "vlink"
-                    ? "vLink"
-                    : method.id === "paddle"
-                      ? "Card / PayPal"
-                      : "Crypto"}
+                  {method.id === "crypto" ? "Crypto" : method.label}
                 </span>
                 {provider === method.id && (
                   <Check size={12} className="method-check" />
@@ -196,7 +203,9 @@ export default function CheckoutPanel() {
             ))}
           </div>
         </fieldset>
-        {provider === "vlink" ? (
+        {provider === "paypal" ? (
+          <PayPalHostedCheckout available={available} />
+        ) : provider === "vlink" ? (
           <VLinkCheckout available={available} />
         ) : (
           <>
