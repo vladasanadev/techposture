@@ -17,17 +17,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/blog/edit-with-vlada-ai/styles.css" />
+<link rel="stylesheet" href="/blog/edit-with-vlada-ai/styles.css?v=20261013-2" />
 <style>
   .media-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 14px; margin: 18px 0 8px; align-items: start; }
   .media-grid video { width: 100%; display: block; border-radius: 16px; border: 1px solid rgba(255,255,255,0.22); background: #000; }
   .media-grid figcaption { margin-top: 8px; color: var(--text-soft); font-size: 13px; }
   .dl-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 6px; }
-  .dl { display: inline-flex; align-items: center; gap: 10px; padding: 13px 18px; border-radius: 999px; background: #fff; color: #3D3982;
-        font: 800 13px/1 "Inter", sans-serif; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }
+  .dl { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 13px 18px; border-radius: 999px; background: #fff; color: #3D3982;
+        font: 800 13px/1.35 "Inter", sans-serif; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }
   .dl small { font-weight: 600; letter-spacing: 0; text-transform: none; opacity: .7; }
   .dl--ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.45); }
-  .beat-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .beat-table { table-layout: fixed; width: 100%; border-collapse: collapse; font-size: 14px; }
+  .beat-table th:first-child { width: 42%; }
   .beat-table th { text-align: left; color: var(--accent); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; padding: 0 10px 10px 0; border-bottom: 1px solid var(--rule); }
   .beat-table td { padding: 10px 10px 10px 0; border-bottom: 1px solid var(--rule); color: var(--text-muted); vertical-align: top; }
   .beat-table td:first-child { color: #fff; font-weight: 600; }
@@ -45,7 +46,7 @@
 
 <main class="page">
   <section class="hero">
-    <p class="hero__byline">a free guide by @vlada.asana · October 13, 2026</p>
+    <p class="hero__byline">a free guide by @vlada.asana · <time datetime="2026-10-13">October 13, 2026</time></p>
     <p class="eyebrow">For creators</p>
     <h1 class="hero__title">Live <span class="hero__title-accent">Edit</span></h1>
     <p class="hero__lede">I said “put ChatGPT logo on my right hand” and Claude did it, on that exact word. Here is the whole setup so you can make the same video: the script, the Claude skill, and every prompt I used.</p>
@@ -250,6 +251,6 @@ Show me a frame before you send the file.</code></pre>
 </main>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="/blog/edit-with-vlada-ai/script.js"></script>
+<script src="/blog/edit-with-vlada-ai/script.js?v=20261013-2"></script>
 </body>
 </html>

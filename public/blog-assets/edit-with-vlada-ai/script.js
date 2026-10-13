@@ -60,9 +60,13 @@
   document.addEventListener('click', (event) => {
     const link = event.target.closest('a[href^="#"]');
     if (!link) return;
-    const target = document.querySelector(link.getAttribute('href'));
+    const target = document.getElementById(link.hash.slice(1));
     if (!target) return;
     event.preventDefault();
-    window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 68, behavior: 'smooth' });
+    const headerHeight = document.querySelector('.topbar')?.getBoundingClientRect().height || 0;
+    window.scrollTo({
+      top: target.getBoundingClientRect().top + window.scrollY - headerHeight - 20,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+    });
   });
 })();

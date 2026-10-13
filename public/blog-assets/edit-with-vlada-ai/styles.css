@@ -22,7 +22,7 @@ body {
   color: var(--text);
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.65;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 a {
@@ -103,23 +103,41 @@ strong { color: #fff; }
 }
 
 .hero__title {
-  max-width: 9ch;
-  margin: 10px 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 0.16em;
+  width: fit-content;
+  margin: 18px 0 26px;
   font-family: "Big Shoulders Display", "Inter", sans-serif;
   font-size: clamp(58px, 12vw, 118px);
   font-weight: 900;
   letter-spacing: -0.02em;
-  line-height: 0.86;
+  line-height: 1;
   text-transform: uppercase;
 }
 
-.hero__title-accent,
 .job-highlight {
   display: inline-block;
   border-radius: 18px;
   background: var(--red);
   padding: 0 0.12em 0.08em;
   color: #fff;
+}
+
+.hero__title-accent {
+  display: inline-block;
+  border-radius: 0.24em;
+  background: var(--red);
+  padding: 0.16em 0.22em 0.20em;
+  color: #fff;
+}
+
+.hero__byline time { white-space: nowrap; }
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 5px;
 }
 
 .hero__lede,
@@ -147,7 +165,7 @@ strong { color: #fff; }
   margin: 0 0 18px;
   font-family: "Big Shoulders Display", "Inter", sans-serif;
   font-weight: 900;
-  line-height: 0.94;
+  line-height: 1.04;
   text-transform: uppercase;
 }
 
@@ -186,6 +204,7 @@ strong { color: #fff; }
 }
 
 .section__body {
+  overflow-wrap: anywhere;
   color: var(--text-muted);
 }
 
@@ -307,7 +326,9 @@ strong { color: #fff; }
   color: #3D3982;
   cursor: pointer;
   font: 800 12px/1 "Inter", sans-serif;
-  padding: 8px 12px;
+  min-height: 44px;
+  flex-shrink: 0;
+  padding: 10px 14px;
   text-transform: uppercase;
 }
 
@@ -316,6 +337,7 @@ pre {
   overflow-x: auto;
   padding: 18px;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 pre code {
@@ -373,28 +395,28 @@ pre code {
 @media (max-width: 760px) {
   .topbar__inner,
   .page {
-    width: min(100% - 24px, 620px);
+    width: min(100% - 40px, 620px);
   }
 
   .topbar__inner {
     align-items: flex-start;
     flex-direction: column;
+    gap: 10px;
   }
 
   .hero {
-    padding: 34px 0 18px;
+    padding: 38px 0 22px;
   }
 
   .hero__title {
-    font-size: clamp(54px, 18vw, 74px);
-    max-width: 8ch;
+    font-size: clamp(50px, 16vw, 74px);
   }
 
   .intro-block,
   .toc,
   .section {
     border-radius: 22px;
-    padding: 20px 16px;
+    padding: 24px 20px;
   }
 
   .model-grid,
