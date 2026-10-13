@@ -682,6 +682,13 @@ const gptAstraGuideDocument = buildEmbeddedGuideDocument(gptAstraGuideHtml, gptA
 
 const blogPosts = [
   {
+    href: '/blog/edit-with-vlada-ai',
+    title: 'Edit With Vlada AI: Live Edit',
+    description: 'Make Claude edit your video on command. Get the free skill, PDF guide, script, and copy-ready prompts.',
+    date: 'October 13, 2026',
+    tag: 'content',
+  },
+  {
     href: '/techblog/gpt-6-astra',
     title: 'GPT-6 Astra',
     description: 'A practical model-routing guide: when to use Astra, when Sol is enough, benchmark caveats, cost notes, and copy-ready prompts.',

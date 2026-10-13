@@ -1,12 +1,47 @@
 {
   "rewrites": [
     {
+      "source": "/blog/edit-with-vlada-ai",
+      "destination": "/blog-assets/edit-with-vlada-ai/index.html"
+    },
+    {
+      "source": "/blog/edit-with-vlada-ai/",
+      "destination": "/blog-assets/edit-with-vlada-ai/index.html"
+    },
+    {
+      "source": "/blog/edit-with-vlada-ai/video/:path*",
+      "destination": "https://editwithvladaai.vercel.app/video/:path*"
+    },
+    {
+      "source": "/blog/edit-with-vlada-ai/img/:path*",
+      "destination": "https://editwithvladaai.vercel.app/img/:path*"
+    },
+    {
+      "source": "/blog/edit-with-vlada-ai/:path*",
+      "destination": "/blog-assets/edit-with-vlada-ai/:path*"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
     {
       "source": "/(.*)",
       "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/blog/edit-with-vlada-ai/reel-live-edit.zip",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"reel-live-edit.zip\""
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
     }
   ]
 }

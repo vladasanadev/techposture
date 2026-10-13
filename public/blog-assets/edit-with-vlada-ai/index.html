@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Edit With Vlada AI · Live Edit</title>
+<meta name="description" content="Make Claude edit your video on command: the script, a free Claude skill, copy-ready prompts, and the ChatGPT vs Claude head-to-head reel." />
+<meta property="og:title" content="Live Edit: make Claude edit your video on command" />
+<meta property="og:description" content="A free Claude skill, the script, every prompt and the ChatGPT vs Claude head-to-head. By @vlada.asana." />
+<meta property="og:image" content="https://editwithvladaai.vercel.app/img/og.jpg" />
+<meta property="og:url" content="https://vladasana.com/blog/edit-with-vlada-ai" />
+<link rel="canonical" href="https://vladasana.com/blog/edit-with-vlada-ai" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="theme-color" content="#3D3982" />
+<link rel="icon" href="/blog/edit-with-vlada-ai/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/blog/edit-with-vlada-ai/styles.css" />
+<style>
+  .media-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 14px; margin: 18px 0 8px; align-items: start; }
+  .media-grid video { width: 100%; display: block; border-radius: 16px; border: 1px solid rgba(255,255,255,0.22); background: #000; }
+  .media-grid figcaption { margin-top: 8px; color: var(--text-soft); font-size: 13px; }
+  .dl-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 6px; }
+  .dl { display: inline-flex; align-items: center; gap: 10px; padding: 13px 18px; border-radius: 999px; background: #fff; color: #3D3982;
+        font: 800 13px/1 "Inter", sans-serif; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }
+  .dl small { font-weight: 600; letter-spacing: 0; text-transform: none; opacity: .7; }
+  .dl--ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.45); }
+  .beat-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .beat-table th { text-align: left; color: var(--accent); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; padding: 0 10px 10px 0; border-bottom: 1px solid var(--rule); }
+  .beat-table td { padding: 10px 10px 10px 0; border-bottom: 1px solid var(--rule); color: var(--text-muted); vertical-align: top; }
+  .beat-table td:first-child { color: #fff; font-weight: 600; }
+  @media (max-width: 720px) { .media-grid { grid-template-columns: 1fr; } .beat-table { font-size: 13px; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="https://www.vladasana.com/techblog">@vlada.asana <span class="topbar__sep">·</span> Live Edit</a>
+    <a class="topbar__cta" href="#download">GET THE SKILL</a>
+  </div>
+</header>
+
+<main class="page">
+  <section class="hero">
+    <p class="hero__byline">a free guide by @vlada.asana · October 13, 2026</p>
+    <p class="eyebrow">For creators</p>
+    <h1 class="hero__title">Live <span class="hero__title-accent">Edit</span></h1>
+    <p class="hero__lede">I said “put ChatGPT logo on my right hand” and Claude did it, on that exact word. Here is the whole setup so you can make the same video: the script, the Claude skill, and every prompt I used.</p>
+  </section>
+
+  <section class="toc" id="contents">
+    <p class="eyebrow">Contents</p>
+    <h2 class="toc__title">8 steps. Click to jump.</h2>
+    <ol class="toc__list">
+      <li><a href="#result"><span class="toc__num">01</span> What you will make</a></li>
+      <li><a href="#need"><span class="toc__num">02</span> What you need</a></li>
+      <li><a href="#script"><span class="toc__num">03</span> The script and how to film it</a></li>
+      <li><a href="#download"><span class="toc__num">04</span> Get the skill and the PDF</a></li>
+      <li><a href="#prompts"><span class="toc__num">05</span> The prompts</a></li>
+      <li><a href="#plan"><span class="toc__num">06</span> Check the plan, then the result</a></li>
+      <li><a href="#h2h"><span class="toc__num">07</span> The head-to-head reel</a></li>
+      <li><a href="#fixes"><span class="toc__num">08</span> Quick fixes</a></li>
+    </ol>
+  </section>
+
+  <article class="section" id="result">
+    <p class="section__eyebrow">01</p>
+    <h2 class="section__title">What you will make</h2>
+    <div class="section__body">
+      <p>One talking-head take, about 35 seconds. You speak editing commands. Claude turns every command into a visible edit at the moment you say it. Nothing in it is AI-generated: every pixel is your own footage, code-drawn graphics and synthesised sound.</p>
+      <div class="media-grid">
+        <figure style="margin:0"><video src="/blog/edit-with-vlada-ai/video/claude-edit.mp4" poster="/blog/edit-with-vlada-ai/img/claude-edit.jpg" controls playsinline preload="none"></video><figcaption>Claude's edit, 16:9.</figcaption></figure>
+        <figure style="margin:0"><video src="/blog/edit-with-vlada-ai/video/head-to-head.mp4" poster="/blog/edit-with-vlada-ai/img/head-to-head.jpg" controls playsinline preload="none"></video><figcaption>The head-to-head, 9:16. Claude on top, ChatGPT below.</figcaption></figure>
+      </div>
+      <table class="beat-table">
+        <tr><th>You say</th><th>What happens</th></tr>
+        <tr><td>“ChatGPT or Claude?”</td><td>Hook title from frame 0, name tags pop onto your palms, VS on “or”</td></tr>
+        <tr><td>“…in real time”</td><td>Your video shrinks into a live editor with two AI cursors and a LIVE timecode</td></tr>
+        <tr><td>“Put ChatGPT logo on my right hand”</td><td>The cursor clicks a glass 3D cube onto your palm, and it follows your hand</td></tr>
+        <tr><td>“Make them float and fly off”</td><td>The cubes hover, sway, then fling off to the sides</td></tr>
+        <tr><td>“Let's make it harder”</td><td>Snap punch-in, shake, difficulty meter</td></tr>
+        <tr><td>“Put subtitles…”</td><td>Two-font captions start on that word</td></tr>
+        <tr><td>“…any Tarantino movie”</td><td>A frameless 3D film card slides out from behind your head</td></tr>
+        <tr><td>“Clear everything on the background”</td><td>A light-band wipe swaps your room for a clean sky</td></tr>
+        <tr><td>“…a clone of me next to me”</td><td>A copy of you slides out into a two-shot</td></tr>
+        <tr><td>“So who won?”</td><td>The cubes come back to frame the question</td></tr>
+        <tr><td>“Want to edit videos like this too?”</td><td>Your real footage and captions. Clean ending.</td></tr>
+      </table>
+    </div>
+  </article>
+
+  <article class="section" id="need">
+    <p class="section__eyebrow">02</p>
+    <h2 class="section__title">What you need</h2>
+    <div class="section__body">
+      <div class="use-grid">
+        <div><span>01</span><h3>Claude Code</h3><p>The terminal app or the Code tab in the Claude desktop app, on a paid Claude plan.</p></div>
+        <div><span>02</span><h3>A good machine</h3><p>An Apple Silicon Mac is best. A PC with an NVIDIA GPU works too. About 6 GB free.</p></div>
+        <div><span>03</span><h3>Three free tools</h3><p>ffmpeg, Google Chrome and Python 3.12. Claude installs the rest.</p></div>
+        <div><span>04</span><h3>Your take</h3><p>One landscape video, 30 fps, about 35 seconds. A movie clip too, if you want that beat.</p></div>
+        <div><span>05</span><h3>~5 min setup</h3><p>Once. Claude installs the engine and downloads the models.</p></div>
+        <div><span>06</span><h3>~20 min per edit</h3><p>Mostly rendering. You check the plan and the result.</p></div>
+      </div>
+      <div class="callout">
+        <div class="callout__body"><strong>Why it runs on your computer.</strong> The clone, the wipe and the film card behind your hair need a proper cut-out of you on every frame. That's real compute. A laptop does it in about a minute, no credits needed.</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="section" id="script">
+    <p class="section__eyebrow">03</p>
+    <h2 class="section__title">The script and how to film it</h2>
+    <div class="section__body">
+      <p>Read this on camera. Swap the AIs (Gemini, Grok, Perplexity, Meta AI, Le Chat, DeepSeek and Copilot work too) or the movie if you want. Skip a line and that effect is skipped.</p>
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">The script</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>Who's better at video editing, ChatGPT or Claude?
+Let's make them edit this video in real time.
+Put ChatGPT logo on my right hand.
+Now put Claude logo on my left hand.
+Now make them float and fly off to the sides.
+Let's make it harder.
+Put subtitles using these two fonts.
+Overlay a clip from any Tarantino movie when I say "movie".
+Let's try even harder.
+Clear everything on the background and put a clone of me next to me.
+So... who won?
+Want to edit videos like this too? Comment EDIT and I'll send you my instructions.</code></pre>
+      </div>
+      <div class="decision-list">
+        <div><strong>Landscape 16:9</strong><span>4K or 1080p, 30 fps, phone on a tripod at eye level. The 9:16 version comes from the head-to-head step.</span></div>
+        <div><strong>Mid-chest up, centred</strong><span>Leave room on both sides for your raised palms.</span></div>
+        <div><strong>Palms up and open</strong><span>When you name a hand, raise it beside your shoulder and keep both up until “fly off”. No palm, no cube.</span></div>
+        <div><strong>Any background</strong><span>A plain wall is easiest. A bright window works, there's a cleanup setting for it.</span></div>
+        <div><strong>Jump cuts are fine</strong><span>Glue your best takes together. Claude finds the cuts and uses them.</span></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="section" id="download">
+    <p class="section__eyebrow">04</p>
+    <h2 class="section__title">Get the skill and the PDF</h2>
+    <div class="section__body">
+      <p>The zip is a Claude skill: a folder with instructions, the script, the prompts and the editing engine. The PDF is this whole guide in 11 pages.</p>
+      <div class="dl-row">
+        <a class="dl" href="/blog/edit-with-vlada-ai/reel-live-edit.zip" download>Download the skill <small>.zip</small></a>
+        <a class="dl dl--ghost" href="/blog/edit-with-vlada-ai/Live-Edit-Guide.pdf" target="_blank" rel="noopener">The PDF guide <small>11 pages</small></a>
+      </div>
+      <p>Unzip it and move the <code>reel-live-edit</code> folder into your Claude Code skills folder:</p>
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">Install (Mac)</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>mkdir -p ~/.claude/skills && mv ~/Downloads/reel-live-edit ~/.claude/skills/
+brew install ffmpeg uv</code></pre>
+      </div>
+      <p class="note">On Windows: put the folder in <code>%USERPROFILE%\.claude\skills\</code> and run <code>winget install Gyan.FFmpeg astral-sh.uv Google.Chrome</code>. Or just ask Claude to do it.</p>
+    </div>
+  </article>
+
+  <article class="section" id="prompts">
+    <p class="section__eyebrow">05</p>
+    <h2 class="section__title">The prompts</h2>
+    <div class="section__body">
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">1 · Setup, once</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>Use the reel-live-edit skill. Run its setup and tell me when it prints READY.
+If anything is missing (ffmpeg, Chrome, Python 3.12), tell me the exact command to install it.</code></pre>
+      </div>
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">2 · The edit</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>Use the reel-live-edit skill to edit my take: &lt;path/to/take.mov&gt;
+The two AIs are ChatGPT (my right hand) and Claude (my left hand).
+For the "movie" command use &lt;path/to/clip.mp4&gt;, starting at &lt;m:ss&gt; in that file.
+Work in &lt;~/live-edit/my-take&gt;.
+Before the long steps, show me the plan: every command, the word it lands on and the time.
+Then render it, open the QA sheet, check every beat yourself, and give me the MP4 path.
+No music, no AI-generated footage. Keep the ending clean (my footage + captions only).</code></pre>
+      </div>
+      <div class="callout callout--yellow">
+        <div class="callout__body">Ask for one change at a time after the first render. Claude tests each change on stills before re-rendering, so small fixes take a minute, not ten.</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="section" id="plan">
+    <p class="section__eyebrow">06</p>
+    <h2 class="section__title">Check the plan, then the result</h2>
+    <div class="section__body">
+      <p>Before anything heavy runs, Claude shows you a table: every beat, its time, and the words around it. Read it once. “chat gbt” is just how the transcriber spells ChatGPT. Your right hand shows on the left of the screen.</p>
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">What the plan looks like</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>  7.18  logos.left        …chat gbt logo on my…
+ 10.28  logos.right       …put claude logo on my…
+ 12.70  logos.float       …make them float and fly…
+ 15.10  difficulty HARDER …the sides let's make it…
+ 20.17  clip.in           …from any tarantino movie when…
+ 26.40  clone.t           …put a clone of me…</code></pre>
+      </div>
+      <p>After the render, Claude makes a QA sheet with one frame just after every beat, checks it, and gives you the file. Then you watch it.</p>
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">Fixes that come up</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>The ChatGPT cube appears a bit late. Move its click 3 frames earlier, show me a still, then re-render.
+Make the movie card bigger (about 1000 px wide) and start the clip on the moment he raises his hands.
+Captions: split "AND I'LL SEND YOU" into "AND I'LL" / "send you".</code></pre>
+      </div>
+    </div>
+  </article>
+
+  <article class="section" id="h2h">
+    <p class="section__eyebrow">07</p>
+    <h2 class="section__title">The head-to-head reel</h2>
+    <div class="section__body">
+      <p>Give another AI the exact same take and the exact same brief, then stack both edits into the 9:16 “who edited it better” reel. Use your original audio so neither edit's sound effects tip it.</p>
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">The fair brief (give it to every AI)</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>Here is my talking-head take: &lt;file&gt;. I speak editing commands in it. Edit the video so every command visibly happens on the word I say it: logos on the hands I name, they float and fly off, it gets "harder", subtitles in two fonts start when I say "subtitles", a clip from a Tarantino movie appears when I say "Tarantino", the background clears, a clone of me appears next to me, and the ending is clean with captions. Every second should look edited. Deliver a 1920×1080 MP4, same length, in sync with my audio.</code></pre>
+      </div>
+      <div class="codeblock">
+        <div class="codeblock__bar"><span class="codeblock__lang">Stack them</span><button class="copybtn" type="button">Copy</button></div>
+<pre><code>Use the reel-live-edit skill to stack two edits of the same take into the 9:16 head-to-head:
+top = &lt;claude_edit.mp4&gt; labelled "CLAUDE" (brand claude),
+bottom = &lt;other_edit.mp4&gt; labelled "CHATGPT" (brand chatgpt).
+Title "EDITING" until the end of my first sentence, then "WHO'S better?". Use my original take's audio.
+Show me a frame before you send the file.</code></pre>
+      </div>
+    </div>
+  </article>
+
+  <article class="section" id="fixes">
+    <p class="section__eyebrow">08</p>
+    <h2 class="section__title">Quick fixes</h2>
+    <div class="section__body">
+      <div class="decision-list">
+        <div><strong>A cube floats in the air</strong><span>Your palm wasn't up yet. Ask Claude to check the palm tracking at that time, or delay the click.</span></div>
+        <div><strong>Cubes on the wrong hands</strong><span>“Swap the brands.” If your camera mirrors you, say “my take is mirrored”.</span></div>
+        <div><strong>Room left in your hair after the wipe</strong><span>“Turn on the window matte cleanup.” Holes in dark hair instead? Turn it off.</span></div>
+        <div><strong>The film card covers your face</strong><span>“Put the clip on the other side” or “make it smaller”.</span></div>
+        <div><strong>A beat on the wrong word</strong><span>“Move X to the word Y.” Claude edits the plan and checks a still.</span></div>
+      </div>
+      <p class="note">Use movie clips you have the right to use. Brand logos are there to name the products you compare, not to suggest endorsement. If you make one, tag me @vlada.asana, I want to see it.</p>
+    </div>
+  </article>
+
+  <footer class="article-footer">
+    <a href="https://www.vladasana.com/techblog">vladasanadev</a>
+    <span>October 13, 2026</span>
+  </footer>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="/blog/edit-with-vlada-ai/script.js"></script>
+</body>
+</html>
