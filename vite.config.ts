@@ -74,6 +74,13 @@ export default defineConfig(({ mode }) => {
       },
     },
 
+    // The home page (public/index.html) is the static Power On desk; the React app serves every other route from app.html
+    build: {
+      rollupOptions: {
+        input: path.resolve(__dirname, 'app.html'),
+      },
+    },
+
     // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
     assetsInclude: ['**/*.svg', '**/*.csv'],
   }

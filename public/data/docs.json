@@ -1,0 +1,20 @@
+{
+ "bundle": {
+  "name": "The Developer Job Search Playbook",
+  "short": "The Job Bundle",
+  "pages": 281,
+  "guides": 12,
+  "extras": "a 22-page roadmap with a 14-day plan, plus worksheets",
+  "price": 19,
+  "line": "Get noticed. Get prepared.",
+  "url": "https://vladasana.com/Job-bundle"
+ },
+ "automations": {
+  "name": "Busy Brain Automations",
+  "line": "your brain creates. the system remembers.",
+  "url": "https://vladasana.com/automations",
+  "kind": "Free guide"
+ },
+ "blog": "https://vladasana.com/techblog",
+ "note": "Posts come from content.js POSTS (title, tag, minutes, href)."
+}

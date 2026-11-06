@@ -1,0 +1,984 @@
+{
+ "asOf": "2026-11-06",
+ "note": "Instagram plays and comments for @vlada.asana reels as of asOf. count = her reels that mention the brand; plays = their total plays. reel = null means no collab reel was found on her Instagram. post = the collab post a click on the brand opens (Instagram reel, or her X post where platform is \"x\"; X plays are post views).",
+ "profile": "https://www.instagram.com/vlada.asana/",
+ "brands": [
+  {
+   "rank": 1,
+   "name": "SpaceX AI",
+   "tier": 1,
+   "logo": {
+    "icon": "spacex",
+    "domain": "x.ai"
+   },
+   "reel": {
+    "code": "Dd87I0GugQ9",
+    "title": "Three Grok bots plan a creator villa",
+    "brand": "SpaceX AI",
+    "plays": 533889,
+    "comments": 93,
+    "date": "2026-10-01",
+    "loop": "../shared/ig/loop/Dd87I0GugQ9.mp4",
+    "poster": "../shared/ig/poster/Dd87I0GugQ9.jpg",
+    "still": "../shared/ig/still/Dd87I0GugQ9.jpg",
+    "embed": "https://www.instagram.com/reel/Dd87I0GugQ9/embed",
+    "link": "https://www.instagram.com/reel/Dd87I0GugQ9/",
+    "full": "../shared/ig/full/Dd87I0GugQ9.mp4"
+   },
+   "count": 3,
+   "plays": 1267071,
+   "post": "https://www.instagram.com/reel/Dd87I0GugQ9/"
+  },
+  {
+   "rank": 2,
+   "name": "Grok",
+   "tier": 1,
+   "logo": {
+    "domain": "grok.com"
+   },
+   "reel": {
+    "code": "DcsyjPFzUJg",
+    "title": "Grok vs. a top model: speed and cost",
+    "brand": "Grok",
+    "plays": 138751,
+    "comments": 77,
+    "date": "2026-08-31",
+    "loop": "../shared/ig/loop/DcsyjPFzUJg.mp4",
+    "poster": "../shared/ig/poster/DcsyjPFzUJg.jpg",
+    "still": "../shared/ig/still/DcsyjPFzUJg.jpg",
+    "embed": "https://www.instagram.com/reel/DcsyjPFzUJg/embed",
+    "link": "https://www.instagram.com/reel/DcsyjPFzUJg/",
+    "full": "../shared/ig/full/DcsyjPFzUJg.mp4"
+   },
+   "count": 4,
+   "plays": 1281361,
+   "post": "https://www.instagram.com/reel/DcsyjPFzUJg/"
+  },
+  {
+   "rank": 3,
+   "name": "CapCut",
+   "tier": 1,
+   "logo": {
+    "domain": "capcut.com"
+   },
+   "reel": {
+    "code": "DeY3N5ZgOvc",
+    "title": "One video, five platforms",
+    "brand": "CapCut",
+    "plays": 65127,
+    "comments": 31,
+    "date": "2026-10-12",
+    "loop": "../shared/ig/loop/DeY3N5ZgOvc.mp4",
+    "poster": "../shared/ig/poster/DeY3N5ZgOvc.jpg",
+    "still": "../shared/ig/still/DeY3N5ZgOvc.jpg",
+    "embed": "https://www.instagram.com/reel/DeY3N5ZgOvc/embed",
+    "link": "https://www.instagram.com/reel/DeY3N5ZgOvc/",
+    "full": "../shared/ig/full/DeY3N5ZgOvc.mp4"
+   },
+   "count": 1,
+   "plays": 65127,
+   "post": "https://www.instagram.com/reel/DeY3N5ZgOvc/"
+  },
+  {
+   "rank": 4,
+   "name": "Cursor",
+   "tier": 1,
+   "logo": {
+    "icon": "cursor",
+    "domain": "cursor.com"
+   },
+   "reel": {
+    "code": "DWdvwzSkXQR",
+    "title": "Taming Cursor's autocomplete",
+    "brand": "Cursor",
+    "plays": 8402,
+    "comments": 6,
+    "date": "2026-03-29",
+    "loop": "../shared/ig/loop/DWdvwzSkXQR.mp4",
+    "poster": "../shared/ig/poster/DWdvwzSkXQR.jpg",
+    "still": "../shared/ig/still/DWdvwzSkXQR.jpg",
+    "embed": "https://www.instagram.com/reel/DWdvwzSkXQR/embed",
+    "link": "https://www.instagram.com/reel/DWdvwzSkXQR/",
+    "full": "../shared/ig/full/DWdvwzSkXQR.mp4"
+   },
+   "count": 5,
+   "plays": 997162,
+   "post": "https://www.instagram.com/reel/DWdvwzSkXQR/"
+  },
+  {
+   "rank": 5,
+   "name": "Hostinger",
+   "tier": 2,
+   "logo": {
+    "tile": "hostinger",
+    "icon": "hostinger",
+    "domain": "hostinger.com"
+   },
+   "reel": {
+    "code": "DUDhxE9EaN3",
+    "title": "Self-hosting n8n on a VPS",
+    "brand": "Hostinger",
+    "plays": 326469,
+    "comments": 34,
+    "date": "2026-01-28",
+    "loop": "../shared/ig/loop/DUDhxE9EaN3.mp4",
+    "poster": "../shared/ig/poster/DUDhxE9EaN3.jpg",
+    "still": "../shared/ig/still/DUDhxE9EaN3.jpg",
+    "embed": "https://www.instagram.com/reel/DUDhxE9EaN3/embed",
+    "link": "https://www.instagram.com/reel/DUDhxE9EaN3/",
+    "full": "../shared/ig/full/DUDhxE9EaN3.mp4"
+   },
+   "count": 3,
+   "plays": 522016,
+   "post": "https://www.instagram.com/reel/DUDhxE9EaN3/"
+  },
+  {
+   "rank": 6,
+   "name": "Ledger",
+   "tier": 2,
+   "logo": {
+    "tile": "ledger",
+    "bg": "#000000",
+    "domain": "ledger.com"
+   },
+   "reel": null,
+   "count": 0,
+   "plays": 0,
+   "post": null
+  },
+  {
+   "rank": 7,
+   "name": "Replit",
+   "tier": 2,
+   "logo": {
+    "icon": "replit",
+    "domain": "replit.com"
+   },
+   "reel": {
+    "code": "DfMh6z2BzW_",
+    "title": "A freelance rate calculator built in Replit",
+    "brand": "Replit",
+    "plays": 57655,
+    "comments": 22,
+    "date": "2026-11-01",
+    "loop": "../shared/ig/loop/DfMh6z2BzW_.mp4",
+    "poster": "../shared/ig/poster/DfMh6z2BzW_.jpg",
+    "still": "../shared/ig/still/DfMh6z2BzW_.jpg",
+    "embed": "https://www.instagram.com/reel/DfMh6z2BzW_/embed",
+    "link": "https://www.instagram.com/reel/DfMh6z2BzW_/",
+    "full": "../shared/ig/full/DfMh6z2BzW_.mp4"
+   },
+   "count": 2,
+   "plays": 114531,
+   "post": "https://www.instagram.com/reel/DfMh6z2BzW_/"
+  },
+  {
+   "rank": 8,
+   "name": "Lovable",
+   "tier": 2,
+   "logo": {
+    "tile": "lovable",
+    "bg": "#14122e",
+    "domain": "lovable.dev"
+   },
+   "reel": {
+    "code": "DNYOZi-t4Do",
+    "title": "Fork-safe",
+    "brand": "Lovable",
+    "plays": 27007,
+    "comments": 24,
+    "date": "2025-08-15",
+    "loop": "../shared/ig/loop/DNYOZi-t4Do.mp4",
+    "poster": "../shared/ig/poster/DNYOZi-t4Do.jpg",
+    "still": "../shared/ig/still/DNYOZi-t4Do.jpg",
+    "embed": "https://www.instagram.com/reel/DNYOZi-t4Do/embed",
+    "link": "https://www.instagram.com/reel/DNYOZi-t4Do/",
+    "full": "../shared/ig/full/DNYOZi-t4Do.mp4"
+   },
+   "count": 1,
+   "plays": 27007,
+   "post": "https://www.instagram.com/reel/DNYOZi-t4Do/"
+  },
+  {
+   "rank": 9,
+   "name": "HeyGen",
+   "tier": 2,
+   "logo": {
+    "tile": "heygen",
+    "bg": "#ffffff",
+    "domain": "heygen.com"
+   },
+   "reel": {
+    "code": "DDxSyAUy0jD",
+    "title": "Delegating work to my AI clone",
+    "brand": "HeyGen",
+    "plays": 4180,
+    "comments": 25,
+    "date": "2024-12-19",
+    "loop": "../shared/ig/loop/DDxSyAUy0jD.mp4",
+    "poster": "../shared/ig/poster/DDxSyAUy0jD.jpg",
+    "still": "../shared/ig/still/DDxSyAUy0jD.jpg",
+    "embed": "https://www.instagram.com/reel/DDxSyAUy0jD/embed",
+    "link": "https://www.instagram.com/reel/DDxSyAUy0jD/",
+    "full": "../shared/ig/full/DDxSyAUy0jD.mp4"
+   },
+   "count": 1,
+   "plays": 4180,
+   "post": "https://www.instagram.com/reel/DDxSyAUy0jD/"
+  },
+  {
+   "rank": 10,
+   "name": "MiniMax",
+   "tier": 2,
+   "logo": {
+    "icon": "minimax",
+    "tile": "minimax",
+    "bg": "#ffffff",
+    "domain": "minimax.io"
+   },
+   "reel": {
+    "code": "DbVNF_eRVAb",
+    "title": "Trying MiniMax M3",
+    "brand": "MiniMax",
+    "plays": 29424,
+    "comments": 56,
+    "date": "2026-07-28",
+    "loop": "../shared/ig/loop/DbVNF_eRVAb.mp4",
+    "poster": "../shared/ig/poster/DbVNF_eRVAb.jpg",
+    "still": "../shared/ig/still/DbVNF_eRVAb.jpg",
+    "embed": "https://www.instagram.com/reel/DbVNF_eRVAb/embed",
+    "link": "https://www.instagram.com/reel/DbVNF_eRVAb/",
+    "full": "../shared/ig/full/DbVNF_eRVAb.mp4"
+   },
+   "count": 2,
+   "plays": 382144,
+   "post": "https://www.instagram.com/reel/DbVNF_eRVAb/"
+  },
+  {
+   "rank": 11,
+   "name": "n8n",
+   "tier": 3,
+   "logo": {
+    "icon": "n8n",
+    "domain": "n8n.io"
+   },
+   "reel": {
+    "code": "DUDhxE9EaN3",
+    "title": "Self-hosting n8n on a VPS",
+    "brand": "n8n",
+    "plays": 326469,
+    "comments": 34,
+    "date": "2026-01-28",
+    "loop": "../shared/ig/loop/DUDhxE9EaN3.mp4",
+    "poster": "../shared/ig/poster/DUDhxE9EaN3.jpg",
+    "still": "../shared/ig/still/DUDhxE9EaN3.jpg",
+    "embed": "https://www.instagram.com/reel/DUDhxE9EaN3/embed",
+    "link": "https://www.instagram.com/reel/DUDhxE9EaN3/",
+    "full": "../shared/ig/full/DUDhxE9EaN3.mp4"
+   },
+   "count": 1,
+   "plays": 326469,
+   "post": "https://www.instagram.com/reel/DUDhxE9EaN3/"
+  },
+  {
+   "rank": 12,
+   "name": "Higgsfield AI",
+   "tier": 3,
+   "logo": {
+    "tile": "higgsfield",
+    "bg": "#d1fe17",
+    "domain": "higgsfield.ai"
+   },
+   "reel": {
+    "code": "DbvAI4PRlhS",
+    "title": "Editing with Higgsfield",
+    "brand": "Higgsfield AI",
+    "plays": 75609,
+    "comments": 105,
+    "date": "2026-08-07",
+    "loop": "../shared/ig/loop/DbvAI4PRlhS.mp4",
+    "poster": "../shared/ig/poster/DbvAI4PRlhS.jpg",
+    "still": "../shared/ig/still/DbvAI4PRlhS.jpg",
+    "embed": "https://www.instagram.com/reel/DbvAI4PRlhS/embed",
+    "link": "https://www.instagram.com/reel/DbvAI4PRlhS/",
+    "full": "../shared/ig/full/DbvAI4PRlhS.mp4"
+   },
+   "count": 3,
+   "plays": 132042,
+   "post": "https://www.instagram.com/reel/DbvAI4PRlhS/"
+  },
+  {
+   "rank": 13,
+   "name": "Genspark",
+   "tier": 3,
+   "logo": {
+    "domain": "genspark.ai"
+   },
+   "reel": {
+    "code": "DdYwpCFNAAF",
+    "title": "An app launch with Genspark Design",
+    "brand": "Genspark",
+    "plays": 96586,
+    "comments": 59,
+    "date": "2026-09-17",
+    "loop": "../shared/ig/loop/DdYwpCFNAAF.mp4",
+    "poster": "../shared/ig/poster/DdYwpCFNAAF.jpg",
+    "still": "../shared/ig/still/DdYwpCFNAAF.jpg",
+    "embed": "https://www.instagram.com/reel/DdYwpCFNAAF/embed",
+    "link": "https://www.instagram.com/reel/DdYwpCFNAAF/",
+    "full": "../shared/ig/full/DdYwpCFNAAF.mp4"
+   },
+   "count": 1,
+   "plays": 96586,
+   "post": "https://www.instagram.com/reel/DdYwpCFNAAF/"
+  },
+  {
+   "rank": 14,
+   "name": "Meshy AI",
+   "tier": 3,
+   "logo": {
+    "domain": "meshy.ai"
+   },
+   "reel": {
+    "code": "Dd8dzLMhXvr",
+    "title": "3D models with Meshy",
+    "brand": "Meshy AI",
+    "plays": 403821,
+    "comments": 27,
+    "date": "2026-10-01",
+    "loop": "../shared/ig/loop/Dd8dzLMhXvr.mp4",
+    "poster": "../shared/ig/poster/Dd8dzLMhXvr.jpg",
+    "still": "../shared/ig/still/Dd8dzLMhXvr.jpg",
+    "embed": "https://www.instagram.com/reel/Dd8dzLMhXvr/embed",
+    "link": "https://www.instagram.com/reel/Dd8dzLMhXvr/",
+    "full": "../shared/ig/full/Dd8dzLMhXvr.mp4"
+   },
+   "count": 1,
+   "plays": 403821,
+   "post": "https://www.instagram.com/reel/Dd8dzLMhXvr/"
+  },
+  {
+   "rank": 15,
+   "name": "Dreamina",
+   "tier": 3,
+   "logo": {
+    "domain": "dreamina.capcut.com"
+   },
+   "reel": null,
+   "count": 0,
+   "plays": 0,
+   "post": null
+  },
+  {
+   "rank": 16,
+   "name": "Tangem",
+   "tier": 3,
+   "logo": {
+    "tile": "tangem",
+    "domain": "tangem.com"
+   },
+   "reel": {
+    "code": "x2077670248283799584",
+    "title": "Time to get encrypted",
+    "brand": "Tangem",
+    "plays": 2090,
+    "comments": 25,
+    "date": "2026-07-16",
+    "platform": "x",
+    "loop": "../shared/ig/loop/x2077670248283799584.mp4",
+    "poster": "../shared/ig/poster/x2077670248283799584.jpg",
+    "still": "../shared/ig/still/x2077670248283799584.jpg",
+    "embed": null,
+    "link": "https://x.com/vladasanadev/status/2077670248283799584",
+    "full": "../shared/ig/full/x2077670248283799584.mp4"
+   },
+   "count": 0,
+   "plays": 0,
+   "post": "https://x.com/vladasanadev/status/2077670248283799584"
+  },
+  {
+   "rank": 17,
+   "name": "Emergent",
+   "tier": 3,
+   "logo": {
+    "domain": "emergent.sh"
+   },
+   "reel": {
+    "code": "DWjGdZQkce2",
+    "title": "A quest app, vibe coded",
+    "brand": "Emergent",
+    "plays": 73180,
+    "comments": 21,
+    "date": "2026-03-31",
+    "loop": "../shared/ig/loop/DWjGdZQkce2.mp4",
+    "poster": "../shared/ig/poster/DWjGdZQkce2.jpg",
+    "still": "../shared/ig/still/DWjGdZQkce2.jpg",
+    "embed": "https://www.instagram.com/reel/DWjGdZQkce2/embed",
+    "link": "https://www.instagram.com/reel/DWjGdZQkce2/",
+    "full": "../shared/ig/full/DWjGdZQkce2.mp4"
+   },
+   "count": 6,
+   "plays": 227093,
+   "post": "https://www.instagram.com/reel/DWjGdZQkce2/"
+  },
+  {
+   "rank": 18,
+   "name": "Jupiter Lend",
+   "tier": 3,
+   "logo": {
+    "domain": "jup.ag"
+   },
+   "reel": {
+    "code": "x2112920591992778870",
+    "title": "A workday with Jupiter Lend",
+    "brand": "Jupiter Lend",
+    "plays": 3685,
+    "comments": 22,
+    "date": "2026-10-21",
+    "platform": "x",
+    "loop": "../shared/ig/loop/x2112920591992778870.mp4",
+    "poster": "../shared/ig/poster/x2112920591992778870.jpg",
+    "still": "../shared/ig/still/x2112920591992778870.jpg",
+    "embed": null,
+    "link": "https://x.com/vladasanadev/status/2112920591992778870",
+    "full": "../shared/ig/full/x2112920591992778870.mp4"
+   },
+   "count": 0,
+   "plays": 0,
+   "post": "https://x.com/vladasanadev/status/2112920591992778870"
+  },
+  {
+   "rank": 19,
+   "name": "Headout",
+   "tier": 3,
+   "logo": {
+    "tile": "headout",
+    "bg": "#7e00ff",
+    "domain": "headout.com"
+   },
+   "reel": {
+    "code": "DXWsHsET-kx",
+    "title": "Japan on a budget",
+    "brand": "Headout",
+    "plays": 6258,
+    "comments": 0,
+    "date": "2026-04-20",
+    "loop": "../shared/ig/loop/DXWsHsET-kx.mp4",
+    "poster": "../shared/ig/poster/DXWsHsET-kx.jpg",
+    "still": "../shared/ig/still/DXWsHsET-kx.jpg",
+    "embed": "https://www.instagram.com/reel/DXWsHsET-kx/embed",
+    "link": "https://www.instagram.com/reel/DXWsHsET-kx/",
+    "full": "../shared/ig/full/DXWsHsET-kx.mp4"
+   },
+   "count": 1,
+   "plays": 6258,
+   "post": "https://www.instagram.com/reel/DXWsHsET-kx/"
+  },
+  {
+   "rank": 20,
+   "name": "Ironhack",
+   "tier": 3,
+   "logo": {
+    "tile": "ironhack",
+    "domain": "ironhack.com"
+   },
+   "reel": null,
+   "count": 0,
+   "plays": 0,
+   "post": null
+  },
+  {
+   "rank": 21,
+   "name": "SheCodes",
+   "tier": 3,
+   "logo": {
+    "tile": "shecodes",
+    "bg": "#ffffff",
+    "domain": "shecodes.io"
+   },
+   "reel": {
+    "code": "C3Vqp0yN9rK",
+    "title": "Simple websites with SheCodes",
+    "brand": "SheCodes",
+    "plays": 39848,
+    "comments": 20,
+    "date": "2024-02-14",
+    "loop": "../shared/ig/loop/C3Vqp0yN9rK.mp4",
+    "poster": "../shared/ig/poster/C3Vqp0yN9rK.jpg",
+    "still": "../shared/ig/still/C3Vqp0yN9rK.jpg",
+    "embed": "https://www.instagram.com/reel/C3Vqp0yN9rK/embed",
+    "link": "https://www.instagram.com/reel/C3Vqp0yN9rK/",
+    "full": "../shared/ig/full/C3Vqp0yN9rK.mp4"
+   },
+   "count": 10,
+   "plays": 197382,
+   "post": "https://www.instagram.com/reel/C3Vqp0yN9rK/"
+  },
+  {
+   "rank": 22,
+   "name": "4Geeks Academy",
+   "tier": 3,
+   "logo": {
+    "tile": "4geeks",
+    "bg": "#14122e",
+    "domain": "4geeksacademy.com"
+   },
+   "reel": {
+    "code": "DG56br3AdYG",
+    "title": "Is working for yourself freedom?",
+    "brand": "4Geeks Academy",
+    "plays": 11084,
+    "comments": 32,
+    "date": "2025-03-07",
+    "loop": "../shared/ig/loop/DG56br3AdYG.mp4",
+    "poster": "../shared/ig/poster/DG56br3AdYG.jpg",
+    "still": "../shared/ig/still/DG56br3AdYG.jpg",
+    "embed": "https://www.instagram.com/reel/DG56br3AdYG/embed",
+    "link": "https://www.instagram.com/reel/DG56br3AdYG/",
+    "full": "../shared/ig/full/DG56br3AdYG.mp4"
+   },
+   "count": 2,
+   "plays": 18937,
+   "post": "https://www.instagram.com/reel/DG56br3AdYG/"
+  },
+  {
+   "rank": 23,
+   "name": "Virtuals",
+   "tier": 4,
+   "logo": {
+    "tile": "virtuals",
+    "bg": "#dbf8e4",
+    "domain": "virtuals.io"
+   },
+   "reel": {
+    "code": "DXto6dkkdd5",
+    "title": "ACP: a marketplace for agents",
+    "brand": "Virtuals",
+    "plays": 64367,
+    "comments": 50,
+    "date": "2026-04-29",
+    "loop": "../shared/ig/loop/DXto6dkkdd5.mp4",
+    "poster": "../shared/ig/poster/DXto6dkkdd5.jpg",
+    "still": "../shared/ig/still/DXto6dkkdd5.jpg",
+    "embed": "https://www.instagram.com/reel/DXto6dkkdd5/embed",
+    "link": "https://www.instagram.com/reel/DXto6dkkdd5/",
+    "full": "../shared/ig/full/DXto6dkkdd5.mp4"
+   },
+   "count": 1,
+   "plays": 64367,
+   "post": "https://www.instagram.com/reel/DXto6dkkdd5/"
+  },
+  {
+   "rank": 24,
+   "name": "Cloaked",
+   "tier": 4,
+   "logo": {
+    "domain": "cloaked.com"
+   },
+   "reel": {
+    "code": "DdtLr-HhNoL",
+    "title": "Where did you get my number?",
+    "brand": "Cloaked",
+    "plays": 102010,
+    "comments": 8,
+    "date": "2026-09-25",
+    "loop": "../shared/ig/loop/DdtLr-HhNoL.mp4",
+    "poster": "../shared/ig/poster/DdtLr-HhNoL.jpg",
+    "still": "../shared/ig/still/DdtLr-HhNoL.jpg",
+    "embed": "https://www.instagram.com/reel/DdtLr-HhNoL/embed",
+    "link": "https://www.instagram.com/reel/DdtLr-HhNoL/",
+    "full": "../shared/ig/full/DdtLr-HhNoL.mp4"
+   },
+   "count": 1,
+   "plays": 102010,
+   "post": "https://www.instagram.com/reel/DdtLr-HhNoL/"
+  },
+  {
+   "rank": 25,
+   "name": "Greptile",
+   "tier": 4,
+   "logo": {
+    "domain": "greptile.com"
+   },
+   "reel": {
+    "code": "DdBZ9F-Bokv",
+    "title": "Cursor builds it, Greptile checks it",
+    "brand": "Greptile",
+    "plays": 275009,
+    "comments": 44,
+    "date": "2026-09-08",
+    "loop": "../shared/ig/loop/DdBZ9F-Bokv.mp4",
+    "poster": "../shared/ig/poster/DdBZ9F-Bokv.jpg",
+    "still": "../shared/ig/still/DdBZ9F-Bokv.jpg",
+    "embed": "https://www.instagram.com/reel/DdBZ9F-Bokv/embed",
+    "link": "https://www.instagram.com/reel/DdBZ9F-Bokv/",
+    "full": "../shared/ig/full/DdBZ9F-Bokv.mp4"
+   },
+   "count": 2,
+   "plays": 387399,
+   "post": "https://www.instagram.com/reel/DdBZ9F-Bokv/"
+  },
+  {
+   "rank": 26,
+   "name": "Fish Audio",
+   "tier": 4,
+   "logo": {
+    "icon": "fishaudio",
+    "domain": "fish.audio"
+   },
+   "reel": {
+    "code": "DcvObJjxGXA",
+    "title": "Fish Audio S2.1 Pro voices",
+    "brand": "Fish Audio",
+    "plays": 105259,
+    "comments": 58,
+    "date": "2026-09-01",
+    "loop": "../shared/ig/loop/DcvObJjxGXA.mp4",
+    "poster": "../shared/ig/poster/DcvObJjxGXA.jpg",
+    "still": "../shared/ig/still/DcvObJjxGXA.jpg",
+    "embed": "https://www.instagram.com/reel/DcvObJjxGXA/embed",
+    "link": "https://www.instagram.com/reel/DcvObJjxGXA/",
+    "full": "../shared/ig/full/DcvObJjxGXA.mp4"
+   },
+   "count": 3,
+   "plays": 240970,
+   "post": "https://www.instagram.com/reel/DcvObJjxGXA/"
+  },
+  {
+   "rank": 27,
+   "name": "Bluedot",
+   "tier": 4,
+   "logo": {
+    "tile": "bluedot",
+    "bg": "#ffffff",
+    "domain": "bluedothq.com"
+   },
+   "reel": {
+    "code": "DbAeyrAxdEV",
+    "title": "AI meeting notes",
+    "brand": "Bluedot",
+    "plays": 49067,
+    "comments": 25,
+    "date": "2026-07-20",
+    "loop": "../shared/ig/loop/DbAeyrAxdEV.mp4",
+    "poster": "../shared/ig/poster/DbAeyrAxdEV.jpg",
+    "still": "../shared/ig/still/DbAeyrAxdEV.jpg",
+    "embed": "https://www.instagram.com/reel/DbAeyrAxdEV/embed",
+    "link": "https://www.instagram.com/reel/DbAeyrAxdEV/",
+    "full": "../shared/ig/full/DbAeyrAxdEV.mp4"
+   },
+   "count": 4,
+   "plays": 135140,
+   "post": "https://www.instagram.com/reel/DbAeyrAxdEV/"
+  },
+  {
+   "rank": 28,
+   "name": "Fhenix",
+   "tier": 4,
+   "logo": {
+    "domain": "fhenix.io"
+   },
+   "reel": {
+    "code": "x2116800778874839102",
+    "title": "Sunday office with Fhenix",
+    "brand": "Fhenix",
+    "plays": 2097,
+    "comments": 19,
+    "date": "2026-11-01",
+    "platform": "x",
+    "loop": "../shared/ig/loop/x2116800778874839102.mp4",
+    "poster": "../shared/ig/poster/x2116800778874839102.jpg",
+    "still": "../shared/ig/still/x2116800778874839102.jpg",
+    "embed": null,
+    "link": "https://x.com/vladasanadev/status/2116800778874839102",
+    "full": "../shared/ig/full/x2116800778874839102.mp4"
+   },
+   "count": 0,
+   "plays": 0,
+   "post": "https://x.com/vladasanadev/status/2116800778874839102"
+  },
+  {
+   "rank": 29,
+   "name": "Verdent",
+   "tier": 4,
+   "logo": {
+    "tile": "verdent",
+    "domain": "verdent.ai"
+   },
+   "reel": {
+    "code": "DXWW59uEeKI",
+    "title": "Build it yourself on Verdent",
+    "brand": "Verdent",
+    "plays": 32418,
+    "comments": 27,
+    "date": "2026-04-20",
+    "loop": "../shared/ig/loop/DXWW59uEeKI.mp4",
+    "poster": "../shared/ig/poster/DXWW59uEeKI.jpg",
+    "still": "../shared/ig/still/DXWW59uEeKI.jpg",
+    "embed": "https://www.instagram.com/reel/DXWW59uEeKI/embed",
+    "link": "https://www.instagram.com/reel/DXWW59uEeKI/",
+    "full": "../shared/ig/full/DXWW59uEeKI.mp4"
+   },
+   "count": 1,
+   "plays": 32418,
+   "post": "https://www.instagram.com/reel/DXWW59uEeKI/"
+  },
+  {
+   "rank": 30,
+   "name": "CREAO",
+   "tier": 4,
+   "logo": {
+    "domain": "creao.ai"
+   },
+   "reel": {
+    "code": "DcdYznvp_lm",
+    "title": "Job search with CREAO",
+    "brand": "CREAO",
+    "plays": 46988,
+    "comments": 200,
+    "date": "2026-08-25",
+    "loop": "../shared/ig/loop/DcdYznvp_lm.mp4",
+    "poster": "../shared/ig/poster/DcdYznvp_lm.jpg",
+    "still": "../shared/ig/still/DcdYznvp_lm.jpg",
+    "embed": "https://www.instagram.com/reel/DcdYznvp_lm/embed",
+    "link": "https://www.instagram.com/reel/DcdYznvp_lm/",
+    "full": "../shared/ig/full/DcdYznvp_lm.mp4"
+   },
+   "count": 1,
+   "plays": 46988,
+   "post": "https://www.instagram.com/reel/DcdYznvp_lm/"
+  },
+  {
+   "rank": 31,
+   "name": "ChatCut",
+   "tier": 4,
+   "logo": {},
+   "reel": {
+    "code": "DdbIOqnhlKN",
+    "title": "An AI agent edits my video",
+    "brand": "ChatCut",
+    "plays": 14727,
+    "comments": 47,
+    "date": "2026-09-18",
+    "loop": "../shared/ig/loop/DdbIOqnhlKN.mp4",
+    "poster": "../shared/ig/poster/DdbIOqnhlKN.jpg",
+    "still": "../shared/ig/still/DdbIOqnhlKN.jpg",
+    "embed": "https://www.instagram.com/reel/DdbIOqnhlKN/embed",
+    "link": "https://www.instagram.com/reel/DdbIOqnhlKN/",
+    "full": "../shared/ig/full/DdbIOqnhlKN.mp4"
+   },
+   "count": 1,
+   "plays": 14727,
+   "post": "https://www.instagram.com/reel/DdbIOqnhlKN/"
+  },
+  {
+   "rank": 32,
+   "name": "HiNoter",
+   "tier": 4,
+   "logo": {
+    "tile": "hinoter",
+    "domain": "hinoter.app"
+   },
+   "reel": {
+    "code": "DbKjdOBR07v",
+    "title": "Meetings, minus the panic",
+    "brand": "HiNoter",
+    "plays": 42270,
+    "comments": 22,
+    "date": "2026-07-24",
+    "loop": "../shared/ig/loop/DbKjdOBR07v.mp4",
+    "poster": "../shared/ig/poster/DbKjdOBR07v.jpg",
+    "still": "../shared/ig/still/DbKjdOBR07v.jpg",
+    "embed": "https://www.instagram.com/reel/DbKjdOBR07v/embed",
+    "link": "https://www.instagram.com/reel/DbKjdOBR07v/",
+    "full": "../shared/ig/full/DbKjdOBR07v.mp4"
+   },
+   "count": 1,
+   "plays": 42270,
+   "post": "https://www.instagram.com/reel/DbKjdOBR07v/"
+  },
+  {
+   "rank": 33,
+   "name": "VidMuse",
+   "tier": 4,
+   "logo": {},
+   "reel": {
+    "code": "DdLkG0kx9WR",
+    "title": "20 ad versions, fast",
+    "brand": "VidMuse",
+    "plays": 75928,
+    "comments": 42,
+    "date": "2026-09-12",
+    "loop": "../shared/ig/loop/DdLkG0kx9WR.mp4",
+    "poster": "../shared/ig/poster/DdLkG0kx9WR.jpg",
+    "still": "../shared/ig/still/DdLkG0kx9WR.jpg",
+    "embed": "https://www.instagram.com/reel/DdLkG0kx9WR/embed",
+    "link": "https://www.instagram.com/reel/DdLkG0kx9WR/",
+    "full": "../shared/ig/full/DdLkG0kx9WR.mp4"
+   },
+   "count": 1,
+   "plays": 75928,
+   "post": "https://www.instagram.com/reel/DdLkG0kx9WR/"
+  },
+  {
+   "rank": 34,
+   "name": "SuperProfile",
+   "tier": 4,
+   "logo": {},
+   "reel": {
+    "code": "DdV4Y-GJMxM",
+    "title": "A link page that sells",
+    "brand": "SuperProfile",
+    "plays": 79978,
+    "comments": 48,
+    "date": "2026-09-16",
+    "loop": "../shared/ig/loop/DdV4Y-GJMxM.mp4",
+    "poster": "../shared/ig/poster/DdV4Y-GJMxM.jpg",
+    "still": "../shared/ig/still/DdV4Y-GJMxM.jpg",
+    "embed": "https://www.instagram.com/reel/DdV4Y-GJMxM/embed",
+    "link": "https://www.instagram.com/reel/DdV4Y-GJMxM/",
+    "full": "../shared/ig/full/DdV4Y-GJMxM.mp4"
+   },
+   "count": 1,
+   "plays": 79978,
+   "post": "https://www.instagram.com/reel/DdV4Y-GJMxM/"
+  },
+  {
+   "rank": 35,
+   "name": "DeepPocket",
+   "tier": 4,
+   "logo": {
+    "tile": "deeppocket"
+   },
+   "reel": {
+    "code": "DYCML8RAD3M",
+    "title": "Payments without a local bank",
+    "brand": "DeepPocket",
+    "plays": 29292,
+    "comments": 19,
+    "date": "2026-05-07",
+    "loop": "../shared/ig/loop/DYCML8RAD3M.mp4",
+    "poster": "../shared/ig/poster/DYCML8RAD3M.jpg",
+    "still": "../shared/ig/still/DYCML8RAD3M.jpg",
+    "embed": "https://www.instagram.com/reel/DYCML8RAD3M/embed",
+    "link": "https://www.instagram.com/reel/DYCML8RAD3M/",
+    "full": "../shared/ig/full/DYCML8RAD3M.mp4"
+   },
+   "count": 1,
+   "plays": 29292,
+   "post": "https://www.instagram.com/reel/DYCML8RAD3M/"
+  },
+  {
+   "rank": 36,
+   "name": "GameDev",
+   "tier": 4,
+   "logo": {
+    "tile": "gamedev"
+   },
+   "reel": {
+    "code": "DGeEqV9xwJv",
+    "title": "Welcome to GameDev",
+    "brand": "GameDev",
+    "plays": 1495,
+    "comments": 0,
+    "date": "2025-02-24",
+    "loop": "../shared/ig/loop/DGeEqV9xwJv.mp4",
+    "poster": "../shared/ig/poster/DGeEqV9xwJv.jpg",
+    "still": "../shared/ig/still/DGeEqV9xwJv.jpg",
+    "embed": "https://www.instagram.com/reel/DGeEqV9xwJv/embed",
+    "link": "https://www.instagram.com/reel/DGeEqV9xwJv/",
+    "full": "../shared/ig/full/DGeEqV9xwJv.mp4"
+   },
+   "count": 1,
+   "plays": 1495,
+   "post": "https://www.instagram.com/reel/DGeEqV9xwJv/"
+  },
+  {
+   "rank": 37,
+   "name": "Astraux",
+   "tier": 4,
+   "logo": {
+    "tile": "astraux",
+    "bg": "#0b0b10",
+    "domain": "astraux.global"
+   },
+   "reel": {
+    "code": "DOOzvMEgA8D",
+    "title": "EV fit test",
+    "brand": "Astraux",
+    "plays": 12213,
+    "comments": 21,
+    "date": "2025-09-05",
+    "loop": "../shared/ig/loop/DOOzvMEgA8D.mp4",
+    "poster": "../shared/ig/poster/DOOzvMEgA8D.jpg",
+    "still": "../shared/ig/still/DOOzvMEgA8D.jpg",
+    "embed": "https://www.instagram.com/reel/DOOzvMEgA8D/embed",
+    "link": "https://www.instagram.com/reel/DOOzvMEgA8D/",
+    "full": "../shared/ig/full/DOOzvMEgA8D.mp4"
+   },
+   "count": 2,
+   "plays": 22754,
+   "post": "https://www.instagram.com/reel/DOOzvMEgA8D/"
+  },
+  {
+   "rank": 38,
+   "name": "Tesana AI",
+   "tier": 4,
+   "logo": {
+    "domain": "tesana.ai"
+   },
+   "reel": {
+    "code": "DbpxJE8zLdb",
+    "title": "A poster workflow for my game",
+    "brand": "Tesana AI",
+    "plays": 42465,
+    "comments": 29,
+    "date": "2026-08-05",
+    "loop": "../shared/ig/loop/DbpxJE8zLdb.mp4",
+    "poster": "../shared/ig/poster/DbpxJE8zLdb.jpg",
+    "still": "../shared/ig/still/DbpxJE8zLdb.jpg",
+    "embed": "https://www.instagram.com/reel/DbpxJE8zLdb/embed",
+    "link": "https://www.instagram.com/reel/DbpxJE8zLdb/",
+    "full": "../shared/ig/full/DbpxJE8zLdb.mp4"
+   },
+   "count": 1,
+   "plays": 42465,
+   "post": "https://www.instagram.com/reel/DbpxJE8zLdb/"
+  },
+  {
+   "rank": 39,
+   "name": "UTell AI",
+   "tier": 4,
+   "logo": {
+    "domain": "utell.ai"
+   },
+   "reel": {
+    "code": "DcLL_42TQQN",
+    "title": "Live translation",
+    "brand": "UTell AI",
+    "plays": 32737,
+    "comments": 28,
+    "date": "2026-08-18",
+    "loop": "../shared/ig/loop/DcLL_42TQQN.mp4",
+    "poster": "../shared/ig/poster/DcLL_42TQQN.jpg",
+    "still": "../shared/ig/still/DcLL_42TQQN.jpg",
+    "embed": "https://www.instagram.com/reel/DcLL_42TQQN/embed",
+    "link": "https://www.instagram.com/reel/DcLL_42TQQN/",
+    "full": "../shared/ig/full/DcLL_42TQQN.mp4"
+   },
+   "count": 1,
+   "plays": 32737,
+   "post": "https://www.instagram.com/reel/DcLL_42TQQN/"
+  },
+  {
+   "rank": 40,
+   "name": "Privara",
+   "tier": 4,
+   "logo": {},
+   "reel": null,
+   "count": 0,
+   "plays": 0,
+   "post": null
+  }
+ ]
+}

@@ -1,0 +1,88 @@
+{
+ "asOf": "2026-11-06",
+ "note": "PLACEHOLDER numbers for gender, age and roles (Amir asked for placeholders until Vlada sends her real Instagram insights). The audience total and the country order are real.",
+ "placeholder": [
+  "gender",
+  "age",
+  "roles.share",
+  "countries.share"
+ ],
+ "total": "58.3K",
+ "countries": [
+  {
+   "name": "India",
+   "code": "IN",
+   "share": 31
+  },
+  {
+   "name": "United States",
+   "code": "US",
+   "share": 18
+  },
+  {
+   "name": "Canada",
+   "code": "CA",
+   "share": 7
+  },
+  {
+   "name": "Brazil",
+   "code": "BR",
+   "share": 6
+  },
+  {
+   "name": "Germany",
+   "code": "DE",
+   "share": 4
+  }
+ ],
+ "gender": [
+  {
+   "label": "Women",
+   "share": 43
+  },
+  {
+   "label": "Men",
+   "share": 57
+  }
+ ],
+ "age": [
+  {
+   "label": "13-17",
+   "share": 3
+  },
+  {
+   "label": "18-24",
+   "share": 29
+  },
+  {
+   "label": "25-34",
+   "share": 44
+  },
+  {
+   "label": "35-44",
+   "share": 17
+  },
+  {
+   "label": "45+",
+   "share": 7
+  }
+ ],
+ "roles": [
+  {
+   "label": "Developers",
+   "share": 38
+  },
+  {
+   "label": "AI users",
+   "share": 27
+  },
+  {
+   "label": "Founders",
+   "share": 19
+  },
+  {
+   "label": "Tech professionals",
+   "share": 16
+  }
+ ]
+}

@@ -1,0 +1,231 @@
+{
+ "note": "Her guides, Claude skills and the things she built, for the Library section prototypes. price 0 = free. Lines are short summaries, never raw captions.",
+ "kinds": [
+  {
+   "id": "guide",
+   "label": "Guides"
+  },
+  {
+   "id": "skill",
+   "label": "Skills"
+  },
+  {
+   "id": "product",
+   "label": "Products"
+  }
+ ],
+ "items": [
+  {
+   "id": "live-edit",
+   "kind": "skill",
+   "name": "Live Edit",
+   "line": "Make Claude edit your video on command.",
+   "meta": "free skill + PDF",
+   "price": 0,
+   "url": "https://vladasana.com/blog/edit-with-vlada-ai"
+  },
+  {
+   "id": "reel-styles",
+   "kind": "skill",
+   "name": "Reel Styles",
+   "line": "24 edit styles as Claude skills, one per look.",
+   "meta": "24 skills",
+   "price": 0,
+   "url": "https://vlada-reels-review.vercel.app/kit/"
+  },
+  {
+   "id": "claude-md",
+   "kind": "skill",
+   "name": "Claude.md",
+   "line": "Her operating file for cleaner AI-assisted work.",
+   "meta": "9 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/claude-dot-md"
+  },
+  {
+   "id": "automations",
+   "kind": "guide",
+   "name": "Busy Brain Automations",
+   "line": "3 simple AI automations to start with.",
+   "meta": "free guide",
+   "price": 0,
+   "url": "https://vladasana.com/automations"
+  },
+  {
+   "id": "bundle",
+   "kind": "guide",
+   "name": "Job Search Playbook",
+   "line": "12 guides and a 14-day plan for the job hunt.",
+   "meta": "281 pages",
+   "price": 19,
+   "url": "https://vladasana.com/Job-bundle"
+  },
+  {
+   "id": "harness-101",
+   "kind": "guide",
+   "name": "Harness 101",
+   "line": "Build a basic Claude Code harness and ship it today.",
+   "meta": "8 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/harness-101"
+  },
+  {
+   "id": "top-5-claude-skills",
+   "kind": "guide",
+   "name": "Top 5 Claude Skills",
+   "line": "The most-installed skills, with install commands.",
+   "meta": "1 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/top-5-claude-skills"
+  },
+  {
+   "id": "gpt-6-astra",
+   "kind": "guide",
+   "name": "GPT-6 Astra",
+   "line": "When to use Astra, and when Sol is enough.",
+   "meta": "4 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/gpt-6-astra"
+  },
+  {
+   "id": "ai-agents",
+   "kind": "guide",
+   "name": "3 AI Agents That Run My Content",
+   "line": "The small agents behind her posting.",
+   "meta": "3 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/3-simple-ai-agents-that-run-my-content"
+  },
+  {
+   "id": "lazymaxxing",
+   "kind": "guide",
+   "name": "Lazymaxxing Video Edit",
+   "line": "Reference video in, finished edit out.",
+   "meta": "2 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/lazymaxxing-video-edit"
+  },
+  {
+   "id": "git",
+   "kind": "guide",
+   "name": "Everything About Git",
+   "line": "Branches, rebase, conflicts and undoing mistakes.",
+   "meta": "19 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/everything-you-need-to-know-about-git"
+  },
+  {
+   "id": "api",
+   "kind": "guide",
+   "name": "Everything About APIs",
+   "line": "REST, GraphQL, gRPC, auth and rate limits.",
+   "meta": "19 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/everything-you-need-to-know-about-api"
+  },
+  {
+   "id": "database",
+   "kind": "guide",
+   "name": "Everything About Database Design",
+   "line": "Indexes, transactions, replication and sharding.",
+   "meta": "19 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/everything-you-need-to-know-about-database-design"
+  },
+  {
+   "id": "docker",
+   "kind": "guide",
+   "name": "Everything About Docker",
+   "line": "Images, Dockerfiles, pods and scaling.",
+   "meta": "18 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/everything-you-need-to-know-about-docker"
+  },
+  {
+   "id": "behavioral",
+   "kind": "guide",
+   "name": "Behavioral Interviews",
+   "line": "STAR answers and a story bank that works.",
+   "meta": "16 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/behavioral-interviews"
+  },
+  {
+   "id": "ai-code-review",
+   "kind": "guide",
+   "name": "Reviewing AI-Generated Code",
+   "line": "An engineer’s checklist for AI code.",
+   "meta": "3 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/reviewing-ai-generated-code"
+  },
+  {
+   "id": "react-2026",
+   "kind": "guide",
+   "name": "React 2026 Roadmap",
+   "line": "Three resources, in the right order.",
+   "meta": "1 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/react-2026-roadmap"
+  },
+  {
+   "id": "land-a-job",
+   "kind": "guide",
+   "name": "Land A Job In 2026",
+   "line": "Reach a human, tailor the CV, then negotiate.",
+   "meta": "1 min read",
+   "price": 0,
+   "url": "https://vladasana.com/techblog/land-a-job-in-2026"
+  },
+  {
+   "id": "womansplain",
+   "kind": "product",
+   "name": "womansplain",
+   "line": "Anonymous advice from verified women, on Farcaster.",
+   "meta": "Farcaster mini app",
+   "price": 0,
+   "url": "https://womansplain.vercel.app",
+   "cta": "Open the app"
+  },
+  {
+   "id": "ledger-dmk",
+   "kind": "product",
+   "name": "Ledger DMK starter",
+   "line": "A beginner starter for Ledger’s Device Management Kit.",
+   "meta": "Developer tool",
+   "price": 0,
+   "url": "https://dmksetup.netlify.app",
+   "cta": "Open the demo"
+  },
+  {
+   "id": "net-motion",
+   "kind": "product",
+   "name": "Net / Motion",
+   "line": "A net with a memory. Pull it and watch it settle.",
+   "meta": "Interactive study",
+   "price": 0,
+   "url": "https://motion-football.vercel.app",
+   "cta": "Play with it"
+  },
+  {
+   "id": "travel-agent",
+   "kind": "product",
+   "name": "Travel agent",
+   "line": "A Telegram bot that builds itineraries from viral travel posts.",
+   "meta": "Telegram bot",
+   "price": 0,
+   "url": "https://github.com/vladasanadev/travel-agent",
+   "cta": "See the code"
+  },
+  {
+   "id": "water",
+   "kind": "product",
+   "name": "Spider-Man water reminder",
+   "line": "Spider-Man drops in to remind you to drink water.",
+   "meta": "macOS app",
+   "price": 0,
+   "url": "https://github.com/vladasanadev/water-reminder-spiderman",
+   "cta": "See the code"
+  }
+ ]
+}

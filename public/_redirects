@@ -1,2 +1,2 @@
 /api/automations/subscribe /.netlify/functions/automations-subscribe 200
-/* /index.html 200
+/* /app.html 200

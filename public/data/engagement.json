@@ -1,0 +1,93 @@
+{
+ "asOf": "2026-11-06",
+ "source": "Instagram @vlada.asana, reels on her profile (trial reels not counted)",
+ "followers": "58.3K",
+ "reels": 271,
+ "totalPlays": 23936857,
+ "avgPlays": 88328,
+ "medianPlays": 15276,
+ "comments": 18452,
+ "since": "2021-06",
+ "over100k": 38,
+ "over10k": 159,
+ "topReels": [
+  {
+   "code": "Dc0954RT_sM",
+   "title": "Telling family you're tired of tech",
+   "brand": null,
+   "plays": 3578937,
+   "comments": 968,
+   "date": "2026-09-05",
+   "loop": "../shared/ig/loop/Dc0954RT_sM.mp4",
+   "poster": "../shared/ig/poster/Dc0954RT_sM.jpg",
+   "still": "../shared/ig/still/Dc0954RT_sM.jpg",
+   "embed": "https://www.instagram.com/reel/Dc0954RT_sM/embed",
+   "link": "https://www.instagram.com/reel/Dc0954RT_sM/"
+  },
+  {
+   "code": "DbX3DeuzgEd",
+   "title": "I trust you, bro",
+   "brand": null,
+   "plays": 2380825,
+   "comments": 1037,
+   "date": "2026-07-30",
+   "loop": "../shared/ig/loop/DbX3DeuzgEd.mp4",
+   "poster": "../shared/ig/poster/DbX3DeuzgEd.jpg",
+   "still": "../shared/ig/still/DbX3DeuzgEd.jpg",
+   "embed": "https://www.instagram.com/reel/DbX3DeuzgEd/embed",
+   "link": "https://www.instagram.com/reel/DbX3DeuzgEd/"
+  },
+  {
+   "code": "DZtcBngTM3P",
+   "title": "Why I really chose programming",
+   "brand": null,
+   "plays": 1878622,
+   "comments": 828,
+   "date": "2026-06-19",
+   "loop": "../shared/ig/loop/DZtcBngTM3P.mp4",
+   "poster": "../shared/ig/poster/DZtcBngTM3P.jpg",
+   "still": "../shared/ig/still/DZtcBngTM3P.jpg",
+   "embed": "https://www.instagram.com/reel/DZtcBngTM3P/embed",
+   "link": "https://www.instagram.com/reel/DZtcBngTM3P/"
+  },
+  {
+   "code": "De9YnXjgDhh",
+   "title": "Six years of developer diagrams",
+   "brand": null,
+   "plays": 1137506,
+   "comments": 353,
+   "date": "2026-10-28",
+   "loop": "../shared/ig/loop/De9YnXjgDhh.mp4",
+   "poster": "../shared/ig/poster/De9YnXjgDhh.jpg",
+   "still": "../shared/ig/still/De9YnXjgDhh.jpg",
+   "embed": "https://www.instagram.com/reel/De9YnXjgDhh/embed",
+   "link": "https://www.instagram.com/reel/De9YnXjgDhh/"
+  },
+  {
+   "code": "DfPRkwiA6vy",
+   "title": "People who like Arch",
+   "brand": null,
+   "plays": 1045976,
+   "comments": 1985,
+   "date": "2026-11-04",
+   "loop": "../shared/ig/loop/DfPRkwiA6vy.mp4",
+   "poster": "../shared/ig/poster/DfPRkwiA6vy.jpg",
+   "still": "../shared/ig/still/DfPRkwiA6vy.jpg",
+   "embed": "https://www.instagram.com/reel/DfPRkwiA6vy/embed",
+   "link": "https://www.instagram.com/reel/DfPRkwiA6vy/"
+  },
+  {
+   "code": "Dd5Suy8AOdd",
+   "title": "The coding date invite",
+   "brand": null,
+   "plays": 792227,
+   "comments": 386,
+   "date": "2026-10-01",
+   "loop": "../shared/ig/loop/Dd5Suy8AOdd.mp4",
+   "poster": "../shared/ig/poster/Dd5Suy8AOdd.jpg",
+   "still": "../shared/ig/still/Dd5Suy8AOdd.jpg",
+   "embed": "https://www.instagram.com/reel/Dd5Suy8AOdd/embed",
+   "link": "https://www.instagram.com/reel/Dd5Suy8AOdd/"
+  }
+ ]
+}
