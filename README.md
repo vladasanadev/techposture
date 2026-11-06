@@ -203,15 +203,15 @@ Implementation notes:
 - Most UI components in `src/app/components/ui/` are not used by the current single-page hero, but they are available if the landing page grows into a larger experience.
 - The project name in `package.json` is still the generated Figma Make name, `@figma/my-make-file`; rename it if this becomes a production repository.
 
-## Live Edit guide (13 October 2026)
+## Edit guides shop (6 November 2026)
 
-Published at `/blog/edit-with-vlada-ai`, with `/reel-live-edit.zip` and
-`/Live-Edit-Guide.pdf` beneath that path. `vercel.json` routes the article and
-its small static assets to `public/blog-assets/edit-with-vlada-ai/` before the
-portfolio SPA fallback. The existing `/techblog` listing links to the article.
+`/blog/edit-with-vlada-ai` is now the shop for Vlada's 24 reel-style Claude skills and the Live Edit kit: one free
+package per visitor, each other one $1.99, everything $19.99, paid through PayPal, files emailed and kept behind an
+email sign-in. It replaced the free Live Edit article that lived here.
 
-The HTML, CSS, JavaScript, favicon and downloads are a snapshot of the
-owner-supplied `https://editwithvladaai.vercel.app` release. Videos and poster
-images remain hosted on that original deployment and are proxied under the
-article URL. Keep the original media deployment available. The Job Bundle
+The page is a separate Vercel project, `vladasana-edit-guides` (team `vlada`). `vercel.json` here only proxies
+`/blog/edit-with-vlada-ai` and everything under it to
+`https://vladasana-edit-guides.vercel.app/blog/edit-with-vlada-ai`, before the portfolio SPA fallback. Its code and
+handover live outside this repo (`~/Claude-Pro/vlada-edit-guides`, HANDOVER.md). The old article files under
+`public/blog-assets/edit-with-vlada-ai/` were removed so the paid kit is not downloadable for free. The Job Bundle
 storefront and payments are unchanged.

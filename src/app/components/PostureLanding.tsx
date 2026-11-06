@@ -683,9 +683,9 @@ const gptAstraGuideDocument = buildEmbeddedGuideDocument(gptAstraGuideHtml, gptA
 const blogPosts = [
   {
     href: '/blog/edit-with-vlada-ai',
-    title: 'Edit With Vlada AI: Live Edit',
-    description: 'Make Claude edit your video on command. Get the free skill, PDF guide, script, and copy-ready prompts.',
-    date: 'October 13, 2026',
+    title: 'Edit With Vlada AI',
+    description: '24 reel edit styles and Live Edit as Claude skills, each with its guide. Your first one is free.',
+    date: 'November 6, 2026',
     tag: 'content',
   },
   {
