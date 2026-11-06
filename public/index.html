@@ -4,18 +4,31 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Vlada Kandyba · Developer Advocate &amp; Tech Creator</title>
-<meta name="robots" content="index, follow" />
 <meta name="description" content="Vlada Kandyba, Developer Advocate and tech creator: brands, collabs, audience, her guides, skills and products, and how to work with her." />
 <meta name="theme-color" content="#f6efe4" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23131313'/%3E%3Cpath d='M16 6 25 11.2v9.6L16 26 7 20.8v-9.6Z' fill='none' stroke='%23a3a3a0' stroke-width='1.4'/%3E%3Cpath d='M16 16.4 25 11.2M16 16.4 7 11.2M16 16.4V26' stroke='%23a3a3a0' stroke-width='1.4'/%3E%3Ccircle cx='16' cy='16.4' r='2' fill='%23e2693c'/%3E%3C/svg%3E" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@300;400;500&family=Pixelify+Sans:wght@400;500;600&family=Silkscreen&display=swap" rel="stylesheet" />
+<link rel="preload" href="fonts/azeret-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="fonts/pixelify-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="fonts/silkscreen-latin.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="stylesheet" href="style.css" />
 <script>try { const t = localStorage.getItem('hw21-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.17/dist/lenis.min.js" defer></script>
+<script src="vendor/lenis.min.js" defer></script>
+<!-- every module the desk needs, fetched at once instead of one import at a time -->
+<link rel="modulepreload" href="iso.js" />
+<link rel="modulepreload" href="sound.js" />
+<link rel="modulepreload" href="content.js" />
+<link rel="modulepreload" href="chrome.js" />
+<link rel="modulepreload" href="cursor.js" />
+<link rel="modulepreload" href="desk.js" />
+<link rel="modulepreload" href="assistant.js" />
+<link rel="modulepreload" href="devices/computer.js" />
+<link rel="modulepreload" href="devices/ipod.js" />
+<link rel="modulepreload" href="devices/camcorder.js" />
+<link rel="modulepreload" href="devices/camcorder-logos.js" />
+<link rel="modulepreload" href="devices/radar.js" />
+<link rel="modulepreload" href="devices/pos.js" />
+<link rel="modulepreload" href="devices/vending.js" />
+<link rel="modulepreload" href="devices/phone.js" />
 </head>
 <body>
 <a class="skip" href="#figs">Skip to the sections</a>
